@@ -1,0 +1,23 @@
+.home{
+    display: flex;
+    align-items: center;
+    flex-direction: column;    
+    justify-content: center;    
+    height: 100%;
+}
+.entry-links{
+    display: flex;
+}
+.entry-link {
+    margin: 0 2rem;       
+    padding: 1rem 2rem;
+    color: white;
+}
+
+.entry-link.government {
+    background: #13B5D4;
+}
+
+.entry-link.companies {
+    background: #377C2B;
+}
