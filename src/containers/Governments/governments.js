@@ -1,6 +1,6 @@
-
 import React from 'react';
 import styles from './governments.css';
+import Layout from '../Layout';
 
 class Governments extends React.Component {
     constructor() {
@@ -8,7 +8,11 @@ class Governments extends React.Component {
     }
 
     render(){
-        return <h1>Governments Page</h1>
+        return (
+            <Layout>
+                <h1>Governments Page</h1>
+            </Layout>
+        )
     }
 }
 

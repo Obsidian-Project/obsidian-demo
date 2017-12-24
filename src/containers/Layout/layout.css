@@ -1,0 +1,38 @@
+.main-container .three.wide.column.sidebar {
+    background: black;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;   
+    background: #FFF; 
+}
+
+.main-content {
+    background: #F4F4F4;
+}
+
+.main-container .thirteen.wide.column.main-content {
+    padding: 0;
+}
+
+.ui.menu.top-nav {
+    float: right;
+    border-radius: 0;
+    box-shadow: none;
+    height: 8vh;
+}
+
+.ui.vertical.sidebar-menu.menu {
+    border-radius: 0;
+    margin-top: 2rem;
+    border: 0;
+    box-shadow: none;
+    text-align: center;   
+}
+
+.top-nav ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: auto!important;
+    margin-right: 5rem;
+}
