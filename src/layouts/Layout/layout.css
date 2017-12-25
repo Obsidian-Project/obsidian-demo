@@ -15,12 +15,13 @@
     padding: 0;
 }
 
-.ui.menu.top-nav {
+.ui.menu.top-nav, .ui.menu.secondary-top-nav {
     float: right;
     border-radius: 0;
     box-shadow: none;
     height: 8vh;
 }
+
 
 .ui.vertical.sidebar-menu.menu {
     border-radius: 0;
@@ -43,4 +44,23 @@
 .main-content .ui.menu.fluid {
     width: 100%!important;
     padding: 0 5rem;
+}
+
+.ui.huge.borderless.fluid.icon.top-nav.menu {
+    margin-bottom: 0;
+    /* border: 0; */
+    border: 1px solid rgba(238, 238, 238, 0.15);
+}
+
+.ui.borderless.fluid.attached.secondary-top-nav.menu{
+    border: 0;
+    /* padding: 2rem 0 3rem 7rem; */
+    padding: 3rem 7rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.governments .ui.borderless.fluid.attached.secondary-top-nav.menu h1{
+    font-weight: 500;
 }

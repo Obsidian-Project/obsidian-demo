@@ -5,3 +5,9 @@
 .governments .ui.icon.menu .item {
     color: #13B5D4 !important;
 }
+
+.governments .ui.borderless.fluid.attached.secondary-top-nav.menu h1{
+    color: #13B5D4;
+}
+
+/* #397782 */
