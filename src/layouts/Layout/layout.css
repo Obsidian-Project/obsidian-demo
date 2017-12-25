@@ -33,6 +33,14 @@
 .top-nav ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
     display: -ms-flexbox;
     display: flex;
-    margin-left: auto!important;
-    margin-right: 5rem;
+    margin-left: auto!important;        
+}
+
+.ui.icon.menu .item {
+    color: #7c8793 !important;
+}
+
+.main-content .ui.menu.fluid {
+    width: 100%!important;
+    padding: 0 5rem;
 }

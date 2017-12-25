@@ -1,11 +1,19 @@
 import React from 'react';
 import './layout.css';
 import { Link, withRouter } from 'react-router-dom';
-import { Container, Grid, Segment, Image, Menu, Icon, Dropdown} from 'semantic-ui-react';
+import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header} from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
 
 const HeaderFixed = (props) => {   
     return <Menu icon borderless fluid className="top-nav" size="huge">
+        <Menu.Item>
+            <Link to={`/${props.baseUrl}`}>
+                <Image src={props.logo}></Image>
+            </Link>
+        </Menu.Item>
+        <Menu.Item><Link to="/">Home</Link></Menu.Item>
+        <Menu.Item><Link to="/programs">Programs</Link></Menu.Item>
+
         <Menu.Menu position='right'>
             <Dropdown item icon="add">
             <Dropdown.Menu>
@@ -34,15 +42,11 @@ const HeaderFixed = (props) => {
 class Layout extends React.Component {
     render() {
         return (
-            <Container fluid className="main-container">
-                <Grid divided='vertically' columns={2}>
-                    <Grid.Row>
-                        <Grid.Column width={3} className="sidebar">
-                            <Image src={this.props.logo}></Image>
-                            <this.props.sidebar />
-                        </Grid.Column>
-                        <Grid.Column width={13} className="main-content">
-                            <HeaderFixed baseUrl={this.props.baseUrl} />
+            <Container fluid className={`main-container ${this.props.baseUrl}`}>
+                <Grid divided='vertically' columns={1}>
+                    <Grid.Row>                       
+                        <Grid.Column width={16} className="main-content">
+                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.props.title} logo={this.props.logo} />
                             {this.props.children}
                         </Grid.Column>
                     </Grid.Row>
@@ -55,7 +59,12 @@ class Layout extends React.Component {
 Layout.propTypes  = {
     logo: PropTypes.any.isRequired,
     sidebar: PropTypes.any.isRequired,
-    baseUrl: PropTypes.string.isRequired
+    baseUrl: PropTypes.string.isRequired,
+    title: PropTypes.string
+}
+
+Layout.defaultProps = {
+    title: "Dashboard"
 }
 
 export default Layout;
