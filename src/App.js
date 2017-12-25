@@ -15,7 +15,7 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
+App.propTypes  = {
   store: PropTypes.object.isRequired
 }
 

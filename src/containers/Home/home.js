@@ -23,6 +23,7 @@ class Home extends React.Component {
             <div className="entry-links">
                 <Link className="entry-link government" to="/governments">Governments</Link>
                 <Link className="entry-link companies" to="/companies">Companies</Link>
+                <Link className="entry-link sugarmills" to="/sugarmills">Sugar mills</Link>
             </div>
         </div>
     }

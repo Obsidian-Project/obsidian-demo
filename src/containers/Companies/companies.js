@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './companies.css';
-import Layout from '../Layout';
+import CompaniesLayout from '../../layouts/CompaniesLayout';
+import './companies.css';
 
 class Companies extends React.Component {
     constructor() {
@@ -9,9 +9,10 @@ class Companies extends React.Component {
 
     render(){
         return (
-        <Layout>
-            <h1>Companies Page</h1>
-        </Layout>
+        <CompaniesLayout>
+            {this.props.children}
+            <h1>Hello</h1>
+        </CompaniesLayout>
         )
     }
 }
