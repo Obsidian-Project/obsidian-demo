@@ -64,3 +64,19 @@
 .governments .ui.borderless.fluid.attached.secondary-top-nav.menu h1{
     font-weight: 500;
 }
+
+.ui.container.members{
+    display: flex;
+}
+
+.ui.container.inner-content {
+    width: 100%;
+    display: flex;
+}
+
+.ui.container.inner-content .segment {
+    width: 100%;
+    margin: 1rem 7rem;
+    height: 75vh;
+    padding: 3rem 2rem;
+}

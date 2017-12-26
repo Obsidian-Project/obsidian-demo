@@ -49,14 +49,17 @@ class Layout extends React.Component {
     render() {
         return (
             <Container fluid className={`main-container ${this.props.baseUrl}`}>
-                <Grid divided='vertically' columns={1}>
+                <Grid columns={1}>
                     <Grid.Row>
                         <Grid.Column width={16} className="main-content">
-                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.props.title} logo={this.props.logo} />
-                            {this.props.children}
-                        </Grid.Column>
-                    </Grid.Row>
+                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.props.title} logo={this.props.logo} />                                                       
+                            <Container className="inner-content">                                
+                                {this.props.children}                                       
+                            </Container>
+                        </Grid.Column>                                                             
+                    </Grid.Row>                    
                 </Grid>
+                
             </Container>
         )
     }

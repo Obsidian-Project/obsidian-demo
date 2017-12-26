@@ -14,6 +14,7 @@ const GovernmentsRoutes = () => (
         <Route exact path="/governments" component={Governments} />    
         <Governments>        
             <Route path="/governments/newProgram" component={NewProgram} />                         
+            <Route path="/governments/newMember" component={NewMember} />  
         </Governments>                                      
     </Switch>
 )
