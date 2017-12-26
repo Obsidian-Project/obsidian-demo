@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, Divider, Input } from 'semantic-ui-react';
 import { uport, web3 } from '../../utils/connector.js';
+//import { waitForMined } from '../../utils';
+
 import './newmember.css';
 import GoogleMapReact from 'google-map-react';
 import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
@@ -28,6 +30,7 @@ const CustomInput = (props) => (
         placeholder='Size of land in hectares'
     />
 )
+
 
 const waitForMined = (txHash, response, pendingCB, successCB) => {
     if (response.blockNumber) {
