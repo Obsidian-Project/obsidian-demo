@@ -5,6 +5,9 @@ import './newmember.css';
 import GoogleMapReact from 'google-map-react';
 import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
 import { withRouter } from 'react-router-dom';
+import * as actions from '../../actions';
+import { connect, } from 'react-redux';
+
 const MNID = require('mnid');
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
@@ -135,8 +138,7 @@ class NewMember extends React.Component {
     }
 
     componentWillMount() {
-        this.requestCredentials();
-        //get smart contract info about coordinates and land size        
+        this.requestCredentials();        
     }
 
     requestCredentials = () => {
@@ -169,7 +171,8 @@ class NewMember extends React.Component {
                             nationalId: nationalId,
                             latitude: state ? state.latitude : this.state.latitude,
                             longitude: state ? state.longitude : this.state.longitude,
-                            sizeOfLand: state ? state.sizeOfLand : this.state.sizeOfLand
+                            sizeOfLand: state ? state.sizeOfLand : this.state.sizeOfLand,
+                            userRegistered: state ? true : false
                         })
                     });
                 } else {
@@ -227,10 +230,13 @@ class NewMember extends React.Component {
         this.setState({
             loading: true
         }, () => {
-            addMember(userAddress, latitude, longitude, sizeOfLand, () => {               
+            addMember(userAddress, latitude, longitude, sizeOfLand, () => {   
+                let isUpdate = this.state.userRegistered;            
                 this.setState({
                     loading: false,
                     userRegistered: true
+                }, () => {                    
+                    this.props.displayNotification(isUpdate ? "Changes saved successfully": "User has being registered correctly");    
                 });
             });
         })
@@ -243,9 +249,10 @@ class NewMember extends React.Component {
                 {this.state.loading && <Dimmer inverted active>
                     <Loader />
                 </Dimmer>}
-
+           
                 <Grid columns={2}>
-                    <Grid.Column width={8}>
+               
+                    <Grid.Column width={8}>                   
                         <Header>Personal Information</Header>
                         <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
                         <Form>
@@ -285,12 +292,11 @@ class NewMember extends React.Component {
                                 onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
                         </Grid.Column>
                     }
-                </Grid>
+                </Grid>                
             </Segment>
         )
     }
 
 }
 
-export default withRouter(NewMember);
-
+export default connect(null, actions)(withRouter(NewMember));

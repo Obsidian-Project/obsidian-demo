@@ -1,8 +1,9 @@
 import React from 'react';
 import './layout.css';
 import { Link, withRouter } from 'react-router-dom';
-import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header } from 'semantic-ui-react';
+import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
+import NotificationComponent from "../../components/notificationComponent";
 
 const HeaderFixed = (props) => {   
     return <div>
@@ -39,9 +40,10 @@ const HeaderFixed = (props) => {
     </Menu>
         <Menu fluid borderless attached className="secondary-top-nav">
             <Menu.Item>                           
-                    <Header as="h1">{props.title}</Header>            
+                    <Header as="h1">{props.title}</Header>                   
             </Menu.Item>
-        </Menu>
+            <NotificationComponent />              
+        </Menu>              
     </div>
 };
 
@@ -65,7 +67,7 @@ class Layout extends React.Component {
     }
     render() {
         return (
-            <Container fluid className={`main-container ${this.props.baseUrl}`}>
+            <Container fluid className={`main-container ${this.props.baseUrl}`}>            
                 <Grid columns={1}>
                     <Grid.Row>
                         <Grid.Column width={16} className="main-content">
