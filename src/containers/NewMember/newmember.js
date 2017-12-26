@@ -16,16 +16,17 @@ const MyGreatPlace = ({ text }) => (
     </div>
 )
 
-const CustomInput = (props) => (    
+const CustomInput = (props) => (
     <Input
-      onChange={props.onChange}
-      label={{ basic: true, content: 'Hectares' }}
-      labelPosition='right'
-      placeholder='Size of land in hectares'
+        onChange={props.onChange}
+        label={{ basic: true, content: 'Hectares' }}
+        labelPosition='right'
+        value={props.value}
+        placeholder='Size of land in hectares'
     />
-  )
+)
 
-  const waitForMined = (txHash, response, pendingCB, successCB) => {
+const waitForMined = (txHash, response, pendingCB, successCB) => {
     if (response.blockNumber) {
         successCB()
     } else {
@@ -46,8 +47,24 @@ const pollingLoop = (txHash, response, pendingCB, successCB) => {
     }, 1000);
 }
 
-const addMember = (memberAddress, latitude, longitude, sizeOfLand, updateCallback) => {    
-    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {      
+const getMemberInfo = (address, callback) => {
+    ObsidianContract.members(address, (error, result) => {
+        if (!result) {
+            callback();
+            return;
+        }
+        ObsidianContract.membersInfo(address, (error, result) => {            
+            let latitude = result[0];
+            let longitude = result[1];
+            let sizeOfLand = result[2].toNumber();
+            callback({ latitude, longitude, sizeOfLand });
+        });
+
+    });
+}
+
+const addMember = (memberAddress, latitude, longitude, sizeOfLand, callback) => {
+    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {
         gas: 2000000,
         from: memberAddress
     }, (error, txHash) => {
@@ -58,7 +75,7 @@ const addMember = (memberAddress, latitude, longitude, sizeOfLand, updateCallbac
                 // for a block confirmation          
             },
             function successCB(data) {
-                updateCallback();
+                callback();
             }
         )
     })
@@ -105,20 +122,21 @@ class NewMember extends React.Component {
             hideLandForm: true,
             loggedWithUport: false,
             latitude: 0,
-            longitude: 0
+            longitude: 0,
+            userRegistered: false
         }
-    } 
+    }
     onNationalIdChange = (event) => {
         this.setState({ nationalId: event.target.value });
     }
 
-    onSizeOfLandChange  = (event) => {      
+    onSizeOfLandChange = (event) => {
         this.setState({ sizeOfLand: event.target.value });
     }
 
     componentWillMount() {
         this.requestCredentials();
-        //get smart contract info about coordinates and land size
+        //get smart contract info about coordinates and land size        
     }
 
     requestCredentials = () => {
@@ -131,23 +149,41 @@ class NewMember extends React.Component {
                 let nationalId = credentials.verified.length > 0 ? credentials.verified[0].claim.NationalIdVerified : undefined;
                 let hasValidatedHisNationalId = nationalId !== undefined;
                 let isVerified = false;
-                let hideLandForm = true;               
+                let hideLandForm = true;
                 if (hasValidatedHisNationalId) {
                     isVerified = true;
                     hideLandForm = false;
                 }
-                //tambien tengo que checar en Obsidian contract si ha sido registrado antes    
-                this.setState({
-                    name: credentials.name,
-                    imageUrl: credentials.avatar.uri,
-                    userAddress: credentials.address,
-                    disableButton: false,
-                    isVerified: isVerified,
-                    loggedWithUport: true,
-                    hideLandForm: hideLandForm,
-                    nationalId: nationalId
-                })
-                                  
+                if (isVerified) {
+                    let addressPayload = MNID.decode(credentials.address);
+                    let userAddress = addressPayload.address;
+                    getMemberInfo(userAddress, (state) => {                   
+                        this.setState({
+                            name: credentials.name,
+                            imageUrl: credentials.avatar.uri,
+                            userAddress: credentials.address,
+                            disableButton: false,
+                            isVerified: isVerified,
+                            loggedWithUport: true,
+                            hideLandForm: hideLandForm,
+                            nationalId: nationalId,
+                            latitude: state ? state.latitude : this.state.latitude,
+                            longitude: state ? state.longitude : this.state.longitude,
+                            sizeOfLand: state ? state.sizeOfLand : this.state.sizeOfLand
+                        })
+                    });
+                } else {
+                    this.setState({
+                        name: credentials.name,
+                        imageUrl: credentials.avatar.uri,
+                        userAddress: credentials.address,
+                        disableButton: false,
+                        isVerified: isVerified,
+                        loggedWithUport: true,
+                        hideLandForm: hideLandForm,
+                        nationalId: nationalId
+                    })
+                }
             });
     }
 
@@ -171,15 +207,16 @@ class NewMember extends React.Component {
             });
         })
     }
-    registerUser = () => {       
-        let userAddress = "";
-        if(this.state.userAddress){ //this shouldn't crash because they need to be logged in, but for testing
+    registerUser = () => {
+        const { history } = this.props;
+        let userAddress;
+        if (this.state.userAddress) { //this shouldn't crash because they need to be logged in, but for testing
             let addressPayload = MNID.decode(this.state.userAddress);
             userAddress = addressPayload.address;
         }
         let latitude = this.state.latitude;
         let longitude = this.state.longitude;
-        
+
         let sizeOfLand = Number(this.state.sizeOfLand);
         console.log({
             latitude,
@@ -190,15 +227,15 @@ class NewMember extends React.Component {
         this.setState({
             loading: true
         }, () => {
-            addMember(userAddress, latitude, longitude, sizeOfLand, () => {                
-                //show message of sucess, 
-                //redirect
+            addMember(userAddress, latitude, longitude, sizeOfLand, () => {               
                 this.setState({
-                    loading: false
+                    loading: false,
+                    userRegistered: true
                 });
             });
         })
     }
+
     render() {
         const position = [this.state.lat, this.state.lng];
         return (
@@ -206,31 +243,32 @@ class NewMember extends React.Component {
                 {this.state.loading && <Dimmer inverted active>
                     <Loader />
                 </Dimmer>}
+
                 <Grid columns={2}>
                     <Grid.Column width={8}>
                         <Header>Personal Information</Header>
                         <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
                         <Form>
                             <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
-                            <Form.Input label='National Id' placeholder={this.state.nationalId || 'National Id'} 
-                                value={this.state.isVerified ? "" : this.state.nationalId || ""} 
-                                onChange={this.onNationalIdChange} 
+                            <Form.Input label='National Id' placeholder={this.state.nationalId || 'National Id'}
+                                value={this.state.isVerified ? "" : this.state.nationalId || ""}
+                                onChange={this.onNationalIdChange}
                                 readOnly={this.state.isVerified} />
                             {!this.state.isVerified &&
-                                <Button disabled={!this.state.loggedWithUport} className="big" color='green' 
+                                <Button disabled={!this.state.loggedWithUport} className="big" color='green'
                                     onClick={this.attestUser}>Verify</Button>
                             }
                         </Form>
                     </Grid.Column>
-                    {this.state.isVerified && 
+                    {this.state.isVerified &&
                         <Grid.Column width={8}>
                             <Header>Land Information</Header>
-                            <Form>                            
-                                    <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
+                            <Form>
+                                <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
                                 <Form.Field>
-                                <label>Location</label>                                                               
-                                </Form.Field>       
-                            </Form>                
+                                    <label>Location</label>
+                                </Form.Field>
+                            </Form>
                             <div className="map-area">
                                 <GoogleMapReact
                                     defaultCenter={this.props.center}
@@ -243,8 +281,8 @@ class NewMember extends React.Component {
                                     <MyGreatPlace lat={this.state.latitude} lng={this.state.longitude} text={'A'} />
                                 </GoogleMapReact>
                             </div>
-                            <Button className="big right" color='green' 
-                                    onClick={this.registerUser}>Register</Button>
+                            <Button className="big right" color='green'
+                                onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
                         </Grid.Column>
                     }
                 </Grid>
@@ -256,19 +294,3 @@ class NewMember extends React.Component {
 
 export default withRouter(NewMember);
 
-// const getBalance = (address, callback) => {
-//     MicrofinanceContract.balances(address, (error, result) => {
-//         let period = 3; //hardcoded period, I could get the info from the smart contract, I need
-//         //a data structure to get info by address? or use uport registry?
-//         if(result){
-//             let dateToPay = moment().add(period, 'months').format('DD/MM/YYYY');
-//             callback({
-//                 hasLoans: result.toNumber() > 0,
-//                 amountToPay: `£ ${result.toNumber()}`,
-//                 paymentDate: dateToPay,
-//                 openAccordion: false
-
-//             })
-//         }
-//     });
-// }
