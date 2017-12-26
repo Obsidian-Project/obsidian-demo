@@ -9,7 +9,7 @@ class Governments extends React.Component {
 
     render(){
         return (
-            <GovernmentsLayout>
+            <GovernmentsLayout title={this.props.title}>
                 {this.props.children}
             </GovernmentsLayout>
         )

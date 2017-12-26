@@ -43,7 +43,7 @@ class Members extends React.Component {
         center: { lat: 18.248916, lng: -96.133804 },
         zoom: 11
     };
-    _onClick = ({ x, y, lat, lng, event }) => {
+    onMapClick = ({ x, y, lat, lng, event }) => {
         this.setState({
             longitude: lng,
             latitude: lat
@@ -60,7 +60,9 @@ class Members extends React.Component {
             loading: false,
             userAddress: undefined,
             hideLandForm: true,
-            loggedWithUport: false
+            loggedWithUport: false,
+            latitude: 0,
+            longitude: 0
         }
     }
     //Process in here
@@ -77,6 +79,7 @@ class Members extends React.Component {
 
     componentWillMount() {
         this.requestCredentials();
+        //get smart contract info about coordinates and land size
     }
 
     requestCredentials = () => {
@@ -89,9 +92,7 @@ class Members extends React.Component {
                 let nationalId = credentials.verified.length > 0 ? credentials.verified[0].claim.NationalIdVerified : undefined;
                 let hasValidatedHisNationalId = nationalId !== undefined;
                 let isVerified = false;
-                let hideLandForm = true;
-                // let addressPayload = MNID.decode(credentials.address);
-                // let userAddress = addressPayload.address;
+                let hideLandForm = true;               
                 if (hasValidatedHisNationalId) {
                     isVerified = true;
                     hideLandForm = false;
@@ -107,7 +108,6 @@ class Members extends React.Component {
                     hideLandForm: hideLandForm,
                     nationalId: nationalId
                 })
-                //si no, entonces, poner vista para que sea atesteado, de lo contrario, vista para capturar datos
                 //tambien tengo que checar en Obsidian contract si ha sido registrado antes                       
             });
     }
@@ -132,7 +132,24 @@ class Members extends React.Component {
             });
         })
     }
-
+    registerUser = () => {       
+        let userAddress = "";
+        if(this.state.userAddress){ //this shouldn't crash because they need to be logged in, but for testing
+            let addressPayload = MNID.decode(this.state.userAddress);
+            userAddress = addressPayload.address;
+        }
+        let latitude = this.state.latitude;
+        let longitude = this.state.longitude;
+        
+        let landSize = this.state.sizeOfLand;
+        console.log({
+            latitude,
+            longitude,
+            userAddress,
+            landSize
+        })
+        //TODO, get smart contract reference
+    }
     render() {
         const position = [this.state.lat, this.state.lng];
         return (
@@ -175,10 +192,12 @@ class Members extends React.Component {
                                         key: GOOGLE_API_KEY,
                                         language: 'en'
                                     }}
-                                    onClick={this._onClick}>
+                                    onClick={this.onMapClick}>
                                     <MyGreatPlace lat={this.state.latitude} lng={this.state.longitude} text={'A'} />
                                 </GoogleMapReact>
                             </div>
+                            <Button className="big right" color='green' 
+                                    onClick={this.registerUser}>Register</Button>
                         </Grid.Column>
                     }
                 </Grid>
@@ -189,9 +208,3 @@ class Members extends React.Component {
 }
 
 export default Members;
-
-//user properties
-
-//name
-//national id
-//status

@@ -7,3 +7,11 @@
 .main-container .grid {
     height: 100%;
 }
+
+button.ui.green.button.big.right {
+    float: right;
+}
+
+button.ui.green.button.big {
+    padding: 1rem 8rem;
+}

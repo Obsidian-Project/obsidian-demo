@@ -5,6 +5,7 @@ import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header } from 's
 import PropTypes from 'prop-types'; // ES6
 
 const HeaderFixed = (props) => {
+    debugger;
     return <div>
         <Menu icon borderless fluid className="top-nav" size="huge">
         <Menu.Item>
@@ -46,13 +47,31 @@ const HeaderFixed = (props) => {
 };
 
 class Layout extends React.Component {
+    componentWillMount(){
+        //hot fix for the bad design of the hierarchy and the need of higher order components
+        const { match, location } = this.props;
+        debugger;
+        if(location.pathname.indexOf("newMember") > -1){
+            this.setState({
+                title: "Register New Member"
+            })
+        } else if (location.pathname.indexOf("newGroup") > -1){
+            this.setState({
+                title: "Register New Group"
+            })
+        } else{
+            this.setState({
+                title: "Dashboard"
+            })
+        }
+    }
     render() {
         return (
             <Container fluid className={`main-container ${this.props.baseUrl}`}>
                 <Grid columns={1}>
                     <Grid.Row>
                         <Grid.Column width={16} className="main-content">
-                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.props.title} logo={this.props.logo} />                                                       
+                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.state.title} logo={this.props.logo} />                                                       
                             <Container className="inner-content">                                
                                 {this.props.children}                                       
                             </Container>
@@ -68,12 +87,7 @@ class Layout extends React.Component {
 Layout.propTypes = {
     logo: PropTypes.any.isRequired,
     sidebar: PropTypes.any.isRequired,
-    baseUrl: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired
+    baseUrl: PropTypes.string.isRequired
 }
 
-Layout.defaultProps = {
-    title: "Dashboard"
-}
-
-export default Layout;
+export default withRouter(Layout);

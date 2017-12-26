@@ -19,7 +19,7 @@ class GovernmentsLayout extends React.Component {
 
     render(){
         return (
-            <Layout logo={GovernmentLogo} sidebar={Sidebar} baseUrl="governments">
+            <Layout logo={GovernmentLogo} sidebar={Sidebar} baseUrl="governments" title={this.props.title}>
                 {this.props.children}                
             </Layout>
         )
