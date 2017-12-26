@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Header, Grid, Segment, Image, Form, Button } from 'semantic-ui-react';
+import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader } from 'semantic-ui-react';
 import { uport, web3 } from '../../utils/connector.js';
 import './newmember.css';
 const MNID = require('mnid');
@@ -11,11 +11,12 @@ class Members extends React.Component {
         this.state = {
             name: undefined,
             nationalId: undefined,
-            imageUrl: undefined,
-            disableButton: true,
+            imageUrl: undefined,         
             isVerified: false,
             loading: false,
-            userAddress: undefined                                    
+            userAddress: undefined,
+            hideLandForm: true,
+            loggedWithUport: true                                    
         }
     }
     //Process in here
@@ -39,11 +40,27 @@ class Members extends React.Component {
         .then((credentials) => {
             let nationalId = credentials.verified.length > 0 ? credentials.verified[0].claim.NationalIdVerified : undefined;
             let hasValidatedHisNationalId = nationalId !== undefined;
-
-            //si no, entonces, poner vista para que sea atesteado, de lo contrario, vista para capturar datos
-            //tambien tengo que checar en Obsidian contract si ha sido registrado antes
+            let isVerified = false;
+            let hideLandForm = true;
             let addressPayload = MNID.decode(credentials.address);
-            let subject = addressPayload.address;
+            let userAddress = addressPayload.address;            
+            if(hasValidatedHisNationalId){               
+                isVerified = true;
+                hideLandForm = false;                        
+            }
+
+            this.setState({
+                name: credentials.name,
+                imageUrl: credentials.avatar.uri,
+                userAddress: credentials.address,
+                disableButton: false,
+                isVerified: isVerified,
+                loggedWithUport: true,
+                userAddress: userAddress,
+                hideLandForm: hideLandForm 
+            })        
+            //si no, entonces, poner vista para que sea atesteado, de lo contrario, vista para capturar datos
+            //tambien tengo que checar en Obsidian contract si ha sido registrado antes                       
         });
     }
 
@@ -57,45 +74,35 @@ class Members extends React.Component {
                     "NationalIdVerified": this.state.nationalId
                 },
                 exp: new Date().getTime() + 365 * 24 * 60 * 60 * 1000, // 365 days from now
-            }).then(res => {
-                console.log(this.state.name);
-               debugger;
-               //see what res has
+            }).then(res => {             
+                this.setState({
+                    loading: false
+                });
 
-            }).then(tx => {
-                //todo check tx 
-                debugger;
-              })
-              .catch(err => {
-                debugger;
-                console.log(err)
-              })
+            });
         })
     }
-
+//add loader
     render() {
         return (
-            <Segment>
-                
+            <Segment>   
+                    {this.state.loading && <Dimmer inverted active>
+                            <Loader />
+                    </Dimmer>}
                     <Grid columns={2}>
                         <Grid.Column width={8}>
                         <Header>Personal Information</Header>
                             <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
                             <Form>
                                 <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
-                                <Form.Input label='National Id' placeholder='National Id' value={this.state.nationalId} onChange={this.onNationalIdChange} />
-                                <Button disabled={this.state.disableButton} className="big" color='green' onClick={this.attestUser}>Verify</Button>
+                                <Form.Input label='National Id' placeholder='National Id' value={this.state.nationalId || ""} onChange={this.onNationalIdChange} />
+                                <Button disabled={!this.state.loggedWithUport} className="big" color='green' onClick={this.attestUser}>Verify</Button>
                             </Form>
                         </Grid.Column>
                         {this.state.isVerified &&
                             <Grid.Column width={8}>
                             <Header>Land Information</Header>
-                                <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='small' circular />
-                                <Form>
-                                    <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
-                                    <Form.Input label='National Id' placeholder='National Id' value={this.state.nationalId} onChange={this.nationalIChange} />
-                                    <Button disabled={this.state.disableButton} className="big" color='green' onClick={this.attestUser}>Verify</Button>
-                                </Form>
+                                <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='small' circular />                               
                             </Grid.Column>
                         }
                     </Grid>
