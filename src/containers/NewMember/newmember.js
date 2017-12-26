@@ -213,6 +213,7 @@ class NewMember extends React.Component {
             });
         })
     }
+    
     registerUser = () => {
         const { history } = this.props;
         let userAddress;

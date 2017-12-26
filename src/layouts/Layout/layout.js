@@ -59,6 +59,10 @@ class Layout extends React.Component {
             this.setState({
                 title: "Register New Group"
             })
+        } else if (location.pathname.indexOf("newProgram") > -1){
+            this.setState({
+                title: "Create New Program"
+            })
         } else{
             this.setState({
                 title: "Dashboard"

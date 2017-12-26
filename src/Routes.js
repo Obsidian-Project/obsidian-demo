@@ -9,6 +9,9 @@ import NewGroup from './containers/NewGroup';
 import NewProgram from './containers/NewProgram';
 import NewMember from './containers/NewMember';
 
+//test
+import Equipments from './containers/Equipments';
+
 const GovernmentsRoutes = () => (
     <Switch>          
         <Route exact path="/governments" component={Governments} />    
@@ -44,6 +47,7 @@ const Routes = () => (
             <Route path="/governments" component={GovernmentsRoutes} />  
             <Route path="/companies" component={CompaniesRoutes} />   
             <Route path="/sugarmills" component={SugarMillsRoutes} />        
+            <Route path="/test" component={Equipments} />        
             <Route component={Home} />
         </Switch>                     
     </Router>

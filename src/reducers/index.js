@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import NotificationReducer from './notificationReducer';
+import EquipmentsReducer from './equipmentsReducer';
 const rootReducer = combineReducers({
-    notificationReducer: NotificationReducer
+    notificationReducer: NotificationReducer,
+    equipmentsReducer: EquipmentsReducer
 });
 
 
