@@ -1,44 +1,6 @@
 export const OBSIDIAN_CONTRACT_ABI = [
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "balances",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint128"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "toBlacklist",
-				"type": "address"
-			}
-		],
-		"name": "blackListMember",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -53,29 +15,53 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	},
 	{
 		"constant": true,
+		"inputs": [],
+		"name": "numberOfMembers",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "numberOfGroups",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [
 			{
 				"name": "",
-				"type": "uint128"
+				"type": "address"
 			}
 		],
-		"name": "loansInfo",
+		"name": "membersInfo",
 		"outputs": [
 			{
-				"name": "approver",
-				"type": "address"
+				"name": "latitude",
+				"type": "string"
 			},
 			{
-				"name": "recipient",
-				"type": "address"
+				"name": "longitude",
+				"type": "string"
 			},
 			{
-				"name": "amount",
-				"type": "uint128"
-			},
-			{
-				"name": "period",
-				"type": "uint8"
+				"name": "sizeOfLand",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -84,12 +70,17 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "balance",
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "members",
 		"outputs": [
 			{
 				"name": "",
-				"type": "uint128"
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -98,12 +89,42 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "numberOfLoans",
+		"inputs": [
+			{
+				"name": "element",
+				"type": "uint256"
+			}
+		],
+		"name": "getGroupInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"name": "members",
+						"type": "address[]"
+					}
+				],
+				"name": "groupInformation",
+				"type": "tuple"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "balances",
 		"outputs": [
 			{
 				"name": "",
-				"type": "uint128"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -114,19 +135,42 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "recipient",
+				"name": "newMember",
 				"type": "address"
 			},
 			{
-				"name": "amount",
-				"type": "uint128"
+				"name": "latitude",
+				"type": "string"
 			},
 			{
-				"name": "period",
-				"type": "uint8"
+				"name": "longitude",
+				"type": "string"
+			},
+			{
+				"name": "sizeOfLand",
+				"type": "uint256"
 			}
 		],
-		"name": "approveLoan",
+		"name": "addMember",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newGroupMembers",
+				"type": "address[]"
+			}
+		],
+		"name": "registerGroup",
 		"outputs": [
 			{
 				"name": "result",
@@ -142,42 +186,10 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "number",
-				"type": "uint128"
-			},
-			{
-				"indexed": false,
-				"name": "recipient",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "approver",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "amount",
-				"type": "uint128"
-			},
-			{
-				"indexed": false,
-				"name": "period",
-				"type": "uint8"
-			}
-		],
-		"name": "NewLoan",
-		"type": "event"
 	}
 ];
 
-export const OBSIDIAN_CONTRACT_ADDRESS = "0x592428dde39682c24a0ae82fcd59437f0de114af";
+export const OBSIDIAN_CONTRACT_ADDRESS = "0x46801b04cfcb02b94ca4a9ac6f1a4e6b37313681";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(OBSIDIAN_CONTRACT_ABI);
