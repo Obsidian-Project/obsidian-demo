@@ -3,23 +3,66 @@ import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, 
 import { uport, web3 } from '../../utils/connector.js';
 import './newmember.css';
 import GoogleMapReact from 'google-map-react';
+import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
+import { withRouter } from 'react-router-dom';
 const MNID = require('mnid');
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
 const GOOGLE_API_KEY = "AIzaSyC--qp92_TXVu0XFzGe9yS67km_ZpV8yBM";
+const ObsidianContract = CreateObsidianContractObj(web3);
 
 const MyGreatPlace = ({ text }) => (
     <div style={greatPlaceStyle}>
     </div>
 )
 
-const CustomInput = () => (    
+const CustomInput = (props) => (    
     <Input
+      onChange={props.onChange}
       label={{ basic: true, content: 'Hectares' }}
       labelPosition='right'
       placeholder='Size of land in hectares'
     />
   )
+
+  const waitForMined = (txHash, response, pendingCB, successCB) => {
+    if (response.blockNumber) {
+        successCB()
+    } else {
+        pendingCB()
+        pollingLoop(txHash, response, pendingCB, successCB)
+    }
+}
+
+const pollingLoop = (txHash, response, pendingCB, successCB) => {
+    setTimeout(function () {
+        web3.eth.getTransaction(txHash, (error, response) => {
+            if (error) { throw error }
+            if (response === null) {
+                response = { blockNumber: null }
+            }
+            waitForMined(txHash, response, pendingCB, successCB)
+        })
+    }, 1000);
+}
+
+const addMember = (memberAddress, latitude, longitude, sizeOfLand, updateCallback) => {    
+    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {      
+        gas: 2000000,
+        from: memberAddress
+    }, (error, txHash) => {
+        if (error) { throw error }
+        waitForMined(txHash, { blockNumber: null },
+            function pendingCB() {
+                // Signal to the user you're still waiting
+                // for a block confirmation          
+            },
+            function successCB(data) {
+                updateCallback();
+            }
+        )
+    })
+}
 
 const greatPlaceStyle = {
     position: 'absolute',
@@ -38,7 +81,7 @@ const greatPlaceStyle = {
     padding: 4
 };
 
-class Members extends React.Component {
+class NewMember extends React.Component {
     static defaultProps = {
         center: { lat: 18.248916, lng: -96.133804 },
         zoom: 11
@@ -64,16 +107,12 @@ class Members extends React.Component {
             latitude: 0,
             longitude: 0
         }
-    }
-    //Process in here
-    //when I start, I launch uport and the user is signed in, I verify identity and the status change to verified
-    //then I can capture acreage and land location
-    //I click register, store address, location and acreage in smart contract and I'm done !!
+    } 
     onNationalIdChange = (event) => {
         this.setState({ nationalId: event.target.value });
     }
 
-    onSizeOfLandChange  = (event) => {
+    onSizeOfLandChange  = (event) => {      
         this.setState({ sizeOfLand: event.target.value });
     }
 
@@ -97,7 +136,7 @@ class Members extends React.Component {
                     isVerified = true;
                     hideLandForm = false;
                 }
-
+                //tambien tengo que checar en Obsidian contract si ha sido registrado antes    
                 this.setState({
                     name: credentials.name,
                     imageUrl: credentials.avatar.uri,
@@ -108,7 +147,7 @@ class Members extends React.Component {
                     hideLandForm: hideLandForm,
                     nationalId: nationalId
                 })
-                //tambien tengo que checar en Obsidian contract si ha sido registrado antes                       
+                                  
             });
     }
 
@@ -141,14 +180,24 @@ class Members extends React.Component {
         let latitude = this.state.latitude;
         let longitude = this.state.longitude;
         
-        let landSize = this.state.sizeOfLand;
+        let sizeOfLand = Number(this.state.sizeOfLand);
         console.log({
             latitude,
             longitude,
             userAddress,
-            landSize
+            sizeOfLand
+        });
+        this.setState({
+            loading: true
+        }, () => {
+            addMember(userAddress, latitude, longitude, sizeOfLand, () => {                
+                //show message of sucess, 
+                //redirect
+                this.setState({
+                    loading: false
+                });
+            });
         })
-        //TODO, get smart contract reference
     }
     render() {
         const position = [this.state.lat, this.state.lng];
@@ -173,13 +222,11 @@ class Members extends React.Component {
                             }
                         </Form>
                     </Grid.Column>
-                    {!this.state.isVerified && //remove ! for test
+                    {this.state.isVerified && 
                         <Grid.Column width={8}>
                             <Header>Land Information</Header>
-                            <Form>
-                                {/* <Form.Input label='Size' placeholder="Hectares" value={this.state.sizeOfLand || ""} 
-                                    onChange={this.onSizeOfLandChange}   labelPosition='right' />   */}
-                                    <Form.Input label='Size' value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
+                            <Form>                            
+                                    <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
                                 <Form.Field>
                                 <label>Location</label>                                                               
                                 </Form.Field>       
@@ -207,4 +254,21 @@ class Members extends React.Component {
 
 }
 
-export default Members;
+export default withRouter(NewMember);
+
+// const getBalance = (address, callback) => {
+//     MicrofinanceContract.balances(address, (error, result) => {
+//         let period = 3; //hardcoded period, I could get the info from the smart contract, I need
+//         //a data structure to get info by address? or use uport registry?
+//         if(result){
+//             let dateToPay = moment().add(period, 'months').format('DD/MM/YYYY');
+//             callback({
+//                 hasLoans: result.toNumber() > 0,
+//                 amountToPay: `£ ${result.toNumber()}`,
+//                 paymentDate: dateToPay,
+//                 openAccordion: false
+
+//             })
+//         }
+//     });
+// }

@@ -4,8 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
 
-const HeaderFixed = (props) => {
-    debugger;
+const HeaderFixed = (props) => {   
     return <div>
         <Menu icon borderless fluid className="top-nav" size="huge">
         <Menu.Item>
@@ -49,8 +48,7 @@ const HeaderFixed = (props) => {
 class Layout extends React.Component {
     componentWillMount(){
         //hot fix for the bad design of the hierarchy and the need of higher order components
-        const { match, location } = this.props;
-        debugger;
+        const { match, location } = this.props;      
         if(location.pathname.indexOf("newMember") > -1){
             this.setState({
                 title: "Register New Member"
