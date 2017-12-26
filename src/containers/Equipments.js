@@ -5,40 +5,47 @@ import { connect, } from 'react-redux';
 
 //la tercer imagen
 const EquipmentList = (props) => (
-    <Item.Group>
+    <Item.Group link>
         {props.equipments && props.equipments.map((item) => {
             let title = `${item.category} ${item.model}`;
             let imageUrl = item.images[2] || "http://via.placeholder.com/350x150";
-            return <Equipment imageUrl={imageUrl} key={item.equipmentId} details={item.details} title={title} />
-          })}
+            return <Equipment id={item.equipmentId} imageUrl={imageUrl} key={item.equipmentId} details={item.details} title={title} />
+        })}
     </Item.Group>
 )
 
-const Equipment = (props) => (
-    <Item>
-        <Item.Image size="large" src={props.imageUrl} />
-        <Item.Content>
-            <Item.Header as='h1'>{props.title}</Item.Header>
-            <Item.Meta>Details</Item.Meta>
-            <Item.Description>
-                <List as="ol">
-                    {props.details.map && props.details.map((item, index) => {
-                        return <List.Item key={index} as='li' value='-'>{item}</List.Item>
-                    })}
-                </List>
-            </Item.Description>
-            <Item.Meta as='h3'>Recommendations</Item.Meta>
-            <Item.Description>
-                Recommended for groups of 4
-        </Item.Description>
-            <Item.Meta as='h3'>Expected land coverage</Item.Meta>
-            <Item.Description>
-                ~ 3000 hectares of land
-        </Item.Description>
-        </Item.Content>
-    </Item>
-)
+class Equipment extends React.Component {
+    render() {
+        return (
+            <Item onClick={() => {
+                this.props.equipmentSelected(this.props.id);
+            }}>
+                <Item.Image size="large" src={this.props.imageUrl} />
+                <Item.Content>
+                    <Item.Header as='h1'>{this.props.title}</Item.Header>
+                    <Item.Meta>Details</Item.Meta>
+                    <Item.Description>
+                        <List as="ol">
+                            {this.props.details.map && this.props.details.map((item, index) => {
+                                return <List.Item key={index} as='li' value='-'>{item}</List.Item>
+                            })}
+                        </List>
+                    </Item.Description>
+                    <Item.Meta as='h3'>Recommendations</Item.Meta>
+                    <Item.Description>
+                        Recommended for groups of 4
+               </Item.Description>
+                    <Item.Meta as='h3'>Expected land coverage</Item.Meta>
+                    <Item.Description>
+                        ~ 3000 hectares of land
+               </Item.Description>
+                </Item.Content>
+            </Item>
+        )
+    }
+}
 
+Equipment = connect(null, actions)(Equipment);
 
 class Equipments extends React.Component {
     constructor() {
@@ -49,11 +56,14 @@ class Equipments extends React.Component {
         this.props.getEquipments();
     }
 
+    onItemClick = (e) => {
+        debugger;
+        console.log("Item clicked");
+    }
     render() {
         return (
             <div>
-                <h1>Equipments</h1>
-                <EquipmentList equipments={this.props.equipments} />                
+                <EquipmentList equipments={this.props.equipments} />
             </div>
         )
     }
