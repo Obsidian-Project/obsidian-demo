@@ -73,14 +73,14 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"inputs": [
 			{
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"name": "members",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -189,7 +189,7 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	}
 ];
 
-export const OBSIDIAN_CONTRACT_ADDRESS = "0x46801b04cfcb02b94ca4a9ac6f1a4e6b37313681";
+export const OBSIDIAN_CONTRACT_ADDRESS = "0x19c216cb0e37b157e8531c2c4f402b2f4aa5de2b";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(OBSIDIAN_CONTRACT_ABI);
