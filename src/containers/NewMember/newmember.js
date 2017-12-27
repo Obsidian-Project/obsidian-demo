@@ -274,7 +274,7 @@ class NewMember extends React.Component {
                       </Grid.Column>
 
 
-                    {/* {this.state.isVerified && */}
+                    {this.state.isVerified &&
                         <Grid.Column width={8}>
                           <Segment>
                             <Header as="h2">Land Information</Header>
@@ -300,7 +300,7 @@ class NewMember extends React.Component {
                                 onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
                           </Segment>
                         </Grid.Column>
-                    {/* } */}
+                    }
                 </Grid>
           </div>
         )
