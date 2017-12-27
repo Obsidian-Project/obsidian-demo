@@ -19,8 +19,11 @@ class SugarMillsLayout extends React.Component {
 
     render(){
         return (
-            <Layout logo={Logo} sidebar={Sidebar} baseUrl="sugarmills">
-                {this.props.children}                
+            <Layout
+              pageTitle="Sugar Mills"
+              pageIcon = "factory"
+              baseUrl="sugarmills">
+                {this.props.children}
             </Layout>
         )
     }

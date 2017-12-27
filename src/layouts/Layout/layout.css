@@ -1,82 +1,11 @@
-.main-container .three.wide.column.sidebar {
-    background: black;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    flex-direction: column;   
-    background: #FFF; 
-}
-
-.main-content {
-    background: #F4F4F4;
-}
-
-.main-container .thirteen.wide.column.main-content {
-    padding: 0;
-}
-
-.ui.menu.top-nav, .ui.menu.secondary-top-nav {
-    float: right;
-    border-radius: 0;
-    box-shadow: none;
-    height: 8vh;
-}
-
-
-.ui.vertical.sidebar-menu.menu {
-    border-radius: 0;
-    margin-top: 2rem;
-    border: 0;
-    box-shadow: none;
-    text-align: center;   
-}
-
-.top-nav ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
-    display: -ms-flexbox;
-    display: flex;
-    margin-left: auto!important;        
-}
-
-.ui.icon.menu .item {
-    color: #7c8793 !important;
-}
-
-.main-content .ui.menu.fluid {
-    width: 100%!important;
-    padding: 0 5rem;
-}
-
-.ui.huge.borderless.fluid.icon.top-nav.menu {
-    margin-bottom: 0;
-    /* border: 0; */
-    border: 1px solid rgba(238, 238, 238, 0.15);
-}
-
-.ui.borderless.fluid.attached.secondary-top-nav.menu{
-    border: 0;
-    /* padding: 2rem 0 3rem 7rem; */
-    padding: 3rem 7rem;
-    text-align: center;
-    display: flex;
-    align-items: center;
-}
-
-.governments .ui.borderless.fluid.attached.secondary-top-nav.menu h1{
-    font-weight: 500;
-}
-
-.ui.container.members{
-    display: flex;
-}
-
-.ui.container.inner-content {
-    width: 100%;
-    display: flex;
-}
-
-.ui.container.inner-content .segment {
-    width: 100%;
-    margin: 1rem 7rem;
+/* .ui.container.inner-content .segment {
     height: 75vh;
-    padding: 3rem 2rem;
+} */
+
+.main-content{
+  background-color: #e9ebee;
+}
+
+.inner-content{
+  margin-top: 2em !important;
 }

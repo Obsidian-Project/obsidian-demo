@@ -59,7 +59,7 @@ const getMemberInfo = (address, callback) => {
             callback();
             return;
         }
-        ObsidianContract.membersInfo(address, (error, result) => {            
+        ObsidianContract.membersInfo(address, (error, result) => {
             let latitude = result[0];
             let longitude = result[1];
             let sizeOfLand = result[2].toNumber();
@@ -78,7 +78,7 @@ const addMember = (memberAddress, latitude, longitude, sizeOfLand, callback) => 
         waitForMined(txHash, { blockNumber: null },
             function pendingCB() {
                 // Signal to the user you're still waiting
-                // for a block confirmation          
+                // for a block confirmation
             },
             function successCB(data) {
                 callback();
@@ -141,7 +141,7 @@ class NewMember extends React.Component {
     }
 
     componentWillMount() {
-        this.requestCredentials();        
+        this.requestCredentials();
     }
 
     requestCredentials = () => {
@@ -162,7 +162,7 @@ class NewMember extends React.Component {
                 if (isVerified) {
                     let addressPayload = MNID.decode(credentials.address);
                     let userAddress = addressPayload.address;
-                    getMemberInfo(userAddress, (state) => {                   
+                    getMemberInfo(userAddress, (state) => {
                         this.setState({
                             name: credentials.name,
                             imageUrl: credentials.avatar.uri,
@@ -213,7 +213,7 @@ class NewMember extends React.Component {
             });
         })
     }
-    
+
     registerUser = () => {
         const { history } = this.props;
         let userAddress;
@@ -234,13 +234,13 @@ class NewMember extends React.Component {
         this.setState({
             loading: true
         }, () => {
-            addMember(userAddress, latitude, longitude, sizeOfLand, () => {   
-                let isUpdate = this.state.userRegistered;            
+            addMember(userAddress, latitude, longitude, sizeOfLand, () => {
+                let isUpdate = this.state.userRegistered;
                 this.setState({
                     loading: false,
                     userRegistered: true
-                }, () => {                    
-                    this.props.displayNotification(isUpdate ? "Changes saved successfully": "User has being registered correctly");    
+                }, () => {
+                    this.props.displayNotification(isUpdate ? "Changes saved successfully": "User has being registered correctly");
                 });
             });
         })
@@ -249,15 +249,15 @@ class NewMember extends React.Component {
     render() {
         const position = [this.state.lat, this.state.lng];
         return (
-            <Segment>
+          <div className="NewMemberSection">
                 {this.state.loading && <Dimmer inverted active>
                     <Loader />
                 </Dimmer>}
-           
-                <Grid columns={2}>
-               
-                    <Grid.Column width={8}>                   
-                        <Header>Personal Information</Header>
+
+                <Grid columns={16}>
+                    <Grid.Column width={8}>
+                      <Segment>
+                        <Header as="h2">Personal Information</Header>
                         <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
                         <Form>
                             <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
@@ -266,14 +266,18 @@ class NewMember extends React.Component {
                                 onChange={this.onNationalIdChange}
                                 readOnly={this.state.isVerified} />
                             {!this.state.isVerified &&
-                                <Button disabled={!this.state.loggedWithUport} className="big" color='green'
+                                <Button fluid disabled={!this.state.loggedWithUport} className="big" color='green'
                                     onClick={this.attestUser}>Verify</Button>
                             }
                         </Form>
-                    </Grid.Column>
-                    {this.state.isVerified &&
+                        </Segment>
+                      </Grid.Column>
+
+
+                    {/* {this.state.isVerified && */}
                         <Grid.Column width={8}>
-                            <Header>Land Information</Header>
+                          <Segment>
+                            <Header as="h2">Land Information</Header>
                             <Form>
                                 <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
                                 <Form.Field>
@@ -292,12 +296,13 @@ class NewMember extends React.Component {
                                     <MyGreatPlace lat={this.state.latitude} lng={this.state.longitude} text={'A'} />
                                 </GoogleMapReact>
                             </div>
-                            <Button className="big right" color='green'
+                            <Button fluid color='green'
                                 onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
+                          </Segment>
                         </Grid.Column>
-                    }
-                </Grid>                
-            </Segment>
+                    {/* } */}
+                </Grid>
+          </div>
         )
     }
 

@@ -5,12 +5,12 @@ import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message 
 import PropTypes from 'prop-types'; // ES6
 import NotificationComponent from "../../components/notificationComponent";
 
-const HeaderFixed = (props) => {   
+const HeaderFixed = (props) => {
     return <div>
         <Menu icon borderless fluid className="top-nav" size="huge">
         <Menu.Item>
             <Link to={`/${props.baseUrl}`}>
-                <Image src={props.logo}></Image>
+              <h2><Icon name={props.pageIcon}/> {props.pageTitle}</h2>
             </Link>
         </Menu.Item>
         <Menu.Item><Link to="/">Home</Link></Menu.Item>
@@ -37,20 +37,20 @@ const HeaderFixed = (props) => {
                 <Icon name='user' />
             </Menu.Item>
         </Menu.Menu>
-    </Menu>
-        <Menu fluid borderless attached className="secondary-top-nav">
-            <Menu.Item>                           
-                    <Header as="h1">{props.title}</Header>                   
-            </Menu.Item>
-            <NotificationComponent />              
-        </Menu>              
+      </Menu>
+      {/* <Menu fluid borderless attached className="secondary-top-nav">
+          <Menu.Item>
+                  <Header as="h1">{props.title}</Header>
+          </Menu.Item>
+          <NotificationComponent />
+      </Menu> */}
     </div>
 };
 
 class Layout extends React.Component {
     componentWillMount(){
         //hot fix for the bad design of the hierarchy and the need of higher order components
-        const { match, location } = this.props;      
+        const { match, location } = this.props;
         if(location.pathname.indexOf("newMember") > -1){
             this.setState({
                 title: "Register New Member"
@@ -71,26 +71,29 @@ class Layout extends React.Component {
     }
     render() {
         return (
-            <Container fluid className={`main-container ${this.props.baseUrl}`}>            
+            <Container fluid className={`main-container ${this.props.baseUrl}`}>
                 <Grid columns={1}>
                     <Grid.Row>
                         <Grid.Column width={16} className="main-content">
-                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.state.title} logo={this.props.logo} />                                                       
-                            <Container className="inner-content">                                
-                                {this.props.children}                                       
+                            <HeaderFixed baseUrl={this.props.baseUrl} title={this.state.title} logo={this.props.logo}
+                            pageTitle={this.props.pageTitle}
+                            pageIcon={this.props.pageIcon}
+
+                             />
+                            <Container className="inner-content">
+                                {this.props.children}
                             </Container>
-                        </Grid.Column>                                                             
-                    </Grid.Row>                    
+                        </Grid.Column>
+                    </Grid.Row>
                 </Grid>
-                
+
             </Container>
         )
     }
 }
 
 Layout.propTypes = {
-    logo: PropTypes.any.isRequired,
-    sidebar: PropTypes.any.isRequired,
+    // logo: PropTypes.any.isRequired,
     baseUrl: PropTypes.string.isRequired
 }
 

@@ -39,7 +39,7 @@ const addProgram = (membersAddress, callback) => {
     //     waitForMined(txHash, { blockNumber: null },
     //         function pendingCB() {
     //             // Signal to the user you're still waiting
-    //             // for a block confirmation          
+    //             // for a block confirmation
     //         },
     //         function successCB(data) {
     //             callback();
@@ -72,15 +72,16 @@ class NewProgram extends React.Component {
     }
     render() {
         return (
-            <Segment>
+          <span>
                 {this.state.loading && <Dimmer inverted active>
                     <Loader />
                 </Dimmer>}
 
-                <Grid columns={3}>
+                <Grid>
 
                     <Grid.Column width={6}>
-                        <Header>Program Information</Header>
+                      <Segment>
+                        <Header as ="h2">Program Information</Header>
                         <Form>
                             <Form.Input label='Name' placeholder="Name of the program" />
                             <Form.TextArea label='Description' placeholder="Description about the program" />
@@ -100,42 +101,45 @@ class NewProgram extends React.Component {
                             </Modal>
 
                         </Form>
+                        </Segment>
                     </Grid.Column>
-                    <Grid.Column width={1}>
-                    </Grid.Column>
-                    <Grid.Column width={9}>
-                        {this.props.selectedEquipment && <div>
-                        <Header>Equipment Selection</Header>
-                            <Item.Group>
-                                <Item>
-                                    <Item.Image className="custom" size="large" src={this.props.selectedEquipment.imageUrl} />
-                                    <Item.Content>
-                                        <Item.Header as='h1'>{this.props.selectedEquipment.title}</Item.Header>
-                                        <Item.Meta>Details</Item.Meta>
-                                        <Item.Description>
-                                            <List as="ol">
-                                                {this.props.selectedEquipment.details.map && this.props.selectedEquipment.details.map((item, index) => {
-                                                    return <List.Item key={index} as='li' value='-'>{item}</List.Item>
-                                                })}
-                                            </List>
-                                        </Item.Description>
-                                        <Item.Meta as='h3'>Recommendations</Item.Meta>
-                                        <Item.Description>
-                                            Recommended for groups of 4
-                                        </Item.Description>
-                                        <Item.Meta as='h3'>Expected land coverage</Item.Meta>
-                                        <Item.Description>
-                                            ~ 3000 hectares of land
-                                        </Item.Description>
-                                    </Item.Content>
-                                </Item>
-                            </Item.Group>
-                            <Button className="big" color='green'
-                                onClick={this.createProgram}>Create Program</Button></div>
+
+                    <Grid.Column width={10}>
+
+                        {this.props.selectedEquipment &&
+                        <Segment>
+                          <Header as ="h2">Equipment Selection</Header>
+                            <Image src={this.props.selectedEquipment.imageUrl} />
+                            <Header as='h1'>{this.props.selectedEquipment.title}</Header>
+                            <Grid>
+
+                              <Grid.Column width={8}>
+
+                                <Header as="h3">Details</Header>
+                                  <List as="ol">
+                                      {this.props.selectedEquipment.details.map && this.props.selectedEquipment.details.map((item, index) => {
+                                          return <List.Item key={index} as='li' value='-'>{item}</List.Item>
+                                      })}
+                                  </List>
+                                </Grid.Column>
+
+                                <Grid.Column width={8}>
+                              <Header as='h3'>Recommendations</Header>
+                                <p> Recommended for groups of 4</p>
+                              <Header as='h3'>Expected land coverage</Header>
+                                <p> ~ 3000 hectares of land </p>
+                              </Grid.Column>
+                            </Grid>
+
+
+                          <Button fluid className="big" color='green'
+                              onClick={this.createProgram}>Create Program</Button>
+
+                      </Segment>
                         }
                     </Grid.Column>
                 </Grid>
-            </Segment>
+          </span>
         )
     }
 }
@@ -148,4 +152,3 @@ function mapStateProps(state) {
 }
 
 export default connect(mapStateProps, actions)(NewProgram);
-

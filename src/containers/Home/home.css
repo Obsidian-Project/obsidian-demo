@@ -1,27 +1,12 @@
 .home{
     display: flex;
     align-items: center;
-    flex-direction: column;    
-    justify-content: center;    
+    flex-direction: column;
+    justify-content: center;
     height: 100%;
 }
-.entry-links{
-    display: flex;
-}
-.entry-link {
-    margin: 0 2rem;       
-    padding: 1rem 2rem;
-    color: white;
-}
 
-.entry-link.government {
-    background: #13B5D4;
-}
-
-.entry-link.companies {
-    background: #377C2B;
-}
-
-.entry-link.sugarmills {
-    background: #132E33;
+.homeHeader{
+  font-size:10em !important;
+  margin-bottom: 0 !important;
 }

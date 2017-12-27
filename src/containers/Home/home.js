@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './home.css';
 import { Link } from 'react-router-dom';
 import governments from '../Governments/governments';
-import { Header } from 'semantic-ui-react';
+import { Header,Button } from 'semantic-ui-react';
 
 class Home extends React.Component {
     constructor() {
@@ -12,18 +12,20 @@ class Home extends React.Component {
 
     render() {
         return <div className="home">
-            <Header textAlign="center" as='h1'>
-                <Header.Content> 
-                    Obsidian
-                    <Header.Subheader>
-                        Giving the tools to farmers around the world
-                    </Header.Subheader>
-                </Header.Content>
-            </Header>
+            <Header className="homeHeader" textAlign="center" as='h1'> Obsidian </Header>
+            <p>Giving the tools to farmers around the world</p>
+
             <div className="entry-links">
-                <Link className="entry-link government" to="/governments">Governments</Link>
-                <Link className="entry-link companies" to="/companies">Companies</Link>
-                <Link className="entry-link sugarmills" to="/sugarmills">Sugar mills</Link>
+              <Link className="entry-link government" to="/governments">
+                <Button  basic color='teal' >Governments</Button>
+              </Link>
+
+              <Link className="entry-link companies" to="/companies">
+                <Button basic color='green'>Companies</Button>
+              </Link>
+              <Link className="entry-link sugarmills" to="/sugarmills">
+                <Button basic color='violet'>Sugar mills</Button>
+              </Link>
             </div>
         </div>
     }
