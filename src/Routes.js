@@ -10,13 +10,15 @@ import NewProgram from './containers/NewProgram';
 import NewMember from './containers/NewMember';
 import EquipmentDetails from './containers/EquipmentDetails';
 
+
+import GovernmentDashboard from './components/GovernmentDashboard'
 //test
 import Equipments from './containers/Equipments';
 
 const GovernmentsRoutes = () => (
     <Switch>
-        <Route exact path="/governments" component={Governments} />
         <Governments>
+            <Route path="/governments" component={GovernmentDashboard} />
             <Route path="/governments/newProgram" component={NewProgram} />
             <Route path="/governments/newMember" component={NewMember} />
             <Route path="/governments/newGroup" component={NewGroup} />
