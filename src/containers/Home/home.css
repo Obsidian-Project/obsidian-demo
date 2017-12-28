@@ -8,5 +8,13 @@
 
 .homeHeader{
   font-size:10em !important;
-  margin-bottom: 0 !important;
+  margin-bottom: -0.1em !important;
+}
+
+.subHeader{
+  margin-bottom: 3.5em;
+}
+
+.entry-links a{
+  margin: 1em;
 }

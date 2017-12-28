@@ -1,7 +1,7 @@
 import React from 'react';
 import './layout.css';
 import { Link, withRouter } from 'react-router-dom';
-import { Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message } from 'semantic-ui-react';
+import { Label, Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
 import NotificationComponent from "../../components/notificationComponent";
 
@@ -29,8 +29,9 @@ const HeaderFixed = (props) => {
             <Icon name='search' />
           </Menu.Item>
 
-          <Menu.Item name='alarm'>
+          <Menu.Item as ="a" name='alarm'>
             <Icon name='alarm' />
+             <Label color='red' circular floating>2</Label>
           </Menu.Item>
 
           <Menu.Item name='user'>

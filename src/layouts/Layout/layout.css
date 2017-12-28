@@ -17,3 +17,8 @@ html body{
 .ui.menu .dropdown.item .menu{
   background-color: #434343 !important;
 }
+
+.ui.floating.label{
+  left:75% !important;
+  top:0.65em !important;
+}

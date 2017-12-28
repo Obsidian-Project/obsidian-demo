@@ -13,7 +13,7 @@ class Home extends React.Component {
     render() {
         return <div className="home">
             <Header className="homeHeader" textAlign="center" as='h1'> Obsidian </Header>
-            <p>Giving the tools to farmers around the world</p>
+            <p className="subHeader">Giving the tools to farmers around the world</p>
 
             <div className="entry-links">
               <Link className="entry-link government" to="/governments">
