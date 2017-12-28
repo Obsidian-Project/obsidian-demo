@@ -13,43 +13,44 @@ import NewMember from './containers/NewMember';
 import Equipments from './containers/Equipments';
 
 const GovernmentsRoutes = () => (
-    <Switch>          
-        <Route exact path="/governments" component={Governments} />    
-        <Governments>        
-            <Route path="/governments/newProgram" component={NewProgram} />                         
-            <Route path="/governments/newMember" component={NewMember} />  
-        </Governments>                                      
+    <Switch>
+        <Route exact path="/governments" component={Governments} />
+        <Governments>
+            <Route path="/governments/newProgram" component={NewProgram} />
+            <Route path="/governments/newMember" component={NewMember} />
+            <Route path="/governments/newGroup" component={NewGroup} />  
+        </Governments>
     </Switch>
 )
 
 const CompaniesRoutes = () => (
-    <Switch>          
-        <Route exact path="/companies" component={Companies} />    
-        <Companies>        
-            <Route path="/companies/newProgram" component={NewProgram} />                         
-        </Companies>                                      
+    <Switch>
+        <Route exact path="/companies" component={Companies} />
+        <Companies>
+            <Route path="/companies/newProgram" component={NewProgram} />
+        </Companies>
     </Switch>
 )
 
 const SugarMillsRoutes = () => (
-    <Switch>          
-        <Route exact path="/sugarmills" component={SugarMills} />    
-        <SugarMills>        
-            <Route path="/sugarmills/newProgram" component={NewProgram} />                         
-        </SugarMills>                                      
+    <Switch>
+        <Route exact path="/sugarmills" component={SugarMills} />
+        <SugarMills>
+            <Route path="/sugarmills/newProgram" component={NewProgram} />
+        </SugarMills>
     </Switch>
 )
 
 const Routes = () => (
-    <Router>   
-      <Switch> 
+    <Router>
+      <Switch>
           <Route exact path="/" component={Home} />
-            <Route path="/governments" component={GovernmentsRoutes} />  
-            <Route path="/companies" component={CompaniesRoutes} />   
-            <Route path="/sugarmills" component={SugarMillsRoutes} />        
-            <Route path="/test" component={Equipments} />        
+            <Route path="/governments" component={GovernmentsRoutes} />
+            <Route path="/companies" component={CompaniesRoutes} />
+            <Route path="/sugarmills" component={SugarMillsRoutes} />
+            <Route path="/test" component={Equipments} />
             <Route component={Home} />
-        </Switch>                     
+        </Switch>
     </Router>
 )
 

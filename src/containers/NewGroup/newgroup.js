@@ -41,7 +41,7 @@ const addGroup = (membersAddress, callback) => {
         waitForMined(txHash, { blockNumber: null },
             function pendingCB() {
                 // Signal to the user you're still waiting
-                // for a block confirmation          
+                // for a block confirmation
             },
             function successCB(data) {
                 callback();
@@ -50,6 +50,23 @@ const addGroup = (membersAddress, callback) => {
     })
 }
 
+const GroupMember = (props) =>{
+  return  <Grid.Column width={5}>
+    <Segment>
+      <Header as="h2">Personal Information</Header>
+      <Image centered src= 'http://www.rmddesign.com/wp-content/uploads/avatar-1.png' size='small' circular />
+      <Form>
+        <Form.Input label='Name' placeholder="Name" readOnly />
+        <Form.Input
+          label='National Id' placeholder='National Id'
+        />
+        <Button fluid color='green'>
+        Verify
+        </Button>
+      </Form>
+    </Segment>
+  </Grid.Column>
+}
 
 class NewGroup extends React.Component {
     constructor() {
@@ -117,30 +134,13 @@ class NewGroup extends React.Component {
 
     render() {
         return (
-            <Segment>
-                {this.state.loading && <Dimmer inverted active>
-                    <Loader />
-                </Dimmer>}
-
-                <Grid columns={2}>
-
-                    <Grid.Column width={8}>
-                        <Header>Personal Information</Header>
-                        <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
-                        <Form>
-                            <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
-                            <Form.Input label='National Id' placeholder={this.state.nationalId || 'National Id'}
-                                value={this.state.isVerified ? "" : this.state.nationalId || ""}
-                                onChange={this.onNationalIdChange}
-                                readOnly={this.state.isVerified} />
-                            {!this.state.isVerified &&
-                                <Button disabled={!this.state.loggedWithUport} className="big" color='green'
-                                    onClick={this.attestUser}>Verify</Button>
-                            }
-                        </Form>
-                    </Grid.Column>
-                </Grid>
-            </Segment>
+          <div className="NewGroupSection">
+            <Grid columns={15}>
+              <GroupMember/>
+              <GroupMember/>
+              <GroupMember/>
+            </Grid>
+          </div>
         )
     }
 }

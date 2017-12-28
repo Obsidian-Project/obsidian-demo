@@ -9,9 +9,9 @@ class Companies extends React.Component {
 
     render(){
         return (
-        <CompaniesLayout>
+        <CompaniesLayout title={this.props.title}>
             {this.props.children}
-            <h1>Hello</h1>
+            {/* <h1>Hello</h1> */}
         </CompaniesLayout>
         )
     }

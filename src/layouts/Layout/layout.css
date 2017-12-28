@@ -2,10 +2,18 @@
     height: 75vh;
 } */
 
-.main-content{
+html body{
   background-color: #e9ebee;
 }
 
 .inner-content{
   margin-top: 2em !important;
+}
+
+.NavBar .menu{
+  border-radius: 0 !important;
+}
+
+.ui.menu .dropdown.item .menu{
+  background-color: #434343 !important;
 }

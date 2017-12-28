@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from '../Layout';
-import CompanyLogo from './john-deere-logo.png';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import './companieslayout.css';
@@ -15,8 +14,8 @@ class CompaniesLayout extends React.Component {
             <Layout
               pageTitle="Companies"
               pageIcon = "briefcase"
-              logo={CompanyLogo}
-              baseUrl="companies">
+              baseUrl="companies"
+              color="green">
                 {this.props.children}
             </Layout>
         )

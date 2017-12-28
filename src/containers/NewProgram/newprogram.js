@@ -73,72 +73,70 @@ class NewProgram extends React.Component {
     render() {
         return (
           <span>
-                {this.state.loading && <Dimmer inverted active>
-                    <Loader />
-                </Dimmer>}
+            {this.state.loading && <Dimmer inverted active>
+              <Loader />
+            </Dimmer>}
 
-                <Grid>
+            <Grid>
+              <Grid.Column width={6}>
+                <Segment>
+                  <Header as ="h2">Program Information</Header>
+                  <Form>
+                    <Form.Input label='Name' placeholder="Name of the program" />
+                    <Form.TextArea label='Description' placeholder="Description about the program" />
+                    <Form.Input label='Units' placeholder="How many units?" />
+                    <Form.Input label='Percentage to subsidy per member' placeholder="The amount to subsidy" />
 
-                    <Grid.Column width={6}>
-                      <Segment>
-                        <Header as ="h2">Program Information</Header>
-                        <Form>
-                            <Form.Input label='Name' placeholder="Name of the program" />
-                            <Form.TextArea label='Description' placeholder="Description about the program" />
-                            <Form.Input label='Units' placeholder="How many units?" />
-                            <Form.Input label='Percentage to subsidy per member' placeholder="The amount to subsidy" />
+                    <Modal
+                      trigger={<Button className="big" color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
+                      open={this.props.modalOpen}
+                      onClose={this.handleClose}>
+                      <Modal.Header>Select an Equipment</Modal.Header>
+                      <Modal.Content>
+                        <Modal.Description>
+                          <Equipments />
+                            </Modal.Description>
+                      </Modal.Content>
+                    </Modal>
+                  </Form>
+                </Segment>
+              </Grid.Column>
 
-                            <Modal
-                                trigger={<Button className="big" color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
-                                open={this.props.modalOpen}
-                                onClose={this.handleClose}>
-                                <Modal.Header>Select an Equipment</Modal.Header>
-                                <Modal.Content>
-                                    <Modal.Description>
-                                        <Equipments />
-                                    </Modal.Description>
-                                </Modal.Content>
-                            </Modal>
+              <Grid.Column width={10}>
+                {this.props.selectedEquipment &&
+                <Segment>
+                  <Header as ="h2">Equipment Selection</Header>
+                  <Image src={this.props.selectedEquipment.imageUrl} />
+                  <Header as='h1'>{this.props.selectedEquipment.title}</Header>
+                  <Grid>
+                    <Grid.Column width={8}>
+                      <Header as="h3">Details</Header>
+                        <List as="ol">
+                          {this.props.selectedEquipment.details.map && this.props.selectedEquipment.details.map((item, index) => {
+                            return <List.Item key={index} as='li' value='-'>{item}</List.Item>
+                            })}
+                        </List>
+                      </Grid.Column>
 
-                        </Form>
-                        </Segment>
-                    </Grid.Column>
+                      <Grid.Column width={8}>
+                        <Header as='h3'>Recommendations</Header>
+                        <p> Recommended for groups of 4</p>
+                        <Header as='h3'>Expected land coverage</Header>
+                        <p> ~ 3000 hectares of land </p>
+                      </Grid.Column>
+                    </Grid>
 
-                    <Grid.Column width={10}>
-
-                        {this.props.selectedEquipment &&
-                        <Segment>
-                          <Header as ="h2">Equipment Selection</Header>
-                            <Image src={this.props.selectedEquipment.imageUrl} />
-                            <Header as='h1'>{this.props.selectedEquipment.title}</Header>
-                            <Grid>
-
-                              <Grid.Column width={8}>
-
-                                <Header as="h3">Details</Header>
-                                  <List as="ol">
-                                      {this.props.selectedEquipment.details.map && this.props.selectedEquipment.details.map((item, index) => {
-                                          return <List.Item key={index} as='li' value='-'>{item}</List.Item>
-                                      })}
-                                  </List>
-                                </Grid.Column>
-
-                                <Grid.Column width={8}>
-                              <Header as='h3'>Recommendations</Header>
-                                <p> Recommended for groups of 4</p>
-                              <Header as='h3'>Expected land coverage</Header>
-                                <p> ~ 3000 hectares of land </p>
-                              </Grid.Column>
-                            </Grid>
-
-
-                          <Button fluid className="big" color='green'
-                              onClick={this.createProgram}>Create Program</Button>
-
-                      </Segment>
-                        }
-                    </Grid.Column>
-                </Grid>
+                  <Button
+                    fluid
+                    className="NewProgramBtn"
+                    color='green'
+                    onClick={this.createProgram}>
+                    Create Program
+                  </Button>
+                </Segment>
+                }
+              </Grid.Column>
+            </Grid>
           </span>
         )
     }

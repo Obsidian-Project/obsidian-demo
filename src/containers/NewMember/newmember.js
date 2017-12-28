@@ -250,58 +250,62 @@ class NewMember extends React.Component {
         const position = [this.state.lat, this.state.lng];
         return (
           <div className="NewMemberSection">
-                {this.state.loading && <Dimmer inverted active>
-                    <Loader />
-                </Dimmer>}
+              {this.state.loading && <Dimmer inverted active>
+                <Loader />
+              </Dimmer>}
 
-                <Grid columns={16}>
-                    <Grid.Column width={8}>
-                      <Segment>
-                        <Header as="h2">Personal Information</Header>
-                        <Image centered src={this.state.imageUrl || 'http://via.placeholder.com/300x300'} size='medium' circular />
-                        <Form>
-                            <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
-                            <Form.Input label='National Id' placeholder={this.state.nationalId || 'National Id'}
-                                value={this.state.isVerified ? "" : this.state.nationalId || ""}
-                                onChange={this.onNationalIdChange}
-                                readOnly={this.state.isVerified} />
-                            {!this.state.isVerified &&
-                                <Button fluid disabled={!this.state.loggedWithUport} className="big" color='green'
-                                    onClick={this.attestUser}>Verify</Button>
-                            }
-                        </Form>
-                        </Segment>
-                      </Grid.Column>
+              <Grid columns={16}>
+                <Grid.Column width={8}>
+                  <Segment>
+                    <Header as="h2">Personal Information</Header>
+                    <Image centered src={this.state.imageUrl || 'http://www.rmddesign.com/wp-content/uploads/avatar-1.png'} size='medium' circular />
+                    <Form>
+                      <Form.Input label='Name' placeholder={this.state.name || "Name"} readOnly />
+                      <Form.Input
+                        label='National Id' placeholder={this.state.nationalId || 'National Id'}
+                        value={this.state.isVerified ? "" : this.state.nationalId || ""}
+                        onChange={this.onNationalIdChange}
+                        readOnly={this.state.isVerified}
+                      />
+                        {!this.state.isVerified &&
+                          <Button fluid disabled={!this.state.loggedWithUport} className="big" color='green'
+                          onClick={this.attestUser}>
+                          Verify
+                          </Button>
+                        }
+                      </Form>
+                    </Segment>
+                  </Grid.Column>
 
 
-                    {this.state.isVerified &&
-                        <Grid.Column width={8}>
-                          <Segment>
-                            <Header as="h2">Land Information</Header>
-                            <Form>
-                                <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
-                                <Form.Field>
-                                    <label>Location</label>
-                                </Form.Field>
-                            </Form>
-                            <div className="map-area">
-                                <GoogleMapReact
-                                    defaultCenter={this.props.center}
-                                    defaultZoom={this.props.zoom}
-                                    bootstrapURLKeys={{
-                                        key: GOOGLE_API_KEY,
-                                        language: 'en'
-                                    }}
-                                    onClick={this.onMapClick}>
-                                    <MyGreatPlace lat={this.state.latitude} lng={this.state.longitude} text={'A'} />
-                                </GoogleMapReact>
-                            </div>
-                            <Button fluid color='green'
-                                onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
-                          </Segment>
-                        </Grid.Column>
+                {this.state.isVerified &&
+                  <Grid.Column width={8}>
+                    <Segment>
+                      <Header as="h2">Land Information</Header>
+                      <Form>
+                        <Form.Input label='Size' onChange={this.onSizeOfLandChange} value={this.state.sizeOfLand || ""} control={CustomInput}></Form.Input>
+                        <Form.Field>
+                            <label>Location</label>
+                        </Form.Field>
+                      </Form>
+                      <div className="map-area">
+                        <GoogleMapReact
+                            defaultCenter={this.props.center}
+                            defaultZoom={this.props.zoom}
+                            bootstrapURLKeys={{
+                              key: GOOGLE_API_KEY,
+                              language: 'en'
+                              }}
+                            onClick={this.onMapClick}>
+                            <MyGreatPlace lat={this.state.latitude} lng={this.state.longitude} text={'A'} />
+                        </GoogleMapReact>
+                      </div>
+                      <Button fluid color='green'
+                        onClick={this.registerUser}>{this.state.userRegistered ? "Update" : "Register"}</Button>
+                    </Segment>
+                  </Grid.Column>
                     }
-                </Grid>
+            </Grid>
           </div>
         )
     }

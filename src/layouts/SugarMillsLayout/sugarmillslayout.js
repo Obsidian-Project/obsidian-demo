@@ -22,6 +22,7 @@ class SugarMillsLayout extends React.Component {
             <Layout
               pageTitle="Sugar Mills"
               pageIcon = "factory"
+              color="violet"
               baseUrl="sugarmills">
                 {this.props.children}
             </Layout>
