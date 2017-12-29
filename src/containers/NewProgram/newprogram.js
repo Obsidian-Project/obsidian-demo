@@ -4,10 +4,10 @@ import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
 import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
-import { web3 } from '../../utils/connector.js';
+import { web3, uport } from '../../utils/connector.js';
 import Equipments from '../Equipments';
 import './newprogram.css';
-import { Field, reduxForm } from 'redux-form';
+const MNID = require('mnid');
 
 const waitForMined = (txHash, response, pendingCB, successCB) => {
     if (response.blockNumber) {
@@ -62,7 +62,8 @@ class NewProgram extends React.Component {
             name: "",
             description: "",
             units: "",
-            subsidyAmount: ""
+            subsidyAmount: "",
+            fromAdress: ""
         }
     }
 
@@ -88,7 +89,7 @@ class NewProgram extends React.Component {
             description: this.state.description,
             selectedEquipment: this.props.selectEquipment
         }
-        this.props.createProgram(valuesToSend, () => {
+        this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
             history.push("/governments");
         });
     }
@@ -107,8 +108,23 @@ class NewProgram extends React.Component {
     onSubsidyAmountChange = (event) => {
         this.setState({ subsidyAmount: event.target.value });
     }
+
+    requestCredentials = () => {
+        uport.requestCredentials({
+            requested: ['name', 'phone', 'country', 'avatar'],
+            verified: ["NationalIdVerified"],
+            notifications: true
+        })
+        .then((credentials) => {
+            let addressPayload = MNID.decode(credentials.address);
+            let userAddress = addressPayload.address;
+            this.setState({
+                fromAdress: userAddress
+            });
+        });
+    }
     componentWillMount(){
-        this.props.getEquipment(1);
+        this.requestCredentials();
     }
     render() {
         return (

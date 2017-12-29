@@ -7,6 +7,7 @@ import {
     SHOW_MODAL
 } from './types';
 import { web3 } from '../utils/connector.js';
+import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
 
 let ROOT_URL = "http://localhost:3000";
 
@@ -14,7 +15,7 @@ if(process.env.NODE_ENV == "production"){
     ROOT_URL = "http://testcoandcoapi.azurewebsites.net";
 }
 
-
+const ObsidianContract = CreateObsidianContractObj(web3);
 const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
 const PROGRAM_URL = `${ROOT_URL}/program`;
 const NOTIFY_URL = `${ROOT_URL}/notify`;
@@ -91,28 +92,33 @@ export function closeModal() {
     }
 }
 
-export function notifyClient(messagePayload){
-    return (dispatch) => {
-        axios.post(NOTIFY_URL, messagePayload)
-        .then(response => {
-            console.log("finished");
-         })
-         .catch((error) => {
-             //TODO: error handling, testing deployment
-         });
-    }
-}
+// export function notifyClient(messagePayload){
+//     return (dispatch) => {
+//         axios.post(NOTIFY_URL, messagePayload)
+//         .then(response => {
+//             console.log("finished");
+//          })
+//          .catch((error) => {
+//              //TODO: error handling, testing deployment
+//          });
+//     }
+// }
 
-export function createProgram(values, redirect) {
+export function createProgram(values, fromAddress, redirect) {
     return (dispatch) => {
         axios.post(PROGRAM_URL, values)
         .then(response => {
            //debugger;
-           let ipfsHash = response.data;
-           //dispatch(createProgramOnChain(ipfsHash));
+           let ipfsHash = response.data;          
+           createProgramOnChain(ipfsHash, fromAddress)
+            .then((response) => {
+                    //get address from uport
+                    debugger;
+            }).catch((error) => {
+
+            });
            //SEND to Ethereum
-           dispatch(notifyClient({ alert: "message"}));
-           //CALL API Notify, pass programid? //o solo el hash? si paso solo el hash, el mobile debe de obtener el hash con el program id y llamar a la API con ese valor, maybe just pass the hash for testing
+           
            //show notification message
            //notifyClient("message payload");//todo
            //var x = response.data;
@@ -127,17 +133,33 @@ export function createProgram(values, redirect) {
     }
 }
 
-const createProgramOnChain = (ipfsHash) => {
-    //send to Ethereum
+const createProgramOnChain = (ipfsHash, fromAddress) => {   
+    return new Promise((resolve, reject) =>{
+        ObsidianContract.addProgram(ipfsHash, {
+            gas: 2000000,
+            from: fromAddress
+        }, (error, txHash) => {
+            if (error) { throw error }
+            waitForMined(txHash, { blockNumber: null },
+                function pendingCB() {
+                    // Signal to the user you're still waiting
+                    // for a block confirmation
+                },
+                function successCB(data) {
+                    resolve(data);
+                }
+            )
+        })
+    })    
 }
 
-const waitForMined = (txHash, response, pendingCB, successCB) => {
-    if (response.blockNumber) {
-        successCB()
-    } else {
-        pendingCB()
-        pollingLoop(txHash, response, pendingCB, successCB)
-    }
+const waitForMined = (txHash, response, pendingCB, successCB) => {              
+        if (response.blockNumber) {
+            successCB();           
+        } else {
+            pendingCB()
+            pollingLoop(txHash, response, pendingCB, successCB)
+        }
 }
 
 const pollingLoop = (txHash, response, pendingCB, successCB) => {
