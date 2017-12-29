@@ -54,17 +54,20 @@ class NewProgram extends React.Component {
     }
 
     createProgram = (values) => {       
+        debugger;
        const { history } = this.props;
+       let selectedEquipment = this.props.selectedEquipment;
+       console.log(selectedEquipment);
         let valuesToSend = {
             name: this.state.name,
             units: this.state.units,
             subsidyAmount: this.state.subsidyAmount,
             description: this.state.description,
-            selectedEquipment: this.props.selectEquipment
+            selectedEquipment: selectedEquipment
         }
-        this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
-            history.push("/governments");
-        });
+        // this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
+        //     history.push("/governments");
+        // });
     }
 
     onNameChange = (event) => {
@@ -97,7 +100,7 @@ class NewProgram extends React.Component {
         });
     }
     componentWillMount(){
-       // this.requestCredentials();
+       //this.requestCredentials();
     }
     render() {
         return (

@@ -25,7 +25,7 @@ export default function (state = initialState, action) {
         case EQUIPMENTS_RECEIVED:
             return { ...state, ...{ equipments: action.data } };       
         case EQUIPMENT_RECEIVED:         
-            return { ...state, ...{ selectedEquipment: action.data } };  
+            return { ...state, ...{ equipment: action.data } };  
         case SHOW_MODAL:
             return { ...state, ...{ modalOpen: action.data } };  
         default:
