@@ -1,12 +1,51 @@
 export const OBSIDIAN_CONTRACT_ABI = [
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"name": "element",
+				"type": "uint256"
+			}
+		],
+		"name": "getGroupInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"name": "members",
+						"type": "address[]"
+					}
+				],
+				"name": "groupInformation",
+				"type": "tuple"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
 			{
 				"name": "",
 				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "numberOfPrograms",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -29,8 +68,36 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "numberOfGroups",
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "programInfo",
+		"outputs": [
+			{
+				"name": "delivered",
+				"type": "bool"
+			},
+			{
+				"name": "ipfsHash",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "balances",
 		"outputs": [
 			{
 				"name": "",
@@ -46,22 +113,14 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"inputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
-		"name": "membersInfo",
+		"name": "programs",
 		"outputs": [
 			{
-				"name": "latitude",
-				"type": "string"
-			},
-			{
-				"name": "longitude",
-				"type": "string"
-			},
-			{
-				"name": "sizeOfLand",
-				"type": "uint256"
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -91,21 +150,23 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"constant": true,
 		"inputs": [
 			{
-				"name": "element",
-				"type": "uint256"
+				"name": "",
+				"type": "address"
 			}
 		],
-		"name": "getGroupInfo",
+		"name": "memberInfo",
 		"outputs": [
 			{
-				"components": [
-					{
-						"name": "members",
-						"type": "address[]"
-					}
-				],
-				"name": "groupInformation",
-				"type": "tuple"
+				"name": "latitude",
+				"type": "string"
+			},
+			{
+				"name": "longitude",
+				"type": "string"
+			},
+			{
+				"name": "sizeOfLand",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -114,13 +175,8 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "balances",
+		"inputs": [],
+		"name": "numberOfGroups",
 		"outputs": [
 			{
 				"name": "",
@@ -130,6 +186,23 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "memberAdress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "isRegistered",
+				"type": "bool"
+			}
+		],
+		"name": "newMemberAdded",
+		"type": "event"
 	},
 	{
 		"constant": false,
@@ -182,6 +255,42 @@ export const OBSIDIAN_CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "ipfsHash",
+				"type": "string"
+			}
+		],
+		"name": "addProgram",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "programId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "ipfsHash",
+				"type": "string"
+			}
+		],
+		"name": "newProgramAdded",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -189,7 +298,7 @@ export const OBSIDIAN_CONTRACT_ABI = [
 	}
 ];
 
-export const OBSIDIAN_CONTRACT_ADDRESS = "0x19c216cb0e37b157e8531c2c4f402b2f4aa5de2b";
+export const OBSIDIAN_CONTRACT_ADDRESS = "0x3ae6f17ba7c810707e003f7eb2fd389da57f8dd5";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(OBSIDIAN_CONTRACT_ABI);

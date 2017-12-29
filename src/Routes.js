@@ -8,17 +8,20 @@ import SugarMills from './containers/SugarMills';
 import NewGroup from './containers/NewGroup';
 import NewProgram from './containers/NewProgram';
 import NewMember from './containers/NewMember';
+import EquipmentDetails from './containers/EquipmentDetails';
 
+
+import GovernmentDashboard from './components/GovernmentDashboard'
 //test
 import Equipments from './containers/Equipments';
 
 const GovernmentsRoutes = () => (
     <Switch>
-        <Route exact path="/governments" component={Governments} />
         <Governments>
+            <Route path="/governments" component={GovernmentDashboard} />
             <Route path="/governments/newProgram" component={NewProgram} />
             <Route path="/governments/newMember" component={NewMember} />
-            <Route path="/governments/newGroup" component={NewGroup} />  
+            <Route path="/governments/newGroup" component={NewGroup} />
         </Governments>
     </Switch>
 )
@@ -28,6 +31,7 @@ const CompaniesRoutes = () => (
         <Route exact path="/companies" component={Companies} />
         <Companies>
             <Route path="/companies/newProgram" component={NewProgram} />
+            <Route path="/companies/equipmentdetails" component={EquipmentDetails} />
         </Companies>
     </Switch>
 )
