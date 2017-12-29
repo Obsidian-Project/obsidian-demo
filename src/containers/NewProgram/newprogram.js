@@ -7,6 +7,7 @@ import { connect, } from 'react-redux';
 import { web3 } from '../../utils/connector.js';
 import Equipments from '../Equipments';
 import './newprogram.css';
+import { Field, reduxForm } from 'redux-form';
 
 const waitForMined = (txHash, response, pendingCB, successCB) => {
     if (response.blockNumber) {
@@ -29,8 +30,11 @@ const pollingLoop = (txHash, response, pendingCB, successCB) => {
     }, 1000);
 }
 
-const addProgram = (membersAddress, callback) => {
+const addProgram = (membersAddress, callback) => {    
     //NEED TO MAP
+    //get values
+    //call action axios
+    //
     // ObsidianContract.addMember(membersAddress, {
     //     gas: 2000000,
     //     from: membersAddress[0]//quien la envia? Podria ser el login de uPort o un default address que yo puedo stipular
@@ -55,7 +59,10 @@ class NewProgram extends React.Component {
     constructor() {
         super();
         this.state = {
-            loading: false
+            name: "",
+            description: "",
+            units: "",
+            subsidyAmount: ""
         }
     }
 
@@ -70,22 +77,54 @@ class NewProgram extends React.Component {
     selectEquipment = () => {
         this.props.openModal();
     }
+
+    createProgram = (values) => {
+       //console.log(this.props.selectedEquipment);
+       const { history } = this.props;
+        let valuesToSend = {
+            name: this.state.name,
+            units: this.state.units,
+            subsidyAmount: this.state.subsidyAmount,
+            description: this.state.description,
+            selectedEquipment: this.props.selectEquipment
+        }
+        this.props.createProgram(valuesToSend, () => {
+            history.push("/governments");
+        });
+    }
+
+    onNameChange = (event) => {
+        this.setState({ name: event.target.value });
+    }
+
+    onDescriptionChange = (event) => {
+        this.setState({ description: event.target.value });
+    }
+    onUnitsChange = (event) => {
+        this.setState({ units: event.target.value });
+    }
+
+    onSubsidyAmountChange = (event) => {
+        this.setState({ subsidyAmount: event.target.value });
+    }
+    componentWillMount(){
+        this.props.getEquipment(1);
+    }
     render() {
         return (
           <span>
-            {this.state.loading && <Dimmer inverted active>
+            {this.props.showLoader && <Dimmer inverted active>
               <Loader />
             </Dimmer>}
-
             <Grid>
               <Grid.Column width={6}>
                 <Segment>
                   <Header as ="h2">Program Information</Header>
                   <Form>
-                    <Form.Input label='Name' placeholder="Name of the program" />
-                    <Form.TextArea label='Description' placeholder="Description about the program" />
-                    <Form.Input label='Units' placeholder="How many units?" />
-                    <Form.Input label='Percentage to subsidy per member' placeholder="The amount to subsidy" />
+                    <Form.Input label='Name' placeholder="Name of the program" onChange={this.onNameChange} value={this.state.name} />
+                    <Form.TextArea label='Description' placeholder="Description about the program" onChange={this.onDescriptionChange} value={this.state.description} />
+                    <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
+                    <Form.Input label='Amount to subsidy per member' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
 
                     <Modal
                       trigger={<Button className="big" color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
@@ -118,9 +157,7 @@ class NewProgram extends React.Component {
                         </List>
                       </Grid.Column>
 
-                      <Grid.Column width={8}>
-                        <Header as='h3'>Recommendations</Header>
-                        <p> Recommended for groups of 4</p>
+                      <Grid.Column width={8}>                       
                         <Header as='h3'>Expected land coverage</Header>
                         <p> ~ 3000 hectares of land </p>
                       </Grid.Column>
@@ -145,8 +182,12 @@ class NewProgram extends React.Component {
 function mapStateProps(state) {
     return {
         selectedEquipment: state.equipmentsReducer.selectedEquipment,
-        modalOpen: state.equipmentsReducer.modalOpen
+        modalOpen: state.equipmentsReducer.modalOpen,
+        showLoader: state.equipmentsReducer.showLoader,
+        equipment: state.equipmentsReducer.equipment
     }
 }
+
+NewProgram = withRouter(NewProgram);
 
 export default connect(mapStateProps, actions)(NewProgram);

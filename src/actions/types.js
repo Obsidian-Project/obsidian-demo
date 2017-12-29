@@ -7,3 +7,5 @@ export const EQUIPMENTS_RECEIVED = "Equipments_Received";
 export const SELECTED_EQUIPMENT = "Selected_Equipment";
 
 export const SHOW_MODAL = "Show_Modal";
+
+export const SHOW_LOADER = "Show_Loader";

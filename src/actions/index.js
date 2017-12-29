@@ -6,8 +6,18 @@ import {
     EQUIPMENTS_RECEIVED,
     SHOW_MODAL
 } from './types';
+import { web3 } from '../utils/connector.js';
 
-const TRACTORS_URL = "http://localhost:3000/equipments/tractors";
+let ROOT_URL = "http://localhost:3000";
+
+if(process.env.NODE_ENV == "production"){
+    ROOT_URL = "http://testcoandcoapi.azurewebsites.net";
+}
+
+
+const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
+const PROGRAM_URL = `${ROOT_URL}/program`;
+const NOTIFY_URL = `${ROOT_URL}/notify`;
 
 export function displayNotification(message) {
     return (dispatch) => {
@@ -23,7 +33,7 @@ export function displayNotification(message) {
 
 export function getEquipment(id) {
     return (dispatch) => {
-        debugger;
+       // debugger;
         axios.get(`${TRACTORS_URL}/${id}`)
             .then(response => {
                 //return 404 in case is not found please ! 
@@ -79,4 +89,65 @@ export function closeModal() {
             data: false
         })
     }
+}
+
+export function notifyClient(messagePayload){
+    return (dispatch) => {
+        axios.post(NOTIFY_URL, messagePayload)
+        .then(response => {
+            console.log("finished");
+         })
+         .catch((error) => {
+             //TODO: error handling, testing deployment
+         });
+    }
+}
+
+export function createProgram(values, redirect) {
+    return (dispatch) => {
+        axios.post(PROGRAM_URL, values)
+        .then(response => {
+           //debugger;
+           let ipfsHash = response.data;
+           //dispatch(createProgramOnChain(ipfsHash));
+           //SEND to Ethereum
+           dispatch(notifyClient({ alert: "message"}));
+           //CALL API Notify, pass programid? //o solo el hash? si paso solo el hash, el mobile debe de obtener el hash con el program id y llamar a la API con ese valor, maybe just pass the hash for testing
+           //show notification message
+           //notifyClient("message payload");//todo
+           //var x = response.data;
+           //dispatch(displayNotification("Program created")); 
+        //    setTimeout(() => {                
+        //         redirect();
+        //    }, 3000);
+        })
+        .catch((error) => {
+            //TODO: error handling, testing deployment
+        });
+    }
+}
+
+const createProgramOnChain = (ipfsHash) => {
+    //send to Ethereum
+}
+
+const waitForMined = (txHash, response, pendingCB, successCB) => {
+    if (response.blockNumber) {
+        successCB()
+    } else {
+        pendingCB()
+        pollingLoop(txHash, response, pendingCB, successCB)
+    }
+}
+
+const pollingLoop = (txHash, response, pendingCB, successCB) => {
+    setTimeout(function () {
+        web3.eth.getTransaction(txHash, (error, response) => {
+            if (error) { throw error }
+            if (response === null) {
+                response = { blockNumber: null }
+            }
+            waitForMined(txHash, response, pendingCB, successCB)
+        })
+    }, 1000);
 }
