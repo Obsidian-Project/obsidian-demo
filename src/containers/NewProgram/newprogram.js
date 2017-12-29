@@ -54,10 +54,8 @@ class NewProgram extends React.Component {
     }
 
     createProgram = (values) => {       
-        debugger;
        const { history } = this.props;
-       let selectedEquipment = this.props.selectedEquipment;
-       console.log(selectedEquipment);
+       let selectedEquipment = this.props.selectedEquipment;      
         let valuesToSend = {
             name: this.state.name,
             units: this.state.units,
@@ -65,9 +63,9 @@ class NewProgram extends React.Component {
             description: this.state.description,
             selectedEquipment: selectedEquipment
         }
-        // this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
-        //     history.push("/governments");
-        // });
+        this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
+            history.push("/governments");
+        });
     }
 
     onNameChange = (event) => {
