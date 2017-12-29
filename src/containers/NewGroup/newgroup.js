@@ -135,6 +135,7 @@ class NewGroup extends React.Component {
     render() {
         return (
           <div className="NewGroupSection">
+            <Header as="h1">New Group</Header>  
             <Grid columns={15}>
               <GroupMember/>
               <GroupMember/>

@@ -86,7 +86,8 @@ class Layout extends React.Component {
                             color={this.props.color}
                            />
                           <Container className="inner-content">
-                              {this.props.children}
+                            <Header as="h1">{this.props.title}</Header>
+                            {this.props.children}
                           </Container>
                       </Grid.Column>
                   </Grid.Row>

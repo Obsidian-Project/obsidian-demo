@@ -1,0 +1,7 @@
+.ui.statistic>.label{
+  text-transform:none !important;
+}
+
+.PieChart{
+  padding:  1em 3em;
+}

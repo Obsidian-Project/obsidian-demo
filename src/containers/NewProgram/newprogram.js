@@ -108,6 +108,7 @@ class NewProgram extends React.Component {
             </Dimmer>}
             <Grid>
               <Grid.Column width={6}>
+                <Header as="h1">New Program</Header>  
                 <Segment>
                   <Header as ="h2">Program Information</Header>
                   <Form>
