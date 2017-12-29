@@ -18,7 +18,7 @@ import Equipments from './containers/Equipments';
 const GovernmentsRoutes = () => (
     <Switch>
         <Governments>
-            <Route path="/governments" component={GovernmentDashboard} />
+            <Route exact path="/governments" component={GovernmentDashboard} />
             <Route path="/governments/newProgram" component={NewProgram} />
             <Route path="/governments/newMember" component={NewMember} />
             <Route path="/governments/newGroup" component={NewGroup} />

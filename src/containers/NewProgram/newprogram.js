@@ -30,31 +30,6 @@ const pollingLoop = (txHash, response, pendingCB, successCB) => {
     }, 1000);
 }
 
-const addProgram = (membersAddress, callback) => {    
-    //NEED TO MAP
-    //get values
-    //call action axios
-    //
-    // ObsidianContract.addMember(membersAddress, {
-    //     gas: 2000000,
-    //     from: membersAddress[0]//quien la envia? Podria ser el login de uPort o un default address que yo puedo stipular
-    // }, (error, txHash) => {
-    //     if (error) { throw error }
-    //     waitForMined(txHash, { blockNumber: null },
-    //         function pendingCB() {
-    //             // Signal to the user you're still waiting
-    //             // for a block confirmation
-    //         },
-    //         function successCB(data) {
-    //             callback();
-    //         }
-    //     )
-    // })
-}
-
-const EquipmentSelection = () => {
-    return <h1>Program Selection</h1>;
-}
 class NewProgram extends React.Component {
     constructor() {
         super();
@@ -67,7 +42,6 @@ class NewProgram extends React.Component {
         }
     }
 
-
     handleOpen = (e) => {
         this.props.openModal();
     }
@@ -79,8 +53,7 @@ class NewProgram extends React.Component {
         this.props.openModal();
     }
 
-    createProgram = (values) => {
-       //console.log(this.props.selectedEquipment);
+    createProgram = (values) => {       
        const { history } = this.props;
         let valuesToSend = {
             name: this.state.name,
@@ -124,7 +97,7 @@ class NewProgram extends React.Component {
         });
     }
     componentWillMount(){
-        this.requestCredentials();
+       // this.requestCredentials();
     }
     render() {
         return (

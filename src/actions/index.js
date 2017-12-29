@@ -4,15 +4,16 @@ import {
     SHOW_NOTIFICATION,
     EQUIPMENT_RECEIVED,
     EQUIPMENTS_RECEIVED,
-    SHOW_MODAL
+    SHOW_MODAL,
+    SHOW_LOADER
 } from './types';
 import { web3 } from '../utils/connector.js';
-import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
+import { CreateObsidianContractObj } from '../utils/smartcontract.js';
 
-let ROOT_URL = "http://localhost:3000";
+let ROOT_URL = "http://obsidian-api.azurewebsites.net";//"http://localhost:3000";
 
-if(process.env.NODE_ENV == "production"){
-    ROOT_URL = "http://testcoandcoapi.azurewebsites.net";
+if (process.env.NODE_ENV == "production") {
+    ROOT_URL = "http://obsidian-api.azurewebsites.net";
 }
 
 const ObsidianContract = CreateObsidianContractObj(web3);
@@ -34,7 +35,6 @@ export function displayNotification(message) {
 
 export function getEquipment(id) {
     return (dispatch) => {
-       // debugger;
         axios.get(`${TRACTORS_URL}/${id}`)
             .then(response => {
                 //return 404 in case is not found please ! 
@@ -68,7 +68,7 @@ export function getEquipments() {
 }
 
 export function equipmentSelected(id) {
-    return (dispatch) => {   
+    return (dispatch) => {
         dispatch(getEquipment(id));
         dispatch(closeModal());
     }
@@ -92,49 +92,39 @@ export function closeModal() {
     }
 }
 
-// export function notifyClient(messagePayload){
-//     return (dispatch) => {
-//         axios.post(NOTIFY_URL, messagePayload)
-//         .then(response => {
-//             console.log("finished");
-//          })
-//          .catch((error) => {
-//              //TODO: error handling, testing deployment
-//          });
-//     }
-// }
-
-export function createProgram(values, fromAddress, redirect) {
-    return (dispatch) => {
-        axios.post(PROGRAM_URL, values)
-        .then(response => {
-           //debugger;
-           let ipfsHash = response.data;          
-           createProgramOnChain(ipfsHash, fromAddress)
-            .then((response) => {
-                    //get address from uport
-                    debugger;
-            }).catch((error) => {
-
-            });
-           //SEND to Ethereum
-           
-           //show notification message
-           //notifyClient("message payload");//todo
-           //var x = response.data;
-           //dispatch(displayNotification("Program created")); 
-        //    setTimeout(() => {                
-        //         redirect();
-        //    }, 3000);
-        })
-        .catch((error) => {
-            //TODO: error handling, testing deployment
+export function createProgram(values, uportAddress, redirect) {
+    return (dispatch) => {      
+        dispatch({
+            type: SHOW_LOADER,
+            data: true
         });
+        let fromAddress = uportAddress || "0xd47ce1fc88c92633ca8801f6ae8d77afa8136a79";
+        axios.post(PROGRAM_URL, values)
+            .then(response => {
+                let ipfsHash = response.data;
+                createProgramOnChain(ipfsHash, fromAddress)
+                    .then((response) => {
+                        //show notification message   
+                        //dispatch(displayNotification("Program created")); 
+                        dispatch({
+                            type: SHOW_LOADER,
+                            data: false
+                        });
+                        setTimeout(() => {                
+                            redirect();
+                        }, 3000);                              
+                    }).catch((error) => {
+
+                    });
+            })
+            .catch((error) => {
+                //TODO: error handling, testing deployment
+            });
     }
 }
 
-const createProgramOnChain = (ipfsHash, fromAddress) => {   
-    return new Promise((resolve, reject) =>{
+const createProgramOnChain = (ipfsHash, fromAddress) => {
+    return new Promise((resolve, reject) => {
         ObsidianContract.addProgram(ipfsHash, {
             gas: 2000000,
             from: fromAddress
@@ -146,20 +136,20 @@ const createProgramOnChain = (ipfsHash, fromAddress) => {
                     // for a block confirmation
                 },
                 function successCB(data) {
-                    resolve(data);
+                    resolve();//don't need to pass nothing
                 }
             )
         })
-    })    
+    })
 }
 
-const waitForMined = (txHash, response, pendingCB, successCB) => {              
-        if (response.blockNumber) {
-            successCB();           
-        } else {
-            pendingCB()
-            pollingLoop(txHash, response, pendingCB, successCB)
-        }
+const waitForMined = (txHash, response, pendingCB, successCB) => {
+    if (response.blockNumber) {
+        successCB();
+    } else {
+        pendingCB()
+        pollingLoop(txHash, response, pendingCB, successCB)
+    }
 }
 
 const pollingLoop = (txHash, response, pendingCB, successCB) => {
