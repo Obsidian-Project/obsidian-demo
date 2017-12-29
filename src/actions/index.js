@@ -98,6 +98,7 @@ export function createProgram(values, uportAddress, redirect) {
             type: SHOW_LOADER,
             data: true
         });
+        debugger;
         let fromAddress = uportAddress || "0xd47ce1fc88c92633ca8801f6ae8d77afa8136a79";
         axios.post(PROGRAM_URL, values)
             .then(response => {
