@@ -10,6 +10,7 @@ class Governments extends React.Component {
     }
 
     componentWillMount(){
+        debugger;
         this.props.getInformationForGovernmentDashboard();
     }
     render(){
@@ -23,10 +24,7 @@ class Governments extends React.Component {
 
 function mapStateProps(state) {
     return {
-        selectedEquipment: state.equipmentsReducer.selectedEquipment,
-        modalOpen: state.equipmentsReducer.modalOpen,
-        showLoader: state.equipmentsReducer.showLoader,
-        equipment: state.equipmentsReducer.equipment
+        dashboardInfo: state.dashboardReducer.dashboardInfo
     }
 }
 

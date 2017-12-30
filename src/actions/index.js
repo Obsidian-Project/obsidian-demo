@@ -167,13 +167,14 @@ export function getInformationForGovernmentDashboard() {
         let result;
         axios.get(DASHBOARD_INFORMATION_URL)
             .then(response => {
-                result = response;
+                result = response.data;
                 getMyBalance().then((balance) => {
                     result.balance = balance;
                     dispatch({
                         type: DASHBOARD_INFORMATION_RECEIVED,
                         data: result
                     });
+                    console.log(result);
                     dispatch({
                         type: SHOW_LOADER,
                         data: false
@@ -202,10 +203,9 @@ export function addListenerForNewTransfers() {//for governments
 }
 
 const getMyBalance = () => {
-    return new Promise((resolve, reject) => {
-        let contract = this.getSmartContractObject();
+    return new Promise((resolve, reject) => {       
         let address = DEMO_ADDRESS;
-        contract.balances(address, (error, result) => {
+        ObsidianContract.balances(address, (error, result) => {
             resolve(result.toNumber());
         })
     });

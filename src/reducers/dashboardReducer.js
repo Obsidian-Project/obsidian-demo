@@ -5,7 +5,11 @@ import {
 
 
 const initialState = {
-    dashboardInfo: [],  
+    dashboardInfo: {
+        numberOfPrograms: 0,
+        subsidiesDeliverd: 0,
+        units: 0
+    },  
     showLoader: false
 };
 
