@@ -1,37 +1,10 @@
 import React from 'react';
 import styles from './governmentdashboard.css';
 import { Link } from 'react-router-dom';
-import { Header,Button, Grid, Segment, Statistic } from 'semantic-ui-react';
-import { LineChart, Line , ResponsiveContainer, CartesianGrid, BarChart, XAxis, YAxis, Tooltip, Legend, Bar,PieChart, Pie} from 'recharts';
-import GoogleMapReact from 'google-map-react';
+import { Header,Button, Grid, Segment, Statistic, List , Table} from 'semantic-ui-react';
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
+import PieChart from 'react-minimal-pie-chart';
 import Governments from '../../containers/Governments'
-
-const MNID = require('mnid');
-const K_WIDTH = 20;
-const K_HEIGHT = 20;
-const GOOGLE_API_KEY = "AIzaSyC--qp92_TXVu0XFzGe9yS67km_ZpV8yBM";
-
-const MyGreatPlace = ({ text }) => (
-    <div style={greatPlaceStyle}>
-    </div>
-)
-
-const greatPlaceStyle = {
-    position: 'absolute',
-    width: K_WIDTH,
-    height: K_HEIGHT,
-    left: -K_WIDTH / 2,
-    top: -K_HEIGHT / 2,
-
-    border: '0 solid #f44336',
-    borderRadius: K_HEIGHT,
-    backgroundColor: '#21ba45',
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
-    padding: 4
-};
 
 const data = [
       {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
@@ -43,15 +16,8 @@ const data = [
       {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
 ];
 
-const data01 = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-                  {name: 'Group C', value: 300}, {name: 'Group D', value: 200},
-                  {name: 'Group E', value: 278}, {name: 'Group F', value: 189}]
-
 class GovernmentDashboard extends React.Component {
-  static defaultProps = {
-      center: { lat: 18.248916, lng: -96.133804 },
-      zoom: 11
-  };
+
     constructor() {
         super();
     }
@@ -59,100 +25,152 @@ class GovernmentDashboard extends React.Component {
     render() {
         return(
             <span>
-                <Grid width={15}>
+                <Grid columns={3}>
                   <Grid.Row>
                     <Header as="h1">Dashboard</Header>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column width={10}>
+                    <Grid.Column >
                       <Segment>
-                        <ResponsiveContainer width="100%" height={300}>
-                          <LineChart data={data}>
-                            <Line type="monotone" dataKey="uv" stroke="#00b5ad" />
-                            <XAxis dataKey="name"/>
-                            <YAxis/>
-                            <CartesianGrid strokeDasharray="3 3"/>
-                            <Tooltip/>
-                            <Legend />
+                        <Header as="h3">Summary</Header>
+                        <Grid width={15}>
+                          <Grid.Column textAlign = "center" width={5}>
+                            <h5 className="dashHeader">Programs</h5>
+                            <p>120</p>
+                          </Grid.Column>
+
+                          <Grid.Column textAlign = "center" width={5}>
+                            <h5 className="dashHeader">Beneficiaries</h5>
+                            <p>120</p>
+                          </Grid.Column>
+
+                          <Grid.Column textAlign = "center" width={5}>
+                            <h5 className="dashHeader">Subsidies</h5>
+                            <p>120</p>
+                          </Grid.Column>
+                        </Grid>
+                      </Segment>
+
+                      <Segment>
+                        <Header as="h3">Distributions of units per type</Header>
+                        <div className="chart">
+                          <List horizontal size="mini">
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header className="one">Agricultural precision </List.Header>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header className="two">Harvesters</List.Header>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header className="three">Tractors</List.Header>
+                                </List.Content>
+                            </List.Item>
+                        </List>
+                        </div>
+
+                          <PieChart
+                            lineWidth={30}
+                            className="PieChart"
+                            data={[
+                              { value: 10, key: 1, color: '#00b5ad' },
+                              { value: 15, key: 2, color: '#7fdad6' },
+                              { value: 20, key: 3, color: '#00908a' },
+                              ]}
+                          />
+                      </Segment>
+                    </Grid.Column>
+
+                    <Grid.Column >
+                      <Segment>
+                        <Header as="h3">Balance</Header>
+                        <Grid width={16}>
+                          <Grid.Column textAlign = "center" width={8}>
+                            <h5 className="dashHeader">Total Spent</h5>
+                            <p>120</p>
+                          </Grid.Column>
+
+                          <Grid.Column textAlign = "center" width={8}>
+                            <h5 className="dashHeader">This Month</h5>
+                            <p>120</p>
+                          </Grid.Column>
+                        </Grid>
+                      </Segment>
+
+                      <Segment>
+                        <Header as="h3">Total Land Coverage</Header>
+                        <div className="chart">
+                          <List horizontal size="mini">
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header className="one">Mechanized</List.Header>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header className="two">Not Mechanized</List.Header>
+                                </List.Content>
+                            </List.Item>
+                        </List>
+                        </div>
+
+                          <PieChart
+                            // lineWidth={30}
+                            className="PieChart"
+                            data={[
+                              { value: 10, key: 1, color: '#00b5ad' },
+                              { value: 15, key: 2, color: '#7fdad6' },
+                              ]}
+                          />
+                      </Segment>
+                    </Grid.Column>
+
+                    <Grid.Column >
+                      <Segment className="tableContainer">
+                        <Header as="h3">Programs</Header>
+                        <Table className="table" textAlign="center" size="small">
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Program Name</Table.HeaderCell>
+                                    <Table.HeaderCell>Type</Table.HeaderCell>
+                                    <Table.HeaderCell>Total Spent</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                              <Table.Row>
+                                  <Table.Cell>1</Table.Cell>
+                                  <Table.Cell>2</Table.Cell>
+                                  <Table.Cell>3</Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+                      </Segment>
+                    </Grid.Column>
+                  </Grid.Row>
+
+                  <Grid.Row>
+                    <Grid.Column width={16}>
+                      <Segment>
+                        <Header as="h3">Loans Made</Header>
+                        <ResponsiveContainer width = "100%" height={300}>
+                          <LineChart data={data}
+                                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                           <XAxis dataKey="name"/>
+                           <YAxis/>
+                           <CartesianGrid strokeDasharray="3 3"/>
+                           <Tooltip/>
+                           <Legend />
+                           <Line type="monotone" dataKey="pv" stroke="#00b5ad" activeDot={{r: 8}}/>
                           </LineChart>
                         </ResponsiveContainer>
                       </Segment>
                     </Grid.Column>
-
-                    <Grid.Column width={5}>
-                      <Segment textAlign='center'>
-                        <Statistic>
-                          <Statistic.Value>4020</Statistic.Value>
-                          <Statistic.Label> Programs</Statistic.Label>
-                        </Statistic>
-                      </Segment>
-                      <Segment textAlign='center'>
-                        <Statistic>
-                          <Statistic.Value>4020</Statistic.Value>
-                          <Statistic.Label> Programs</Statistic.Label>
-                        </Statistic>
-                      </Segment>
-                      <Segment textAlign='center'>
-                        <Statistic>
-                          <Statistic.Value>4020</Statistic.Value>
-                          <Statistic.Label> Programs</Statistic.Label>
-                        </Statistic>
-                      </Segment>
-                    </Grid.Column>
                   </Grid.Row>
-                  <Grid.Row>
-
-                    <Grid.Column width={5}>
-                      <Segment>
-                        <Header textAlign= "center" as = "h4">Distribution per type</Header>
-                        <ResponsiveContainer width="100%" height={300}>
-                          <PieChart>
-                            <Pie isAnimationActive={false} data={data01} outerRadius={80} fill="#00b5ad" label/>
-                            <Tooltip/>
-                           </PieChart>
-                         </ResponsiveContainer>
-                      </Segment>
-                    </Grid.Column>
-
-                    <Grid.Column width={10}>
-                      <Segment>
-                        <Header textAlign= "center" as = "h4">Distribution per farmer type</Header>
-                        <ResponsiveContainer  width="100%" height={300}>
-                        <BarChart data={data}
-                              margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                         <XAxis dataKey="name"/>
-                         <YAxis/>
-                         <CartesianGrid strokeDasharray="3 3"/>
-                         <Tooltip/>
-                         <Legend/>
-                         <Bar dataKey="pv" fill="#00b5ad" />
-                         <Bar dataKey="uv" fill="#007e79" />
-                        </BarChart>
-                        </ResponsiveContainer>
-                      </Segment>
-                    </Grid.Column>
-                  </Grid.Row>
-
-                  <Grid.Row>
-                    <Grid.Column width={15}>
-                      <Segment>
-                        <Header as = "h4">Land Coverage</Header>
-                        <div className="map-area">
-                          <GoogleMapReact
-                              defaultCenter={this.props.center}
-                              defaultZoom={3}
-                              bootstrapURLKeys={{
-                                key: GOOGLE_API_KEY,
-                                language: 'en'
-                                }}
-                              onClick={this.onMapClick}>
-                              <MyGreatPlace lat="0" lng="0" text={'A'} />
-                          </GoogleMapReact>
-                        </div>
-                      </Segment>
-                    </Grid.Column>
-                  </Grid.Row>
-
                 </Grid>
             </span>
       )

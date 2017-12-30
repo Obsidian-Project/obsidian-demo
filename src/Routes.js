@@ -29,8 +29,8 @@ const GovernmentsRoutes = () => (
 
 const CompaniesRoutes = () => (
     <Switch>
-        <Route exact path="/companies" component={CompaniesDashboard} />
         <Companies>
+            <Route exact path="/companies" component={CompaniesDashboard} />
             <Route path="/companies/newProgram" component={NewProgram} />
             <Route path="/companies/equipmentdetails" component={EquipmentDetails} />
         </Companies>
