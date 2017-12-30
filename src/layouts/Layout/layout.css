@@ -22,3 +22,15 @@ html body{
   left:75% !important;
   top:0.65em !important;
 }
+
+.equipmentdetailsLink{
+  color:white;
+}
+
+.equipmentdetailsLink:hover{
+  color:white;
+}
+
+.equipmentdetailsLink:active{
+  color:white;
+}
