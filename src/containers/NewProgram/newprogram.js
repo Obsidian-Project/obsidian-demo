@@ -9,6 +9,14 @@ import Equipments from '../Equipments';
 import './newprogram.css';
 const MNID = require('mnid');
 
+Number.prototype.format = function(n, x) {
+    if(this == 0){
+        return;
+    }
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
 const waitForMined = (txHash, response, pendingCB, successCB) => {
     if (response.blockNumber) {
         successCB()
@@ -52,7 +60,9 @@ class NewProgram extends React.Component {
             units: "",
             subsidyAmount: "",
             fromAdress: "",
-            programType: "subsidy"
+            programType: "subsidy",
+            pricePerUnit: 1200,
+            landCoverage: 300        
         }
     }
 
@@ -113,6 +123,18 @@ class NewProgram extends React.Component {
             });
         });
     }
+
+    getTotalToPay(){
+        let units = this.state.units;        
+        let subsidyAmount = this.state.subsidyAmount;        
+        if(!units || !this.props.selectedEquipment)
+            return;
+        let { price } = this.props.selectedEquipment;
+        debugger;
+        if(subsidyAmount)
+            return (subsidyAmount * units).format();
+        return (units * price).format();
+    }
     componentWillMount(){
        //this.requestCredentials();
     }
@@ -133,7 +155,7 @@ class NewProgram extends React.Component {
                     <Form.Select label='Type' options={programType} value={this.state.programType} onChange={this.onProgramTypeChange} />
                     
                     <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
-                    <Form.Input label='Amount to subsidy per member' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
+                    <Form.Input label='Amount to subsidy per unit' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
 
                     <Modal
                       trigger={<Button className="big" color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
@@ -164,11 +186,16 @@ class NewProgram extends React.Component {
                             return <List.Item key={index} as='li' value='-'>{item}</List.Item>
                             })}
                         </List>
+                        <Header as='h3'>Expected land coverage</Header>
+                         <p> ~ { (this.state.units * this.props.selectedEquipment.landCoverage).format() || this.props.selectedEquipment.landCoverage } hectares of land </p>
                       </Grid.Column>
 
                       <Grid.Column width={8}>                       
-                        <Header as='h3'>Expected land coverage</Header>
-                        <p> ~ 3000 hectares of land </p>
+                      
+                        <Header as='h3'>Cost per unit</Header>
+                        <p className="price-per-unit">$ {this.props.selectedEquipment.price}</p>
+                        <Header as='h3'>Total cost</Header>
+                        <p className="price-per-unit">{this.state.units && <span>$</span>}{ this.getTotalToPay() || "--"}</p>
                       </Grid.Column>
                     </Grid>
 
