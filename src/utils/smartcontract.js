@@ -1,17 +1,12 @@
 const ABI = [
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "requestInfo",
+		"inputs": [],
+		"name": "numberOfGroups",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -139,6 +134,25 @@ const ABI = [
 		"constant": true,
 		"inputs": [
 			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requestInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
 				"name": "element",
 				"type": "uint256"
 			}
@@ -189,6 +203,20 @@ const ABI = [
 	},
 	{
 		"constant": true,
+		"inputs": [],
+		"name": "balance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [
 			{
 				"name": "",
@@ -210,20 +238,6 @@ const ABI = [
 		"constant": true,
 		"inputs": [],
 		"name": "numberOfProgramsDelivered",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfGroups",
 		"outputs": [
 			{
 				"name": "",
@@ -269,11 +283,11 @@ const ABI = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "ipfsHash",
-				"type": "string"
+				"name": "recipient",
+				"type": "address"
 			}
 		],
-		"name": "addProgram",
+		"name": "transfer",
 		"outputs": [
 			{
 				"name": "result",
@@ -288,11 +302,11 @@ const ABI = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "newGroupMembers",
-				"type": "address[]"
+				"name": "ipfsHash",
+				"type": "string"
 			}
 		],
-		"name": "registerGroup",
+		"name": "addProgram",
 		"outputs": [
 			{
 				"name": "result",
@@ -327,6 +341,25 @@ const ABI = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newGroupMembers",
+				"type": "address[]"
+			}
+		],
+		"name": "registerGroup",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -344,12 +377,6 @@ const ABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -365,6 +392,12 @@ const ABI = [
 		],
 		"name": "newMemberAdded",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"anonymous": false,
@@ -385,7 +418,7 @@ const ABI = [
 	}
 ];
 
-const ADDRESS = "0xc21e20358378efb318abc46d6415c16fee0145a4";
+const ADDRESS = "0xa502246807e6f2758874acc8729873db3d5ce74d";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(ABI);
