@@ -59,8 +59,10 @@ class GovernmentDashboard extends React.Component {
     render() {
         return(
             <span>
-              <Header as="h1">Dashboard</Header>
                 <Grid width={15}>
+                  <Grid.Row>
+                    <Header as="h1">Dashboard</Header>
+                  </Grid.Row>
                   <Grid.Row>
                     <Grid.Column width={10}>
                       <Segment>

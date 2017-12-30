@@ -12,6 +12,7 @@ import EquipmentDetails from './containers/EquipmentDetails';
 
 
 import GovernmentDashboard from './components/GovernmentDashboard'
+import CompaniesDashboard from './components/CompaniesDashboard'
 //test
 import Equipments from './containers/Equipments';
 
@@ -28,7 +29,7 @@ const GovernmentsRoutes = () => (
 
 const CompaniesRoutes = () => (
     <Switch>
-        <Route exact path="/companies" component={Companies} />
+        <Route exact path="/companies" component={CompaniesDashboard} />
         <Companies>
             <Route path="/companies/newProgram" component={NewProgram} />
             <Route path="/companies/equipmentdetails" component={EquipmentDetails} />
