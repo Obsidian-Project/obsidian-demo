@@ -136,7 +136,7 @@ export function createProgram(values, uportAddress, redirect) {
 export function addListenerForNewRequests(){
     return (dispatch) => {      
         //let myEvent = ObsidianContract.newEquipmentRequested({}, { fromBlock: 0, toBlock: 'latest' });
-        let myEvent = ObsidianContract.newProgramAdded({}, { fromBlock: 0, toBlock: 'latest' });		
+        let myEvent = ObsidianContract.newProgramAdded({}, 'latest');		
 		myEvent.watch(function (error, event) {
 			console.log("New equipment was requested");
 			if (!error) {
