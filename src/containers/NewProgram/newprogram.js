@@ -30,6 +30,19 @@ const pollingLoop = (txHash, response, pendingCB, successCB) => {
     }, 1000);
 }
 
+const programType = [
+  {
+    text: 'Subsidy',
+    value: 'subsidy'
+  },
+  {
+    text: 'Other',
+    value: 'other'
+  }
+]
+
+
+
 class NewProgram extends React.Component {
     constructor() {
         super();
@@ -38,7 +51,8 @@ class NewProgram extends React.Component {
             description: "",
             units: "",
             subsidyAmount: "",
-            fromAdress: ""
+            fromAdress: "",
+            programType: "subsidy"
         }
     }
 
@@ -82,7 +96,9 @@ class NewProgram extends React.Component {
     onSubsidyAmountChange = (event) => {
         this.setState({ subsidyAmount: event.target.value });
     }
-
+    onProgramTypeChange = (event, data) => {
+        this.setState({ programType: data.value });
+    }
     requestCredentials = () => {
         uport.requestCredentials({
             requested: ['name', 'phone', 'country', 'avatar'],
@@ -114,6 +130,8 @@ class NewProgram extends React.Component {
                   <Form>
                     <Form.Input label='Name' placeholder="Name of the program" onChange={this.onNameChange} value={this.state.name} />
                     <Form.TextArea label='Description' placeholder="Description about the program" onChange={this.onDescriptionChange} value={this.state.description} />
+                    <Form.Select label='Type' options={programType} value={this.state.programType} onChange={this.onProgramTypeChange} />
+                    
                     <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
                     <Form.Input label='Amount to subsidy per member' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
 

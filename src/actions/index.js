@@ -13,7 +13,7 @@ import {
 import Web3 from 'web3';
 import { CreateObsidianContractObj } from '../utils/smartcontract.js';
 const ETHEREUM_PROVIDER = "http://52.178.92.72:8545";
-const DEMO_ADDRESS = "0x101a4b7af0523bc8539d353eec163ac207ad680b";
+const DEMO_ADDRESS = "0xf3ad20433639493ceab8a85fa838c73d65b84b6f";
 const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
 
 let ROOT_URL = "http://obsidian-api.azurewebsites.net";//"http://localhost:3000";
