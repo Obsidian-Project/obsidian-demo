@@ -1,56 +1,95 @@
 pragma solidity ^0.4.0;
 contract Obsidian {
     
+    address public owner;
     uint256 public numberOfGroups;
     uint256 public numberOfMembers;
-    address[] public members; //para validar si es parte de algun grupo
-    address public owner;
+    uint256 public numberOfPrograms;
+    uint256 public numberOfRequest;
+    uint256 public numberOfProgramsDelivered;
+    
+    mapping(address => bool) public members; //para validar si es parte de algun grupo
+    mapping(uint256 => bool) public programs;// para validar si existe el programa
     
     mapping(address => uint256) public balances;
-    mapping(uint256 => GroupInfo) groups; //id of group and groupInfo
-    mapping(address => MemberInfo) public membersInfo;
-    struct GroupInfo {
+    mapping(uint256 => Group) groupInfo; //id of group and groupInfo
+    mapping(address => Member) public memberInfo;
+    mapping(uint256 => Program) public programInfo;
+    mapping(uint256 => address) public requestInfo;
+    
+   // struct Request {
+  //      address sender;
+//    }
+    struct Program {
+        //TODO: beneficiary (the group)
+        bool delivered;
+        string ipfsHash;
+    }
+    struct Group {
         address[] members;
     }
-    struct MemberInfo {
+    
+    struct Member {
         string latitude;
         string longitude;
         uint256 sizeOfLand;
     }
-    //event NewMember
-    //event newGroup
+    
+    //TODO: event for new groups
+    event newMemberAdded(address memberAdress, bool isRegistered);
+    event newProgramAdded(uint256 programId, string ipfsHash);
+    event newEquipmentRequested(uint256 programId, address beneficiary);
+    
+    //proposals ( I need to track the requests)
     function Obsidian() public {
         numberOfGroups = 0;
         numberOfMembers = 0;
+        numberOfPrograms = 0;
     }
     
-    function addMember(address newMember, string latitude, string longitude, uint256 sizeOfLand) public returns(bool result){
+    function addProgram(string ipfsHash) public returns(bool result) {
+         numberOfPrograms++;
+         programs[numberOfPrograms] = true;
+         programInfo[numberOfPrograms] = Program(false, ipfsHash);
+         newProgramAdded(numberOfPrograms, ipfsHash);
+         result = true;
+         return result;
+    }
+    function addMember(address newMember, string latitude, string longitude, uint256 sizeOfLand) 
+        public returns(bool result){
+        //TODO: validate if it is already member to avoid increasing numberOfMembers
         numberOfMembers++;
-        membersInfo[newMember] = MemberInfo(latitude, longitude, sizeOfLand);
+        memberInfo[newMember] = Member(latitude, longitude, sizeOfLand);
+        members[newMember] = true;
+        result = true;
+        newMemberAdded(newMember, result);
+        return result;
+    }
+    
+    function requestEquipment(uint256 programId, address requester) public returns (bool result) {
+        numberOfRequest++;
+        newEquipmentRequested(programId, requester);   
+        requestInfo[numberOfRequest] = requester;
         result = true;
         return result;
     }
+    
+    //TODO: DO the transfer
+    
     //in reality it should be a multisignature wallet, or something like that?
     //because I can just do simple smart contract to get the info, but not sure if it 
     //is going to be totally effective as a scalable solution
     function registerGroup(address[] newGroupMembers) public returns (bool result) {
         //for demo just use 2 members
         //add require to check lenght
-        address firstMember = newGroupMembers[0];
-        address secondMember = newGroupMembers[1];
-        
         numberOfGroups++;
-        members.push(firstMember);
-        members.push(secondMember);
-        groups[numberOfGroups] = GroupInfo(newGroupMembers);
-        //        loansInfo[numberOfLoans] = LoanInfo(recipient, msg.sender, amount, period);
-
+        groupInfo[numberOfGroups] = Group(newGroupMembers);
         result = true;
         return result;
     }
     
-    function getGroupInfo(uint element) public constant returns (GroupInfo groupInformation){
-        return groups[element];
+    function getGroupInfo(uint element) public constant returns (Group groupInformation){
+        return groupInfo[element];
     }
     //transfer token
     //demo con 2 miembros
