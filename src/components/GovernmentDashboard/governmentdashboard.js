@@ -18,18 +18,18 @@ Number.prototype.format = function(n, x) {
 
 
 const data = [
-      {name: 'January', uv: 4000, pv: 2400, amt: 2400},
-      {name: 'February', uv: 3000, pv: 1398, amt: 2210},
-      {name: 'March', uv: 2000, pv: 9800, amt: 2290},
-      {name: 'April', uv: 2780, pv: 3908, amt: 2000},
-      {name: 'May', uv: 1890, pv: 4800, amt: 2181},
-      {name: 'June', uv: 2390, pv: 3800, amt: 2500},
-      {name: 'July', uv: 3490, pv: 4300, amt: 2100},      
-      {name: 'August', uv: 3490, pv: 4300, amt: 2100},      
-      {name: 'September', uv: 3490, pv: 4300, amt: 2100},      
-      {name: 'October', uv: 3490, pv: 4300, amt: 2100},      
-      {name: 'November', uv: 3490, pv: 4300, amt: 2100},      
-      {name: 'December', uv: 3490, pv: 4300, amt: 2100},
+      {name: 'January', subsides:100},
+      {name: 'February', subsides:230},
+      {name: 'March', subsides:103},
+      {name: 'April', subsides:240},
+      {name: 'May', subsides:305},
+      {name: 'June', subsides:293},
+      {name: 'July', subsides:521},
+      {name: 'August', subsides:423},
+      {name: 'September', subsides:234},
+      {name: 'October', subsides:435},
+      {name: 'November', subsides:345},
+      {name: 'December', subsides:456}
 ];
 
 class GovernmentDashboard extends React.Component {
@@ -40,7 +40,7 @@ class GovernmentDashboard extends React.Component {
           pieChartValues: []
         }
     }
-    componentWillMount(){       
+    componentWillMount(){
       this.props.getInformationForGovernmentDashboard();
     }
     render() {
@@ -56,12 +56,12 @@ class GovernmentDashboard extends React.Component {
                         <Header as="h3">Summary</Header>
                         <Grid width={15}>
                           <Grid.Column textAlign = "center" width={5}>
-                            <h5 className="dashHeader">Programs</h5>
+                            <h5 className="dashHeader">Programs</h5><br/>
                             <p>{this.props.dashboardInfo.numberOfPrograms}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
-                            <h5 className="dashHeader">Beneficiaries</h5>
+                            <h5 className="dashHeader">Beneficiaries</h5><br/>
                             <p>{this.props.dashboardInfo.subsidiesDeliverd * 2}</p>
                           </Grid.Column>
 
@@ -107,12 +107,12 @@ class GovernmentDashboard extends React.Component {
                         <Header as="h3">Balance</Header>
                         <Grid width={16}>
                           <Grid.Column textAlign = "center" width={8}>
-                            <h5 className="dashHeader">Total Spent</h5>
+                            <h5 className="dashHeader">Total Spent</h5><br/>
                             <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={8}>
-                            <h5 className="dashHeader">This Month</h5>
+                            <h5 className="dashHeader">This Month</h5><br/>
                             <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
                           </Grid.Column>
                         </Grid>
@@ -135,7 +135,7 @@ class GovernmentDashboard extends React.Component {
                         </List>
                         </div>
 
-                          <PieChart                            
+                          <PieChart
                             className="PieChart"
                             data={this.props.dashboardInfo.mechanizedAreaPieChartValues}
                           />
@@ -181,7 +181,7 @@ class GovernmentDashboard extends React.Component {
                            <CartesianGrid strokeDasharray="3 3"/>
                            <Tooltip/>
                            <Legend />
-                           <Line type="monotone" dataKey="pv" stroke="#00b5ad" activeDot={{r: 8}}/>
+                           <Line type="monotone" dataKey="subsides" stroke="#00b5ad" activeDot={{r: 8}}/>
                           </LineChart>
                         </ResponsiveContainer>
                       </Segment>
