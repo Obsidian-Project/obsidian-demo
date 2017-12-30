@@ -82,12 +82,12 @@ class NewProgram extends React.Component {
        let selectedEquipment = this.props.selectedEquipment;      
         let valuesToSend = {
             name: this.state.name,
-            units: this.state.units,
-            subsidyAmount: this.state.subsidyAmount,
+            units: Number(this.state.units),
+            subsidyAmount: Number(this.state.subsidyAmount),
             description: this.state.description,
             selectedEquipment: selectedEquipment
         }
-        this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
+        this.props.createProgram(valuesToSend, () => {
             history.push("/governments");
         });
     }
@@ -129,8 +129,7 @@ class NewProgram extends React.Component {
         let subsidyAmount = this.state.subsidyAmount;        
         if(!units || !this.props.selectedEquipment)
             return;
-        let { price } = this.props.selectedEquipment;
-        debugger;
+        let { price } = this.props.selectedEquipment;       
         if(subsidyAmount)
             return (subsidyAmount * units).format();
         return (units * price).format();
