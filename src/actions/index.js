@@ -9,7 +9,8 @@ import {
     SELECTED_EQUIPMENT,
     NEW_EQUIPMENT_REQUESTED,
     NEW_EQUIPMENT_TRANSFERRED,
-    DASHBOARD_INFORMATION_RECEIVED
+    DASHBOARD_INFORMATION_RECEIVED,
+    PROGRAMS_RECEIVED
 } from './types';
 
 import Web3 from 'web3';
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV == "production") {
 const ObsidianContract = CreateObsidianContractObj(web3Instance);
 const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
 const PROGRAM_URL = `${ROOT_URL}/program`;
-const NOTIFY_URL = `${ROOT_URL}/notify`;
+const GET_PROGRAMS_URL = `${ROOT_URL}/programs`;
 const DASHBOARD_INFORMATION_URL = `${ROOT_URL}/programInfo`;
 
 export function displayNotification(message) {
@@ -174,6 +175,7 @@ export function getInformationForGovernmentDashboard() {
                         type: DASHBOARD_INFORMATION_RECEIVED,
                         data: result
                     });
+                    dispatch(getProgramInformation());
                     console.log(result);
                     dispatch({
                         type: SHOW_LOADER,
@@ -212,9 +214,19 @@ const getMyBalance = () => {
 
 }
 const getProgramInformation = () => {
-    return new Promise((resolve, reject) => {
-        axios.get()
-    });
+    debugger;
+    return (dispatch) => {
+        axios.get(GET_PROGRAMS_URL)
+            .then((response) => {
+                debugger;
+               dispatch({
+                   type:PROGRAMS_RECEIVED,
+                   data: response.data
+               });
+            }).catch((error) => {
+                //TODO: catch error
+            })
+    }   
 }
 
 const createProgramOnChain = (ipfsHash, costPerUnit, subsidyAmount, units, fromAddress) => {

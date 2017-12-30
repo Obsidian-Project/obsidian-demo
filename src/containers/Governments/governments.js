@@ -1,6 +1,6 @@
 import React from 'react';
 import GovernmentsLayout from '../../layouts/GovernmentsLayout';
-import styles from './governments.css';
+import './governments.css';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
 
@@ -9,14 +9,13 @@ class Governments extends React.Component {
         super();
     }
 
-    componentWillMount(){
-        debugger;
+    componentWillMount(){       
         this.props.getInformationForGovernmentDashboard();
     }
     render(){
         return (
             <GovernmentsLayout>
-                {this.props.children}
+                {this.props.children}                
             </GovernmentsLayout>
         )
     }

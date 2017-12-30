@@ -1,27 +1,48 @@
 import React from 'react';
-import styles from './governmentdashboard.css';
+import './governmentdashboard.css';
 import { Link } from 'react-router-dom';
 import { Header,Button, Grid, Segment, Statistic, List , Table} from 'semantic-ui-react';
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts'
 import PieChart from 'react-minimal-pie-chart';
 import Governments from '../../containers/Governments'
+import * as actions from '../../actions';
+import { connect, } from 'react-redux';
+
+Number.prototype.format = function(n, x) {
+  if(this == 0){
+      return;
+  }
+  var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+  return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
 
 const data = [
-      {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
-      {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
-      {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
-      {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
-      {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
-      {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
-      {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
+      {name: 'January', uv: 4000, pv: 2400, amt: 2400},
+      {name: 'February', uv: 3000, pv: 1398, amt: 2210},
+      {name: 'March', uv: 2000, pv: 9800, amt: 2290},
+      {name: 'April', uv: 2780, pv: 3908, amt: 2000},
+      {name: 'May', uv: 1890, pv: 4800, amt: 2181},
+      {name: 'June', uv: 2390, pv: 3800, amt: 2500},
+      {name: 'July', uv: 3490, pv: 4300, amt: 2100},      
+      {name: 'August', uv: 3490, pv: 4300, amt: 2100},      
+      {name: 'September', uv: 3490, pv: 4300, amt: 2100},      
+      {name: 'October', uv: 3490, pv: 4300, amt: 2100},      
+      {name: 'November', uv: 3490, pv: 4300, amt: 2100},      
+      {name: 'December', uv: 3490, pv: 4300, amt: 2100},
 ];
 
 class GovernmentDashboard extends React.Component {
 
     constructor() {
         super();
+        this.state = {
+          pieChartValues: []
+        }
     }
-
+    componentWillMount(){       
+      this.props.getInformationForGovernmentDashboard();
+    }
     render() {
         return(
             <span>
@@ -36,17 +57,17 @@ class GovernmentDashboard extends React.Component {
                         <Grid width={15}>
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Programs</h5>
-                            <p>120</p>
+                            <p>{this.props.dashboardInfo.numberOfPrograms}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Beneficiaries</h5>
-                            <p>120</p>
+                            <p>{this.props.dashboardInfo.subsidiesDeliverd * 2}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
-                            <h5 className="dashHeader">Subsidies</h5>
-                            <p>120</p>
+                            <h5 className="dashHeader">Subsidies delivered</h5>
+                            <p>{this.props.dashboardInfo.subsidiesDeliverd}</p>
                           </Grid.Column>
                         </Grid>
                       </Segment>
@@ -76,11 +97,7 @@ class GovernmentDashboard extends React.Component {
                           <PieChart
                             lineWidth={30}
                             className="PieChart"
-                            data={[
-                              { value: 10, key: 1, color: '#00b5ad' },
-                              { value: 15, key: 2, color: '#7fdad6' },
-                              { value: 20, key: 3, color: '#00908a' },
-                              ]}
+                            data={this.props.dashboardInfo.pieChartValues}
                           />
                       </Segment>
                     </Grid.Column>
@@ -91,12 +108,12 @@ class GovernmentDashboard extends React.Component {
                         <Grid width={16}>
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">Total Spent</h5>
-                            <p>120</p>
+                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">This Month</h5>
-                            <p>120</p>
+                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
                           </Grid.Column>
                         </Grid>
                       </Segment>
@@ -118,13 +135,9 @@ class GovernmentDashboard extends React.Component {
                         </List>
                         </div>
 
-                          <PieChart
-                            // lineWidth={30}
+                          <PieChart                            
                             className="PieChart"
-                            data={[
-                              { value: 10, key: 1, color: '#00b5ad' },
-                              { value: 15, key: 2, color: '#7fdad6' },
-                              ]}
+                            data={this.props.dashboardInfo.mechanizedAreaPieChartValues}
                           />
                       </Segment>
                     </Grid.Column>
@@ -137,16 +150,19 @@ class GovernmentDashboard extends React.Component {
                                 <Table.Row>
                                     <Table.HeaderCell>Program Name</Table.HeaderCell>
                                     <Table.HeaderCell>Type</Table.HeaderCell>
-                                    <Table.HeaderCell>Total Spent</Table.HeaderCell>
+                                    <Table.HeaderCell>Units</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
                             <Table.Body>
-                              <Table.Row>
-                                  <Table.Cell>1</Table.Cell>
-                                  <Table.Cell>2</Table.Cell>
-                                  <Table.Cell>3</Table.Cell>
-                                </Table.Row>
+                            {this.props.programsInfo && this.props.programsInfo.map((item) => {
+                                return <Table.Row>
+                                <Table.Cell>{item.name}</Table.Cell>
+                                <Table.Cell>Subsidy</Table.Cell>
+                                <Table.Cell>{item.units}</Table.Cell>
+                              </Table.Row>
+                            })
+                          }
                             </Table.Body>
                         </Table>
                       </Segment>
@@ -156,7 +172,7 @@ class GovernmentDashboard extends React.Component {
                   <Grid.Row>
                     <Grid.Column width={16}>
                       <Segment>
-                        <Header as="h3">Loans Made</Header>
+                        <Header as="h3">Subsidies delivered</Header>
                         <ResponsiveContainer width = "100%" height={300}>
                           <LineChart data={data}
                                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
@@ -177,4 +193,12 @@ class GovernmentDashboard extends React.Component {
     }
 }
 
-export default GovernmentDashboard;
+function mapStateProps(state) {
+  return {
+      dashboardInfo: state.dashboardReducer.dashboardInfo,
+      showLoader: state.dashboardReducer.showLoader,
+      programsInfo: state.dashboardReducer.programsInfo
+  }
+}
+
+export default connect(mapStateProps, actions)(GovernmentDashboard);
