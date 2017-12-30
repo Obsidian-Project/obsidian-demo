@@ -47,6 +47,10 @@ const ABI = [
 			{
 				"name": "units",
 				"type": "uint256"
+			},
+			{
+				"name": "creator",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -493,7 +497,7 @@ const ABI = [
 	}
 ];
 
-const ADDRESS = "0xb1e2a65a1b0ae4121c7596fcc2c3500ac41c0cfe";
+const ADDRESS = "0xa1e72a2fe3906a18bed25e17e370b3588354d347";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(ABI);
