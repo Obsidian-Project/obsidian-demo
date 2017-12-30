@@ -129,7 +129,7 @@ class NewProgram extends React.Component {
         let subsidyAmount = this.state.subsidyAmount;
         if(!units || !this.props.selectedEquipment)
             return;
-        let { price } = this.props.selectedEquipment;       
+        let { price } = this.props.selectedEquipment;
         if(subsidyAmount)
             return (subsidyAmount * units).format();
         return (units * price).format();
@@ -141,7 +141,9 @@ class NewProgram extends React.Component {
         return (
           <span>
             {this.props.showLoader && <Dimmer inverted active>
-              <Loader />
+                <Loader>
+                <Header>Program is being created</Header>
+              </Loader>
             </Dimmer>}
             <Grid>
               <Grid.Row>
