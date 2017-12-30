@@ -6,7 +6,8 @@ import {
     EQUIPMENTS_RECEIVED,
     SHOW_MODAL,
     SHOW_LOADER,
-    SELECTED_EQUIPMENT
+    SELECTED_EQUIPMENT,
+    NEW_EQUIPMENT_REQUESTED
 } from './types';
 
 import Web3 from 'web3';
@@ -129,6 +130,21 @@ export function createProgram(values, uportAddress, redirect) {
             .catch((error) => {
                 //TODO: error handling, testing deployment
             });
+    }
+}
+
+export function addListenerForNewRequests(){
+    return (dispatch) => {      
+        //let myEvent = ObsidianContract.newEquipmentRequested({}, { fromBlock: 0, toBlock: 'latest' });
+        let myEvent = ObsidianContract.newProgramAdded({}, { fromBlock: 0, toBlock: 'latest' });		
+		myEvent.watch(function (error, event) {
+			console.log("New equipment was requested");
+			if (!error) {
+				dispatch({
+                    type: NEW_EQUIPMENT_REQUESTED
+                })
+			}
+		});
     }
 }
 
