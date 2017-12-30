@@ -7,12 +7,16 @@ import {
     SHOW_MODAL,
     SHOW_LOADER,
     SELECTED_EQUIPMENT,
-    NEW_EQUIPMENT_REQUESTED
+    NEW_EQUIPMENT_REQUESTED,
+    NEW_EQUIPMENT_TRANSFERRED,
+    DASHBOARD_INFORMATION_RECEIVED
 } from './types';
 
 import Web3 from 'web3';
 import { CreateObsidianContractObj } from '../utils/smartcontract.js';
+
 const ETHEREUM_PROVIDER = "http://52.178.92.72:8545";
+
 const DEMO_ADDRESS = "0x74913e53c6916a5fe86511edbf3c21c7d6ffb3f7";
 
 const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
@@ -27,6 +31,7 @@ const ObsidianContract = CreateObsidianContractObj(web3Instance);
 const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
 const PROGRAM_URL = `${ROOT_URL}/program`;
 const NOTIFY_URL = `${ROOT_URL}/notify`;
+const DASHBOARD_INFORMATION_URL = `${ROOT_URL}/programInfo`;
 
 export function displayNotification(message) {
     return (dispatch) => {
@@ -104,11 +109,11 @@ export function closeModal() {
 }
 
 export function createProgram(values, redirect) {
-    return (dispatch) => {      
+    return (dispatch) => {
         dispatch({
             type: SHOW_LOADER,
             data: true
-        });      
+        });
         let fromAddress = DEMO_ADDRESS;
         axios.post(PROGRAM_URL, values)
             .then(response => {
@@ -125,9 +130,9 @@ export function createProgram(values, redirect) {
                             type: SHOW_LOADER,
                             data: false
                         });
-                        setTimeout(() => {                
+                        setTimeout(() => {
                             redirect();
-                        }, 3000);                              
+                        }, 3000);
                     }).catch((error) => {
 
                     });
@@ -138,19 +143,78 @@ export function createProgram(values, redirect) {
     }
 }
 
-export function addListenerForNewRequests(){
-    return (dispatch) => {      
+export function addListenerForNewRequests() {
+    return (dispatch) => {
         //let myEvent = ObsidianContract.newEquipmentRequested({}, { fromBlock: 0, toBlock: 'latest' });
-        let myEvent = ObsidianContract.newProgramAdded({}, 'latest');		
-		myEvent.watch(function (error, event) {
-			console.log("New equipment was requested");
-			if (!error) {
-				dispatch({
+        let myEvent = ObsidianContract.newProgramAdded({}, 'latest');
+        myEvent.watch(function (error, event) {
+            console.log("New equipment was requested");
+            if (!error) {
+                dispatch({
                     type: NEW_EQUIPMENT_REQUESTED
                 })
-			}
-		});
+            }
+        });
     }
+}
+
+export function getInformationForGovernmentDashboard() {   
+    return (dispatch) => {
+        dispatch({
+            type: SHOW_LOADER,
+            data: true
+        });
+        let result;
+        axios.get(DASHBOARD_INFORMATION_URL)
+            .then(response => {
+                result = response;
+                getMyBalance().then((balance) => {
+                    result.balance = balance;
+                    dispatch({
+                        type: DASHBOARD_INFORMATION_RECEIVED,
+                        data: result
+                    });
+                    dispatch({
+                        type: SHOW_LOADER,
+                        data: false
+                    });
+                });
+            }).catch((error) => {
+                //TODO
+            });
+      
+    }
+}
+
+export function addListenerForNewTransfers() {//for governments
+    return (dispatch) => {
+        let myEvent = ObsidianContract.newEquipmentTransferred({}, 'latest');
+        myEvent.watch(function (error, event) {
+            console.log("New equipment transferred");
+            if (!error) {
+                dispatch({
+                    type: NEW_EQUIPMENT_TRANSFERRED//tengo que reaccionar, obtener data, entonces
+                    //dispatcho otra action
+                })
+            }
+        });
+    }
+}
+
+const getMyBalance = () => {
+    return new Promise((resolve, reject) => {
+        let contract = this.getSmartContractObject();
+        let address = DEMO_ADDRESS;
+        contract.balances(address, (error, result) => {
+            resolve(result.toNumber());
+        })
+    });
+
+}
+const getProgramInformation = () => {
+    return new Promise((resolve, reject) => {
+        axios.get()
+    });
 }
 
 const createProgramOnChain = (ipfsHash, costPerUnit, subsidyAmount, units, fromAddress) => {
