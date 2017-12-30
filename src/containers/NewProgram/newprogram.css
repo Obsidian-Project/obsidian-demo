@@ -6,3 +6,7 @@ p.price-per-unit {
   color: #21ba45;
   font-size: 1.2rem;
 }
+
+.ui.inverted.dimmer{
+  height:100vh;
+}
