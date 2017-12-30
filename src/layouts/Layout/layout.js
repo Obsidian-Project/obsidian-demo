@@ -39,12 +39,12 @@ const HeaderFixed = (props) => {
           </Menu.Item>
         </Menu.Menu>
       </Menu>
-      {/* <Menu fluid borderless attached className="secondary-top-nav">
+      <Menu fluid borderless attached className="secondary-top-nav">
           <Menu.Item>
                   <Header as="h1">{props.title}</Header>
           </Menu.Item>
           <NotificationComponent />
-      </Menu> */}
+      </Menu>
     </div>
 };
 
