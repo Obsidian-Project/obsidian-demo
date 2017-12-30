@@ -57,22 +57,17 @@ class GovernmentDashboard extends React.Component {
                           <List horizontal size="mini">
                             <List.Item>
                                 <List.Content>
-                                    <List.Header className="one">0-£100</List.Header>
+                                    <List.Header className="one">Agricultural precision </List.Header>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
-                                    <List.Header className="two">£100-£500</List.Header>
+                                    <List.Header className="two">Harvesters</List.Header>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
-                                    <List.Header className="three">£500-1000</List.Header>
-                                </List.Content>
-                            </List.Item>
-                            <List.Item>
-                                <List.Content>
-                                    <List.Header className="four">+£1000</List.Header>
+                                    <List.Header className="three">Tractors</List.Header>
                                 </List.Content>
                             </List.Item>
                         </List>
@@ -82,9 +77,9 @@ class GovernmentDashboard extends React.Component {
                             lineWidth={30}
                             className="PieChart"
                             data={[
-                              { value: 10, key: 1, color: '#E38627' },
-                              { value: 15, key: 2, color: '#C13C37' },
-                              { value: 20, key: 3, color: '#6A2135' },
+                              { value: 10, key: 1, color: '#00b5ad' },
+                              { value: 15, key: 2, color: '#7fdad6' },
+                              { value: 20, key: 3, color: '#00908a' },
                               ]}
                           />
                       </Segment>
@@ -127,9 +122,8 @@ class GovernmentDashboard extends React.Component {
                             // lineWidth={30}
                             className="PieChart"
                             data={[
-                              { value: 10, key: 1, color: '#E38627' },
-                              { value: 15, key: 2, color: '#C13C37' },
-                              { value: 20, key: 3, color: '#6A2135' },
+                              { value: 10, key: 1, color: '#00b5ad' },
+                              { value: 15, key: 2, color: '#7fdad6' },
                               ]}
                           />
                       </Segment>
@@ -171,7 +165,7 @@ class GovernmentDashboard extends React.Component {
                            <CartesianGrid strokeDasharray="3 3"/>
                            <Tooltip/>
                            <Legend />
-                           <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
+                           <Line type="monotone" dataKey="pv" stroke="#00b5ad" activeDot={{r: 8}}/>
                           </LineChart>
                         </ResponsiveContainer>
                       </Segment>

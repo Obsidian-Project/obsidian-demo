@@ -20,7 +20,7 @@
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
-    background-color: #9EAEB9;
+    background-color: #00b5ad;
  }
 
  .chart .two::before{
@@ -33,7 +33,7 @@
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
-    background-color: #48DAA0;
+    background-color: #7fdad6;
  }
 
  .chart .three::before{
@@ -46,21 +46,9 @@
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
-    background-color: #FFB946;
+    background-color: #00908a;
  }
 
- .chart .four::before{
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-right: 2px;
-    margin-left: 0;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    background-color: #3ACA60;
- }
 
 .chart{
   text-align: center;
