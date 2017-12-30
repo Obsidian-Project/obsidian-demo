@@ -102,7 +102,7 @@ class GovernmentDashboard extends React.Component {
                       </Segment>
 
                       <Segment>
-                        <Header as="h3">Distributions of units per type</Header>
+                        <Header as="h3">Total Land Coverage</Header>
                         <div className="chart">
                           <List horizontal size="mini">
                             <List.Item>
