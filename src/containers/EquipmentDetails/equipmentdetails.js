@@ -13,6 +13,12 @@ class EquipmentDetails extends React.Component {
     render(){
         return (
           <span>
+            <Dimmer inverted active>
+                <Loader>
+                <Header>Transfering</Header>
+              </Loader>
+            </Dimmer>
+
             <Segment>
               <Grid>
                 <Grid.Column width={8}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import './layout.css';
 import { Link, withRouter } from 'react-router-dom';
-import { Label, Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message } from 'semantic-ui-react';
+import { Label, Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message, Modal, Button, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
 import NotificationComponent from "../../components/notificationComponent";
 
@@ -29,10 +29,26 @@ const HeaderFixed = (props) => {
             <Icon name='search' />
           </Menu.Item>
 
-          <Menu.Item as ="a" name='alarm'>
-            <Icon name='alarm' />
-             <Label color='red' circular floating>2</Label>
-          </Menu.Item>
+          <Popup
+            trigger={
+              <Menu.Item as ="a" name='alarm'>
+                <Icon name='alarm' />
+                 <Label color='red' circular floating>2</Label>
+              </Menu.Item>
+            }
+            content={
+              <Button color='green'>
+                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails`} >
+                  New request for equipment
+                </Link>
+              </Button>
+
+
+            }
+            hoverable
+            position='top right'
+          />
+
 
           <Menu.Item name='user'>
             <Icon name='user' />
