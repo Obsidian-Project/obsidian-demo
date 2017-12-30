@@ -62,7 +62,7 @@ class NewProgram extends React.Component {
             fromAdress: "",
             programType: "subsidy",
             pricePerUnit: 1200,
-            landCoverage: 300        
+            landCoverage: 300
         }
     }
 
@@ -77,17 +77,17 @@ class NewProgram extends React.Component {
         this.props.openModal();
     }
 
-    createProgram = (values) => {       
+    createProgram = (values) => {
        const { history } = this.props;
-       let selectedEquipment = this.props.selectedEquipment;      
+       let selectedEquipment = this.props.selectedEquipment;
         let valuesToSend = {
             name: this.state.name,
-            units: this.state.units,
-            subsidyAmount: this.state.subsidyAmount,
+            units: Number(this.state.units),
+            subsidyAmount: Number(this.state.subsidyAmount),
             description: this.state.description,
             selectedEquipment: selectedEquipment
         }
-        this.props.createProgram(valuesToSend, this.state.fromAdress, () => {
+        this.props.createProgram(valuesToSend, () => {
             history.push("/governments");
         });
     }
@@ -125,12 +125,11 @@ class NewProgram extends React.Component {
     }
 
     getTotalToPay(){
-        let units = this.state.units;        
-        let subsidyAmount = this.state.subsidyAmount;        
+        let units = this.state.units;
+        let subsidyAmount = this.state.subsidyAmount;
         if(!units || !this.props.selectedEquipment)
             return;
-        let { price } = this.props.selectedEquipment;
-        debugger;
+        let { price } = this.props.selectedEquipment;       
         if(subsidyAmount)
             return (subsidyAmount * units).format();
         return (units * price).format();
@@ -145,20 +144,23 @@ class NewProgram extends React.Component {
               <Loader />
             </Dimmer>}
             <Grid>
+              <Grid.Row>
+                <Grid.Column><Header as="h1">New Program</Header>  </Grid.Column>
+              </Grid.Row>
               <Grid.Column width={6}>
-                <Header as="h1">New Program</Header>  
+
                 <Segment>
-                  <Header as ="h2">Program Information</Header>
+                  <Header as ="h3">Program Information</Header>
                   <Form>
                     <Form.Input label='Name' placeholder="Name of the program" onChange={this.onNameChange} value={this.state.name} />
                     <Form.TextArea label='Description' placeholder="Description about the program" onChange={this.onDescriptionChange} value={this.state.description} />
                     <Form.Select label='Type' options={programType} value={this.state.programType} onChange={this.onProgramTypeChange} />
-                    
+
                     <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
                     <Form.Input label='Amount to subsidy per unit' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
 
                     <Modal
-                      trigger={<Button className="big" color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
+                      trigger={<Button fluid color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
                       open={this.props.modalOpen}
                       onClose={this.handleClose}>
                       <Modal.Header>Select an Equipment</Modal.Header>
@@ -175,26 +177,26 @@ class NewProgram extends React.Component {
               <Grid.Column width={10}>
                 {this.props.selectedEquipment &&
                 <Segment>
-                  <Header as ="h2">Equipment Selection</Header>
+                  <Header as ="h3">Equipment Selection</Header>
                   <Image src={this.props.selectedEquipment.imageUrl} />
-                  <Header as='h1'>{this.props.selectedEquipment.title}</Header>
+                  <Header as='h3'>{this.props.selectedEquipment.title}</Header>
                   <Grid>
                     <Grid.Column width={8}>
-                      <Header as="h3">Details</Header>
+                      <Header as="h4">Details</Header>
                         <List as="ol">
                           {this.props.selectedEquipment.details.map && this.props.selectedEquipment.details.map((item, index) => {
                             return <List.Item key={index} as='li' value='-'>{item}</List.Item>
                             })}
                         </List>
-                        <Header as='h3'>Expected land coverage</Header>
+                        <Header as='h4'>Expected land coverage</Header>
                          <p> ~ { (this.state.units * this.props.selectedEquipment.landCoverage).format() || this.props.selectedEquipment.landCoverage } hectares of land </p>
                       </Grid.Column>
 
-                      <Grid.Column width={8}>                       
-                      
-                        <Header as='h3'>Cost per unit</Header>
+                      <Grid.Column width={8}>
+
+                        <Header as='h4'>Cost per unit</Header>
                         <p className="price-per-unit">$ {this.props.selectedEquipment.price}</p>
-                        <Header as='h3'>Total cost</Header>
+                        <Header as='h4'>Total cost</Header>
                         <p className="price-per-unit">{this.state.units && <span>$</span>}{ this.getTotalToPay() || "--"}</p>
                       </Grid.Column>
                     </Grid>

@@ -3,6 +3,7 @@ import CompaniesLayout from '../../layouts/CompaniesLayout';
 import './companies.css';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
+import GovernmentDashboard from '../../components/GovernmentDashboard'
 
 class Companies extends React.Component {
     constructor() {
@@ -20,7 +21,6 @@ class Companies extends React.Component {
         return (
         <CompaniesLayout title={this.props.title}>
             {this.props.children}
-            <h1>Requests of Equipment: {this.props.numberOfNotifications}</h1>
         </CompaniesLayout>
         )
     }

@@ -13,7 +13,8 @@ import {
 import Web3 from 'web3';
 import { CreateObsidianContractObj } from '../utils/smartcontract.js';
 const ETHEREUM_PROVIDER = "http://52.178.92.72:8545";
-const DEMO_ADDRESS = "0xf3ad20433639493ceab8a85fa838c73d65b84b6f";
+const DEMO_ADDRESS = "0x74913e53c6916a5fe86511edbf3c21c7d6ffb3f7";
+
 const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
 
 let ROOT_URL = "http://obsidian-api.azurewebsites.net";//"http://localhost:3000";
@@ -102,17 +103,21 @@ export function closeModal() {
     }
 }
 
-export function createProgram(values, uportAddress, redirect) {
+export function createProgram(values, redirect) {
     return (dispatch) => {      
         dispatch({
             type: SHOW_LOADER,
             data: true
         });      
-        let fromAddress = DEMO_ADDRESS;//uportAddress || "0xd47ce1fc88c92633ca8801f6ae8d77afa8136a79";
+        let fromAddress = DEMO_ADDRESS;
         axios.post(PROGRAM_URL, values)
             .then(response => {
                 let ipfsHash = response.data;
-                createProgramOnChain(ipfsHash, fromAddress)
+                debugger;
+                let costPerUnit = values.selectedEquipment.price;
+                let { subsidyAmount, units } = values;
+                //ipfsHash, costPerUnit, subsidyAmount, units
+                createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units, fromAddress)
                     .then((response) => {
                         //show notification message   
                         //dispatch(displayNotification("Program created")); 
@@ -148,9 +153,9 @@ export function addListenerForNewRequests(){
     }
 }
 
-const createProgramOnChain = (ipfsHash, fromAddress) => {
+const createProgramOnChain = (ipfsHash, costPerUnit, subsidyAmount, units, fromAddress) => {
     return new Promise((resolve, reject) => {
-        ObsidianContract.addProgram(ipfsHash, {
+        ObsidianContract.addProgram(ipfsHash, costPerUnit, subsidyAmount, units, {
             gas: 2000000,
             from: fromAddress
         }, (error, txHash) => {

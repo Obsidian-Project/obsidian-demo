@@ -16,7 +16,7 @@ class GovernmentsLayout extends React.Component {
               pageIcon = "building outline"
               baseUrl="governments"
               color="teal"
-              title={this.props.title}>
+              >
                 {this.props.children}
             </Layout>
         )
