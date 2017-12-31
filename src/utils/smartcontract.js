@@ -496,12 +496,6 @@ const ABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -517,10 +511,16 @@ const ABI = [
 		],
 		"name": "newEquipmentRequested",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	}
 ];
 
-const ADDRESS = "0x79c42f1c9227557242966f7b208d2957ad579b65";
+const ADDRESS = "0xda76a990a63a3a68bb86a4308cf69032affdfa5e";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(ABI);
