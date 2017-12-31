@@ -12,7 +12,8 @@ import {
     DASHBOARD_INFORMATION_RECEIVED,
     PROGRAMS_RECEIVED,
     COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
-    EQUIPMENT_DETAILS_RECEVIED
+    EQUIPMENT_DETAILS_RECEVIED,
+    MEMBER_INFO_RECEIVED
 } from './types';
 
 import Web3 from 'web3';
@@ -147,19 +148,21 @@ export function createProgram(values, redirect) {
 
 export function addListenerForNewRequests() {
     return (dispatch) => {
-        let myEvent = ObsidianContract.newEquipmentRequested('latest');
-        myEvent.watch(function (error, event) {
+      
+        let myEvent = ObsidianContract.newEquipmentRequested("latest");
+        myEvent.watch((error, event) => {
             if (!error) {   
-                debugger;                            
-                if(!localStorage.getItem('state')){
+              
+                console.log("new equipment requested");
+                if(localStorage.getItem('newEquipmentRequested')){
                     dispatch({
                         type: NEW_EQUIPMENT_REQUESTED,
                         data: { notificationNumber: 1,
                             programId: event.args.programId.toNumber()
                         }
                     })
-                }   
-                localStorage.setItem('state', 'off');
+               }   
+               localStorage.setItem('newEquipmentRequested', 'on');
             }
         });
     }
@@ -264,9 +267,16 @@ export function getProgram(programId){
             })
     }
 }
+
+export function setupEventListeners(){
+    return (dispatch) => {
+        dispatch(addListenerForNewRequests);
+        dispatch(addListenerForNewTransfers);
+    }
+}
 export function addListenerForNewTransfers() {//for governments
     return (dispatch) => {
-        let myEvent = ObsidianContract.newEquipmentTransferred({}, 'latest');
+        let myEvent = ObsidianContract.newEquipmentTransferred('latest');
         myEvent.watch(function (error, event) {
             if (!error) {        
                 dispatch({
@@ -298,6 +308,62 @@ export function makeTransfer(programId, redirect){
         })            
     }
 }
+
+export function getMemberInformation(address, callback) {
+    return (dispatch) => {   
+        memberExist(address)
+            .then(() => {
+                getMemberInfoBy(address)
+                    .then((memberInfo) => {
+                        dispatch({
+                            type: MEMBER_INFO_RECEIVED,
+                            data: memberInfo 
+                        })
+                    })
+            })
+    }
+}
+
+const memberExist = (address) => {
+    return new Promise((resolve, reject) => {
+        ObsidianContract.members(address, (error, result) => {
+            if (!result) {
+                resolve(result);
+            }
+        });    
+    })
+}
+
+const getMemberInfoBy = (address) => {
+    return new Promise((resolve, reject) => {
+        ObsidianContract.membersInfo(address, (error, result) => {
+            let latitude = result[0];
+            let longitude = result[1];
+            let sizeOfLand = result[2].toNumber();
+            resolve({ latitude, longitude, sizeOfLand });
+            //TODO: error handling
+        });
+    })
+}
+
+const addMember = (memberAddress, latitude, longitude, sizeOfLand, callback) => {
+    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {
+        gas: 2000000,
+        from: memberAddress
+    }, (error, txHash) => {
+        if (error) { throw error }
+        waitForMined(txHash, { blockNumber: null },
+            function pendingCB() {
+                // Signal to the user you're still waiting
+                // for a block confirmation
+            },
+            function successCB(data) {
+                callback();
+            }
+        )
+    })
+}
+
 
 const makeTransferOnChain = (programId) => {
     return new Promise((resolve, reject) => {                    

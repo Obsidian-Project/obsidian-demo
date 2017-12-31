@@ -9,6 +9,8 @@ import 'semantic-ui-css/semantic.min.css';
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
+localStorage.clear();
+
 ReactDOM.render(   
     <App store={store} />,
     document.getElementById("root"));

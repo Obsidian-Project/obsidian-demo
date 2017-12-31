@@ -1,11 +1,8 @@
 import React from 'react';
 import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, Divider, Input } from 'semantic-ui-react';
-import { uport, web3 } from '../../utils/connector.js';
-//import { waitForMined } from '../../utils';
-
+import { uport } from '../../utils/connector.js';
 import './newmember.css';
 import GoogleMapReact from 'google-map-react';
-import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
 import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
@@ -14,7 +11,6 @@ const MNID = require('mnid');
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
 const GOOGLE_API_KEY = "AIzaSyC--qp92_TXVu0XFzGe9yS67km_ZpV8yBM";
-const ObsidianContract = CreateObsidianContractObj(web3);
 
 const MyGreatPlace = ({ text }) => (
     <div style={greatPlaceStyle}>
@@ -30,62 +26,6 @@ const CustomInput = (props) => (
         placeholder='Size of land in hectares'
     />
 )
-
-
-const waitForMined = (txHash, response, pendingCB, successCB) => {
-    if (response.blockNumber) {
-        successCB()
-    } else {
-        pendingCB()
-        pollingLoop(txHash, response, pendingCB, successCB)
-    }
-}
-
-const pollingLoop = (txHash, response, pendingCB, successCB) => {
-    setTimeout(function () {
-        web3.eth.getTransaction(txHash, (error, response) => {
-            if (error) { throw error }
-            if (response === null) {
-                response = { blockNumber: null }
-            }
-            waitForMined(txHash, response, pendingCB, successCB)
-        })
-    }, 1000);
-}
-
-const getMemberInfo = (address, callback) => {
-    ObsidianContract.members(address, (error, result) => {
-        if (!result) {
-            callback();
-            return;
-        }
-        ObsidianContract.membersInfo(address, (error, result) => {
-            let latitude = result[0];
-            let longitude = result[1];
-            let sizeOfLand = result[2].toNumber();
-            callback({ latitude, longitude, sizeOfLand });
-        });
-
-    });
-}
-
-const addMember = (memberAddress, latitude, longitude, sizeOfLand, callback) => {
-    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {
-        gas: 2000000,
-        from: memberAddress
-    }, (error, txHash) => {
-        if (error) { throw error }
-        waitForMined(txHash, { blockNumber: null },
-            function pendingCB() {
-                // Signal to the user you're still waiting
-                // for a block confirmation
-            },
-            function successCB(data) {
-                callback();
-            }
-        )
-    })
-}
 
 const greatPlaceStyle = {
     position: 'absolute',
@@ -162,33 +102,35 @@ class NewMember extends React.Component {
                 if (isVerified) {
                     let addressPayload = MNID.decode(credentials.address);
                     let userAddress = addressPayload.address;
-                    getMemberInfo(userAddress, (state) => {
-                        this.setState({
-                            name: credentials.name,
-                            imageUrl: credentials.avatar.uri,
-                            userAddress: credentials.address,
-                            disableButton: false,
-                            isVerified: isVerified,
-                            loggedWithUport: true,
-                            hideLandForm: hideLandForm,
-                            nationalId: nationalId,
-                            latitude: state ? state.latitude : this.state.latitude,
-                            longitude: state ? state.longitude : this.state.longitude,
-                            sizeOfLand: state ? state.sizeOfLand : this.state.sizeOfLand,
-                            userRegistered: state ? true : false
-                        })
-                    });
+                    // getMemberInfo(userAddress, (state) => {
+                    //     this.setState({
+                    //         name: credentials.name,
+                    //         imageUrl: credentials.avatar.uri,
+                    //         userAddress: credentials.address,
+                    //         disableButton: false,
+                    //         isVerified: isVerified,
+                    //         loggedWithUport: true,
+                    //         hideLandForm: hideLandForm,
+                    //         nationalId: nationalId,
+                    //         latitude: state ? state.latitude : this.state.latitude,
+                    //         longitude: state ? state.longitude : this.state.longitude,
+                    //         sizeOfLand: state ? state.sizeOfLand : this.state.sizeOfLand,
+                    //         userRegistered: state ? true : false
+                    //     })
+                    // });
+                    //TODO: Remember it was MOVED TO ACTION
                 } else {
-                    this.setState({
-                        name: credentials.name,
-                        imageUrl: credentials.avatar.uri,
-                        userAddress: credentials.address,
-                        disableButton: false,
-                        isVerified: isVerified,
-                        loggedWithUport: true,
-                        hideLandForm: hideLandForm,
-                        nationalId: nationalId
-                    })
+                    // this.setState({
+                    //     name: credentials.name,
+                    //     imageUrl: credentials.avatar.uri,
+                    //     userAddress: credentials.address,
+                    //     disableButton: false,
+                    //     isVerified: isVerified,
+                    //     loggedWithUport: true,
+                    //     hideLandForm: hideLandForm,
+                    //     nationalId: nationalId
+                    // })
+                    //TODO: Moved to reducer
                 }
             });
     }
@@ -217,10 +159,6 @@ class NewMember extends React.Component {
     registerUser = () => {
         const { history } = this.props;
         let userAddress;
-        if (this.state.userAddress) { //this shouldn't crash because they need to be logged in, but for testing
-            let addressPayload = MNID.decode(this.state.userAddress);
-            userAddress = addressPayload.address;
-        }
         let latitude = this.state.latitude;
         let longitude = this.state.longitude;
 
@@ -228,15 +166,16 @@ class NewMember extends React.Component {
         this.setState({
             loading: true
         }, () => {
-            addMember(userAddress, latitude, longitude, sizeOfLand, () => {
-                let isUpdate = this.state.userRegistered;
-                this.setState({
-                    loading: false,
-                    userRegistered: true
-                }, () => {
-                    this.props.displayNotification(isUpdate ? "Changes saved successfully": "User has being registered correctly");
-                });
-            });
+            //TODO: MOVED TO REDUCER
+            // addMember(userAddress, latitude, longitude, sizeOfLand, () => {
+            //     let isUpdate = this.state.userRegistered;
+            //     this.setState({
+            //         loading: false,
+            //         userRegistered: true
+            //     }, () => {
+            //         this.props.displayNotification(isUpdate ? "Changes saved successfully": "User has being registered correctly");
+            //     });
+            // });
         })
     }
 

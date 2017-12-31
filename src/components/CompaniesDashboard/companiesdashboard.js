@@ -124,8 +124,8 @@ class CompaniesDashboard extends React.Component {
                   </Table.Header>
 
                   <Table.Body>
-                    {this.props.dashboardInfo.transfers && this.props.dashboardInfo.transfers.map((item) => {
-                      return <Table.Row>
+                    {this.props.dashboardInfo.transfers && this.props.dashboardInfo.transfers.map((item, index) => {
+                      return <Table.Row key={index}>
                         <Table.Cell>{item.model}</Table.Cell>
                         <Table.Cell>{item.type}</Table.Cell>
                         <Table.Cell>{item.costPerUnit}</Table.Cell>

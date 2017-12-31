@@ -21,3 +21,5 @@ export const PROGRAMS_RECEIVED = "Dashboard_Received";
 export const COMPANIES_DASHBOARD_INFORMATION_RECEIVED = "Companies_Dashboard_Information_Received";
 
 export const EQUIPMENT_DETAILS_RECEVIED = "Equipment_Details_Received";
+
+export const MEMBER_INFO_RECEIVED = "Member_Info_Received";

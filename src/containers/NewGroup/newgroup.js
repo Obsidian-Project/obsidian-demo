@@ -3,52 +3,52 @@ import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, 
 import { uport, web3 } from '../../utils/connector.js';
 import './newgroup.css';
 
-import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
+//import { CreateObsidianContractObj } from '../../utils/smartcontract.js';
 import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
 
 const MNID = require('mnid');
-const ObsidianContract = CreateObsidianContractObj(web3);
+//const ObsidianContract = CreateObsidianContractObj(web3);
 
-const waitForMined = (txHash, response, pendingCB, successCB) => {
-    if (response.blockNumber) {
-        successCB()
-    } else {
-        pendingCB()
-        pollingLoop(txHash, response, pendingCB, successCB)
-    }
-}
+// const waitForMined = (txHash, response, pendingCB, successCB) => {
+//     if (response.blockNumber) {
+//         successCB()
+//     } else {
+//         pendingCB()
+//         pollingLoop(txHash, response, pendingCB, successCB)
+//     }
+// }
 
-const pollingLoop = (txHash, response, pendingCB, successCB) => {
-    setTimeout(function () {
-        web3.eth.getTransaction(txHash, (error, response) => {
-            if (error) { throw error }
-            if (response === null) {
-                response = { blockNumber: null }
-            }
-            waitForMined(txHash, response, pendingCB, successCB)
-        })
-    }, 1000);
-}
+// const pollingLoop = (txHash, response, pendingCB, successCB) => {
+//     setTimeout(function () {
+//         web3.eth.getTransaction(txHash, (error, response) => {
+//             if (error) { throw error }
+//             if (response === null) {
+//                 response = { blockNumber: null }
+//             }
+//             waitForMined(txHash, response, pendingCB, successCB)
+//         })
+//     }, 1000);
+// }
 
-const addGroup = (membersAddress, callback) => {
-    ObsidianContract.addMember(membersAddress, {
-        gas: 2000000,
-        from: membersAddress[0]//quien la envia? Podria ser el login de uPort o un default address que yo puedo stipular
-    }, (error, txHash) => {
-        if (error) { throw error }
-        waitForMined(txHash, { blockNumber: null },
-            function pendingCB() {
-                // Signal to the user you're still waiting
-                // for a block confirmation
-            },
-            function successCB(data) {
-                callback();
-            }
-        )
-    })
-}
+// const addGroup = (membersAddress, callback) => {
+//     ObsidianContract.addMember(membersAddress, {
+//         gas: 2000000,
+//         from: membersAddress[0]//quien la envia? Podria ser el login de uPort o un default address que yo puedo stipular
+//     }, (error, txHash) => {
+//         if (error) { throw error }
+//         waitForMined(txHash, { blockNumber: null },
+//             function pendingCB() {
+//                 // Signal to the user you're still waiting
+//                 // for a block confirmation
+//             },
+//             function successCB(data) {
+//                 callback();
+//             }
+//         )
+//     })
+// }
 
 const GroupMember = (props) =>{
   return  <Grid.Column width={5}>
