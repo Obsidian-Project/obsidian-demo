@@ -31,13 +31,8 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {     
         case COMPANIES_DASHBOARD_INFORMATION_RECEIVED:
-            debugger;
             let distributionPerType = getPieChartValues(action.data.subsidiesDeliverd);
             action.data.distributionPerType = distributionPerType;  
-
-           // action.data.unitsTransferred = action.data.unitsTransferred;
-            //action.data.customers = action.data.numberOfPrograms * 2;//for couples now for demo        
-
             return { ...state, ...{ companiesDashboardInfo: action.data } };  
         case PROGRAMS_RECEIVED:               
             return { ...state, ...{ programsInfo: action.data } };  

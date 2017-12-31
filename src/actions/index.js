@@ -11,7 +11,8 @@ import {
     NEW_EQUIPMENT_TRANSFERRED,
     DASHBOARD_INFORMATION_RECEIVED,
     PROGRAMS_RECEIVED,
-    COMPANIES_DASHBOARD_INFORMATION_RECEIVED
+    COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
+    EQUIPMENT_DETAILS_RECEVIED
 } from './types';
 
 import Web3 from 'web3';
@@ -34,6 +35,7 @@ const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
 const PROGRAM_URL = `${ROOT_URL}/program`;
 const GET_PROGRAMS_URL = `${ROOT_URL}/programs`;
 const DASHBOARD_INFORMATION_URL = `${ROOT_URL}/programInfo`;
+let firstTime = true;
 
 export function displayNotification(message) {
     return (dispatch) => {
@@ -119,8 +121,7 @@ export function createProgram(values, redirect) {
         let fromAddress = DEMO_ADDRESS;
         axios.post(PROGRAM_URL, values)
             .then(response => {
-                let ipfsHash = response.data;
-                debugger;
+                let ipfsHash = response.data;               
                 let costPerUnit = values.selectedEquipment.price;
                 let { subsidyAmount, units } = values;
                 //ipfsHash, costPerUnit, subsidyAmount, units
@@ -147,11 +148,18 @@ export function createProgram(values, redirect) {
 
 export function addListenerForNewRequests() {
     return (dispatch) => {
-        let myEvent = ObsidianContract.newEquipmentRequested({}, 'latest');
+        let myEvent = ObsidianContract.newEquipmentRequested('latest');
         myEvent.watch(function (error, event) {
-            if (!error) {
+            if (!error) {                   
+                if(firstTime){
+                    firstTime = false;
+                    return;
+                }               
                 dispatch({
-                    type: NEW_EQUIPMENT_REQUESTED
+                    type: NEW_EQUIPMENT_REQUESTED,
+                    data: { notificationNumber: 1,
+                        programId: event.args.programId.toNumber()
+                    }
                 })
             }
         });
@@ -169,9 +177,7 @@ export function getInformationForCompaniesDashboard() {
         //iterate and filter all the ones that are delivered    
         let result = {};
         axios.get(GET_PROGRAMS_URL)
-            .then(response => {                
-                debugger;
-              
+            .then(response => {                                           
                 let programs = response.data;
                 let numberOfPrograms = programs.length;
                 let unitsTransferred = programs.filter((item) => {
@@ -180,9 +186,9 @@ export function getInformationForCompaniesDashboard() {
 
                 let balance = 0;
                 for(let i = 0; i < unitsTransferred.length; i++){
-                    balance += unitsTransferred[i].costPerUnit;
+                    balance += Number(unitsTransferred[i].costPerUnit);
                 }             
-                result.totalEarnings = balance;
+                result.totalEarnings = balance > 0 ? balance.format() : balance;
                 result.unitsTransferred = unitsTransferred.length;
                 result.numberOfPrograms = numberOfPrograms;
                 
@@ -193,7 +199,7 @@ export function getInformationForCompaniesDashboard() {
                         type: "Tractor",
                         costPerUnit: item.costPerUnit
                     }
-                })
+                });
                 result.transfers = transfers;
                 dispatch({
                     type: COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
@@ -237,20 +243,83 @@ export function getInformationForGovernmentDashboard() {
     }
 }
 
+export function getProgram(programId){
+    return (dispatch) => {
+        axios.get(`${GET_PROGRAMS_URL}`)
+            .then(response => {             
+                let result;
+                let program = response.data.filter((item) => {
+                    return item.programId == Number(programId);
+                });
+                if(program.length > 0){
+                    result = program[0].selectedEquipment;
+                    result.programId = programId;
+                }
+                dispatch({
+                    type: EQUIPMENT_DETAILS_RECEVIED,
+                    data: result
+                })
+
+            }).catch((error) => {
+
+            })
+    }
+}
 export function addListenerForNewTransfers() {//for governments
     return (dispatch) => {
         let myEvent = ObsidianContract.newEquipmentTransferred({}, 'latest');
         myEvent.watch(function (error, event) {
-            if (!error) {
+            if (!error) {        
                 dispatch({
                     type: NEW_EQUIPMENT_TRANSFERRED//tengo que reaccionar, obtener data, entonces
                     //dispatcho otra action
-                })
+                });
             }
         });
     }
 }
 
+export function makeTransfer(programId, redirect){
+    return (dispatch) => {       
+        dispatch({
+            type: SHOW_LOADER,
+            data: true
+        });
+        
+        makeTransferOnChain(programId).then((result) => {
+            dispatch({
+                type: SHOW_LOADER,
+                data: false
+            });    
+            dispatch(getInformationForCompaniesDashboard());
+            dispatch(getInformationForGovernmentDashboard());
+            redirect();
+        }).catch((error)=>{
+            //TODO: catch error
+        })            
+    }
+}
+
+const makeTransferOnChain = (programId) => {
+    return new Promise((resolve, reject) => {                    
+        ObsidianContract.transfer(programId, {
+            gas: 2000000,
+            from: DEMO_ADDRESS
+        }, (error, txHash) => {
+            if (error) { throw error }
+            waitForMined(txHash, { blockNumber: null },
+                function pendingCB() {
+                    // Signal to the user you're still waiting
+                    // for a block confirmation
+                },
+                function successCB(data) {
+                    resolve();//don't need to pass nothing
+                }
+            )
+        })
+
+    });
+}
 const getMyBalance = () => {
     return new Promise((resolve, reject) => {       
         let address = DEMO_ADDRESS;
@@ -260,13 +329,12 @@ const getMyBalance = () => {
     });
 
 }
-const getProgramInformation = () => {
-    debugger;
+
+const getProgramInformation = () => { 
     return (dispatch) => {
         axios.get(GET_PROGRAMS_URL)
             .then((response) => {
-                debugger;
-               dispatch({
+                dispatch({
                    type:PROGRAMS_RECEIVED,
                    data: response.data
                });
@@ -316,3 +384,12 @@ const pollingLoop = (txHash, response, pendingCB, successCB) => {
         })
     }, 1000);
 }
+
+Number.prototype.format = function(n, x) {
+    if(this == 0){
+        return;
+    }
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+  };
+  

@@ -7,14 +7,17 @@ import {
 const initialState = {
     message: "",
     animateIn: false,
-    companyNotificationsNumber: 0,
-    governmentNotificatiosNumber: 0
+    governmentNotificatiosNumber: 0,
+    programId: 0,
+    notificationInfo: {
+        
+    }
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {     
         case NEW_EQUIPMENT_REQUESTED:
-            return { ...state, ...{ companyNotificationsNumber: state.companyNotificationsNumber + 1 } }; //TODO: hardcoded always 1 for demo
+            return { ...state, ...{ notificationInfo: action.data }}; //TODO: hardcoded always 1 for demo
         case SHOW_NOTIFICATION:
             return { ...state, ...{ message: action.data, animateIn: action.data !== "" } };        
         default:

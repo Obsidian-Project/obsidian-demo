@@ -3,7 +3,8 @@ import {
     EQUIPMENT_RECEIVED,
     SELECTED_EQUIPMENT,
     SHOW_MODAL,
-    SHOW_LOADER   
+    SHOW_LOADER,
+    EQUIPMENT_DETAILS_RECEVIED   
 } from '../actions/types';
 
 
@@ -12,8 +13,8 @@ const initialState = {
     equipment: undefined,
     selectedEquipment: undefined,
     modalOpen: false,
-    showLoader: false
-    //In case I need more modal can move to a reducer for that
+    showLoader: false,
+    equipmentDetails: undefined,   
 };
 
 export default function (state = initialState, action) {
@@ -26,6 +27,8 @@ export default function (state = initialState, action) {
             return { ...state, ...{ equipments: action.data } };       
         case EQUIPMENT_RECEIVED:         
             return { ...state, ...{ equipment: action.data } };  
+        case EQUIPMENT_DETAILS_RECEVIED:          
+            return { ...state, ...{ equipmentDetails: action.data } };          
         case SHOW_MODAL:
             return { ...state, ...{ modalOpen: action.data } };  
         default:

@@ -4,6 +4,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { Label, Container, Grid, Segment, Image, Menu, Icon, Dropdown, Header, Message, Modal, Button, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types'; // ES6
 import NotificationComponent from "../../components/notificationComponent";
+import * as actions from '../../actions';
+import { connect, } from 'react-redux';
 
 const HeaderFixed = (props) => {
     return <div className="NavBar">
@@ -33,17 +35,15 @@ const HeaderFixed = (props) => {
             trigger={
               <Menu.Item as ="a" name='alarm'>
                 <Icon name='alarm' />
-                 <Label color='red' circular floating>2</Label>
+                 {props.companyNotificationsNumber > 0 && <Label color='red' circular floating>{props.companyNotificationsNumber}</Label>}
               </Menu.Item>
             }
             content={
               <Button color='green'>
-                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails`} >
+                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails/${props.programId}`} >
                   New request for equipment
                 </Link>
               </Button>
-
-
             }
             hoverable
             position='top right'
@@ -89,11 +89,13 @@ class Layout extends React.Component {
                   <Grid.Row>
                       <Grid.Column width={16} className="main-content">
                           <HeaderFixed
+                            companyNotificationsNumber={this.props.companyNotificationsNumber}
                             baseUrl={this.props.baseUrl} title={this.state.title}
                             logo={this.props.logo}
                             pageTitle={this.props.pageTitle}
                             pageIcon={this.props.pageIcon}
                             color={this.props.color}
+                            programId={this.props.programId}
                            />
                           <Container className="inner-content">
                             {this.props.children}
@@ -111,4 +113,14 @@ Layout.propTypes = {
     baseUrl: PropTypes.string.isRequired
 }
 
-export default withRouter(Layout);
+function mapStateProps(state) {
+  return {     
+      companyNotificationsNumber: state.notificationReducer.notificationInfo.notificationNumber,
+      programId: Number(state.notificationReducer.notificationInfo.programId)
+  }
+}
+
+Layout = withRouter(Layout);
+
+export default connect(mapStateProps, actions)(Layout);
+

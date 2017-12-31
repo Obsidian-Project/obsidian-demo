@@ -57,7 +57,7 @@ class Equipments extends React.Component {
     }
 
     onItemClick = (e) => {
-        debugger;
+       // debugger;
     }
     render() {
         return (

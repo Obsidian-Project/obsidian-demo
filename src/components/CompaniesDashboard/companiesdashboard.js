@@ -18,6 +18,7 @@ const data = [
   { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
 ];
 
+
 class CompaniesDashboard extends React.Component {
   constructor() {
     super();
@@ -72,12 +73,12 @@ class CompaniesDashboard extends React.Component {
                 <Grid width={16}>
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">Total Earnings</h5>
-                    <p>{this.props.dashboardInfo.totalEarnings}</p>
+                    <p>{`$ ${this.props.dashboardInfo.totalEarnings}`}</p>
                   </Grid.Column>
 
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">This Month</h5>
-                    <p>{this.props.dashboardInfo.totalEarnings}</p>
+                    <p>{`$ ${this.props.dashboardInfo.totalEarnings}`}</p>
                   </Grid.Column>
                 </Grid>
               </Segment>
@@ -125,15 +126,15 @@ class CompaniesDashboard extends React.Component {
                   </Table.Header>
 
                   <Table.Body>
-                    {this.props.transfers && this.props.transfers.map((item) => {
+                    {this.props.dashboardInfo.transfers && this.props.dashboardInfo.transfers.map((item) => {
                       return <Table.Row>
                         <Table.Cell>{item.model}</Table.Cell>
                         <Table.Cell>{item.type}</Table.Cell>
                         <Table.Cell>{item.costPerUnit}</Table.Cell>
                       </Table.Row>
-                    })                    
+                    })
                     }
-                    {!this.props.transfers && 
+                    {!this.props.dashboardInfo.transfers &&
                       <Table.Row>
                         <Table.Cell>No records</Table.Cell>
                         <Table.Cell>No records</Table.Cell>

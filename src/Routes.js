@@ -32,7 +32,7 @@ const CompaniesRoutes = () => (
         <Companies>
             <Route exact path="/companies" component={CompaniesDashboard} />
             <Route path="/companies/newProgram" component={NewProgram} />
-            <Route path="/companies/equipmentdetails" component={EquipmentDetails} />
+            <Route path="/companies/equipmentdetails/:equipmentId" component={EquipmentDetails} />
         </Companies>
     </Switch>
 )
