@@ -108,12 +108,12 @@ class GovernmentDashboard extends React.Component {
                         <Grid width={16}>
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">Total Spent</h5><br/>
-                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
+                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "0"}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">This Month</h5><br/>
-                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "-"}</p>
+                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "0"}</p>
                           </Grid.Column>
                         </Grid>
                       </Segment>
