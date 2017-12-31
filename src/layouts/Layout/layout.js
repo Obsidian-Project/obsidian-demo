@@ -35,7 +35,7 @@ const HeaderFixed = (props) => {
             trigger={
               <Menu.Item as ="a" name='alarm'>
                 <Icon name='alarm' />
-                 {props.companyNotificationsNumber > 0 && <Label color='red' circular floating>{props.companyNotificationsNumber}</Label>}
+                 {props.companyNotificationsNumber > 0 && props.companyNotificationsNumber < 2 && <Label color='red' circular floating>{props.companyNotificationsNumber}</Label>}
               </Menu.Item>
             }
             content={
