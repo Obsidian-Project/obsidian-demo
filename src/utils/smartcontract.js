@@ -20,45 +20,6 @@ const ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "programInfo",
-		"outputs": [
-			{
-				"name": "delivered",
-				"type": "bool"
-			},
-			{
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"name": "costPerUnit",
-				"type": "uint256"
-			},
-			{
-				"name": "subsidyAmount",
-				"type": "uint256"
-			},
-			{
-				"name": "units",
-				"type": "uint256"
-			},
-			{
-				"name": "creator",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -107,11 +68,31 @@ const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "programs",
+		"name": "programInfo",
 		"outputs": [
 			{
-				"name": "",
+				"name": "delivered",
 				"type": "bool"
+			},
+			{
+				"name": "ipfsHash",
+				"type": "string"
+			},
+			{
+				"name": "costPerUnit",
+				"type": "uint256"
+			},
+			{
+				"name": "subsidyAmount",
+				"type": "uint256"
+			},
+			{
+				"name": "units",
+				"type": "uint256"
+			},
+			{
+				"name": "creator",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -150,25 +131,6 @@ const ABI = [
 		"constant": true,
 		"inputs": [
 			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "requestInfo",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
 				"name": "element",
 				"type": "uint256"
 			}
@@ -184,6 +146,25 @@ const ABI = [
 				],
 				"name": "groupInformation",
 				"type": "tuple"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requestInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -222,6 +203,44 @@ const ABI = [
 		"inputs": [
 			{
 				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "programs",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "members",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
 				"type": "address"
 			}
 		],
@@ -242,13 +261,17 @@ const ABI = [
 			{
 				"name": "",
 				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "members",
+		"name": "membersPrograms",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -288,31 +311,16 @@ const ABI = [
 		"inputs": [
 			{
 				"indexed": false,
-				"name": "programId",
-				"type": "uint256"
+				"name": "memberAdress",
+				"type": "address"
 			},
 			{
 				"indexed": false,
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "costPerUnit",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "subsidyAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "units",
-				"type": "uint256"
+				"name": "isRegistered",
+				"type": "bool"
 			}
 		],
-		"name": "newProgramAdded",
+		"name": "newMemberAdded",
 		"type": "event"
 	},
 	{
@@ -443,16 +451,31 @@ const ABI = [
 		"inputs": [
 			{
 				"indexed": false,
-				"name": "memberAdress",
-				"type": "address"
+				"name": "programId",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
-				"name": "isRegistered",
-				"type": "bool"
+				"name": "ipfsHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "costPerUnit",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "subsidyAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "units",
+				"type": "uint256"
 			}
 		],
-		"name": "newMemberAdded",
+		"name": "newProgramAdded",
 		"type": "event"
 	},
 	{
@@ -497,7 +520,7 @@ const ABI = [
 	}
 ];
 
-const ADDRESS = "0x749f8b19cd313e3ee1e7dac14af557a0bcb4159a";
+const ADDRESS = "0x79c42f1c9227557242966f7b208d2957ad579b65";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(ABI);
