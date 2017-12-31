@@ -35,7 +35,6 @@ const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
 const PROGRAM_URL = `${ROOT_URL}/program`;
 const GET_PROGRAMS_URL = `${ROOT_URL}/programs`;
 const DASHBOARD_INFORMATION_URL = `${ROOT_URL}/programInfo`;
-let firstTime = true;
 
 export function displayNotification(message) {
     return (dispatch) => {
@@ -150,17 +149,17 @@ export function addListenerForNewRequests() {
     return (dispatch) => {
         let myEvent = ObsidianContract.newEquipmentRequested('latest');
         myEvent.watch(function (error, event) {
-            if (!error) {                   
-                if(firstTime){
-                    firstTime = false;
-                    return;
-                }               
-                dispatch({
-                    type: NEW_EQUIPMENT_REQUESTED,
-                    data: { notificationNumber: 1,
-                        programId: event.args.programId.toNumber()
-                    }
-                })
+            if (!error) {   
+                debugger;                            
+                if(!localStorage.getItem('state')){
+                    dispatch({
+                        type: NEW_EQUIPMENT_REQUESTED,
+                        data: { notificationNumber: 1,
+                            programId: event.args.programId.toNumber()
+                        }
+                    })
+                }   
+                localStorage.setItem('state', 'off');
             }
         });
     }
