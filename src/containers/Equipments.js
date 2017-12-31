@@ -58,7 +58,6 @@ class Equipments extends React.Component {
 
     onItemClick = (e) => {
         debugger;
-        console.log("Item clicked");
     }
     render() {
         return (

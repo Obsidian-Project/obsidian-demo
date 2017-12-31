@@ -224,13 +224,7 @@ class NewMember extends React.Component {
         let latitude = this.state.latitude;
         let longitude = this.state.longitude;
 
-        let sizeOfLand = Number(this.state.sizeOfLand);
-        console.log({
-            latitude,
-            longitude,
-            userAddress,
-            sizeOfLand
-        });
+        let sizeOfLand = Number(this.state.sizeOfLand);      
         this.setState({
             loading: true
         }, () => {

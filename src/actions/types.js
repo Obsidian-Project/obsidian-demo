@@ -17,3 +17,5 @@ export const NEW_EQUIPMENT_TRANSFERRED = "New_Equipment_Transferred";
 export const DASHBOARD_INFORMATION_RECEIVED = "Dashboard_Information_Received";
 
 export const PROGRAMS_RECEIVED = "Dashboard_Received";
+
+export const COMPANIES_DASHBOARD_INFORMATION_RECEIVED = "Companies_Dashboard_Information_Received";

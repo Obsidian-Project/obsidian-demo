@@ -10,7 +10,8 @@ import {
     NEW_EQUIPMENT_REQUESTED,
     NEW_EQUIPMENT_TRANSFERRED,
     DASHBOARD_INFORMATION_RECEIVED,
-    PROGRAMS_RECEIVED
+    PROGRAMS_RECEIVED,
+    COMPANIES_DASHBOARD_INFORMATION_RECEIVED
 } from './types';
 
 import Web3 from 'web3';
@@ -22,7 +23,7 @@ const DEMO_ADDRESS = "0x74913e53c6916a5fe86511edbf3c21c7d6ffb3f7";
 
 const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
 
-let ROOT_URL = "http://obsidian-api.azurewebsites.net";//"http://localhost:3000";
+let ROOT_URL = "http://obsidian-api.azurewebsites.net";
 
 if (process.env.NODE_ENV == "production") {
     ROOT_URL = "http://obsidian-api.azurewebsites.net";
@@ -146,10 +147,8 @@ export function createProgram(values, redirect) {
 
 export function addListenerForNewRequests() {
     return (dispatch) => {
-        //let myEvent = ObsidianContract.newEquipmentRequested({}, { fromBlock: 0, toBlock: 'latest' });
-        let myEvent = ObsidianContract.newProgramAdded({}, 'latest');
+        let myEvent = ObsidianContract.newEquipmentRequested({}, 'latest');
         myEvent.watch(function (error, event) {
-            console.log("New equipment was requested");
             if (!error) {
                 dispatch({
                     type: NEW_EQUIPMENT_REQUESTED
@@ -159,6 +158,56 @@ export function addListenerForNewRequests() {
     }
 }
 
+export function getInformationForCompaniesDashboard() {   
+    return (dispatch) => {
+        dispatch({
+            type: SHOW_LOADER,
+            data: true
+        });
+       
+        //Para sacar el total earnings, get all programs
+        //iterate and filter all the ones that are delivered    
+        let result = {};
+        axios.get(GET_PROGRAMS_URL)
+            .then(response => {                
+                debugger;
+              
+                let programs = response.data;
+                let numberOfPrograms = programs.length;
+                let unitsTransferred = programs.filter((item) => {
+                    return item.delivered == true;
+                });
+
+                let balance = 0;
+                for(let i = 0; i < unitsTransferred.length; i++){
+                    balance += unitsTransferred[i].costPerUnit;
+                }             
+                result.totalEarnings = balance;
+                result.unitsTransferred = unitsTransferred.length;
+                result.numberOfPrograms = numberOfPrograms;
+                
+                result.customers = numberOfPrograms * 2;//for couples now for demo        
+                let transfers = unitsTransferred.map((item) => {
+                    return {
+                        model: item.selectedEquipment.model,
+                        type: "Tractor",
+                        costPerUnit: item.costPerUnit
+                    }
+                })
+                result.transfers = transfers;
+                dispatch({
+                    type: COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
+                    data: result
+                });      
+                dispatch({
+                    type: SHOW_LOADER,
+                    data: false
+                });
+            }).catch((error) => {
+                //TODO
+            });
+    }
+}
 export function getInformationForGovernmentDashboard() {   
     return (dispatch) => {
         dispatch({
@@ -176,7 +225,6 @@ export function getInformationForGovernmentDashboard() {
                         data: result
                     });
                     dispatch(getProgramInformation());
-                    console.log(result);
                     dispatch({
                         type: SHOW_LOADER,
                         data: false
@@ -193,7 +241,6 @@ export function addListenerForNewTransfers() {//for governments
     return (dispatch) => {
         let myEvent = ObsidianContract.newEquipmentTransferred({}, 'latest');
         myEvent.watch(function (error, event) {
-            console.log("New equipment transferred");
             if (!error) {
                 dispatch({
                     type: NEW_EQUIPMENT_TRANSFERRED//tengo que reaccionar, obtener data, entonces

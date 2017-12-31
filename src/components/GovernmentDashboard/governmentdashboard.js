@@ -155,8 +155,8 @@ class GovernmentDashboard extends React.Component {
                             </Table.Header>
 
                             <Table.Body>
-                            {this.props.programsInfo && this.props.programsInfo.map((item) => {
-                                return <Table.Row>
+                            {this.props.programsInfo && this.props.programsInfo.map((item, index) => {
+                                return <Table.Row key={index}>
                                 <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>Subsidy</Table.Cell>
                                 <Table.Cell>{item.units}</Table.Cell>

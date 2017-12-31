@@ -1,7 +1,8 @@
 import {
     DASHBOARD_INFORMATION_RECEIVED,
     SHOW_LOADER,
-    PROGRAMS_RECEIVED   
+    PROGRAMS_RECEIVED,
+    COMPANIES_DASHBOARD_INFORMATION_RECEIVED   
 } from '../actions/types';
 
 
@@ -14,11 +15,30 @@ const initialState = {
         mechanizedAreaPieChartValues: []
     },  
     showLoader: false,
-    programsInfo: undefined
+    programsInfo: undefined,
+    companiesDashboardInfo: {
+        unitsTransferred: 0,
+        customers: 0,
+        totalEarnings: 0,
+        transfers: [{
+            model: "1",
+            type: "Tractor",
+            costPerUnit: 123123
+        }]
+    }
 };
-
+//subsidiesDeliverd, units, numberOfPrograms
 export default function (state = initialState, action) {
-    switch (action.type) {      
+    switch (action.type) {     
+        case COMPANIES_DASHBOARD_INFORMATION_RECEIVED:
+            debugger;
+            let distributionPerType = getPieChartValues(action.data.subsidiesDeliverd);
+            action.data.distributionPerType = distributionPerType;  
+
+           // action.data.unitsTransferred = action.data.unitsTransferred;
+            //action.data.customers = action.data.numberOfPrograms * 2;//for couples now for demo        
+
+            return { ...state, ...{ companiesDashboardInfo: action.data } };  
         case PROGRAMS_RECEIVED:               
             return { ...state, ...{ programsInfo: action.data } };  
         case SHOW_LOADER:
