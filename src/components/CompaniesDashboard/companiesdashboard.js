@@ -9,13 +9,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, Tooltip, L
 import PieChart from 'react-minimal-pie-chart';
 
 const data = [
-  { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-  { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-  { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-  { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-  { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-  { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-  { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
+  { name: 'Q1', 2015: 4000, 2016: 2400},
+  { name: 'Q2', 2015: 3000, 2016: 1398},
+  { name: 'Q3', 2015: 2000, 2016: 9800},
+  { name: 'Q4', 2015: 2780, 2016: 3908}
 ];
 
 
@@ -52,7 +49,8 @@ class CompaniesDashboard extends React.Component {
               </Segment>
 
               <Segment>
-                <ResponsiveContainer width="100%" height={325}>
+                <Header as="h3">Earnings per quarter</Header>
+                <ResponsiveContainer width="100%" height={290}>
                   <BarChart data={data}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
@@ -60,8 +58,8 @@ class CompaniesDashboard extends React.Component {
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="pv" fill="#21ba45" />
-                    <Bar dataKey="uv" fill="#1a9437" />
+                    <Bar dataKey="2015" fill="#21ba45" />
+                    <Bar dataKey="2016" fill="#1a9437" />
                   </BarChart>
                 </ResponsiveContainer>
               </Segment>
@@ -114,7 +112,7 @@ class CompaniesDashboard extends React.Component {
             </Grid.Column>
 
             <Grid.Column >
-              <Segment className="tableContainer">
+              <Segment className="tableContainer2">
                 <Header as="h3">Last Transfers</Header>
                 <Table className="table" textAlign="center" size="small">
                   <Table.Header>
@@ -200,4 +198,3 @@ function mapStateProps(state) {
 }
 
 export default connect(mapStateProps, actions)(CompaniesDashboard);
-
