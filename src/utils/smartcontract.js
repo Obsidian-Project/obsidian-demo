@@ -497,7 +497,7 @@ const ABI = [
 	}
 ];
 
-const ADDRESS = "0xa1e72a2fe3906a18bed25e17e370b3588354d347";
+const ADDRESS = "0x749f8b19cd313e3ee1e7dac14af557a0bcb4159a";
 
 export const CreateObsidianContractObj = (web3) => {      
     let contractABI = web3.eth.contract(ABI);

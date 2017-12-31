@@ -19,7 +19,7 @@ import { CreateObsidianContractObj } from '../utils/smartcontract.js';
 
 const ETHEREUM_PROVIDER = "http://52.178.92.72:8545";
 
-const DEMO_ADDRESS = "0x74913e53c6916a5fe86511edbf3c21c7d6ffb3f7";
+const DEMO_ADDRESS = "0x6884ff0de92e3328173ab12b722c0f2d727b1677";
 
 const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
 
