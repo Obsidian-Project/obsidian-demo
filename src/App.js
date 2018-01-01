@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import styles from './App.css';
 import * as actions from './actions';
 import { connect, } from 'react-redux';
+import './utils';
 
 class App extends React.Component {
   constructor() {

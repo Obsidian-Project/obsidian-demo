@@ -127,7 +127,7 @@ export function createProgram(values, redirect) {
                                 type: SHOW_PROGRAM_CREATED_VIEW,
                                 data: false    
                             }); 
-                        }, 3000);
+                        }, 1500);
                     }).catch((error) => {
                         //TODO: handle error
                     });
@@ -158,7 +158,7 @@ export function getInformationForCompaniesDashboard() {
                 for (let i = 0; i < unitsTransferred.length; i++) {
                     balance += Number(unitsTransferred[i].costPerUnit);
                 }
-                result.totalEarnings = balance > 0 ? balance.format() : balance;
+                result.totalEarnings = balance > 0 ? balance : balance;
                 result.unitsTransferred = unitsTransferred.length;
                 result.numberOfPrograms = numberOfPrograms;
 
@@ -349,10 +349,3 @@ const getProgramInformation = () => {
     }
 }
 
-Number.prototype.format = function (n, x) {
-    if (this == 0) {
-        return;
-    }
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-};

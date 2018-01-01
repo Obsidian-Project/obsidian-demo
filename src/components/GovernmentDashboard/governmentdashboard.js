@@ -8,30 +8,6 @@ import Governments from '../../containers/Governments'
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
 
-Number.prototype.format = function(n, x) {
-  if(this == 0){
-      return;
-  }
-  var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-  return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-};
-
-
-const data = [
-      {name: 'January', subsides:100},
-      {name: 'February', subsides:230},
-      {name: 'March', subsides:103},
-      {name: 'April', subsides:240},
-      {name: 'May', subsides:305},
-      {name: 'June', subsides:293},
-      {name: 'July', subsides:521},
-      {name: 'August', subsides:423},
-      {name: 'September', subsides:234},
-      {name: 'October', subsides:435},
-      {name: 'November', subsides:345},
-      {name: 'December', subsides:456}
-];
-
 class GovernmentDashboard extends React.Component {
 
     constructor() {
@@ -40,6 +16,24 @@ class GovernmentDashboard extends React.Component {
           pieChartValues: []
         }
     }
+    getSubsidiesPerYear = (subsidies) => {
+      const data = [
+        {name: 'January', subsides:0},
+        {name: 'February', subsides:0},
+        {name: 'March', subsides:0},
+        {name: 'April', subsides:0},
+        {name: 'May', subsides:0},
+        {name: 'June', subsides:0},
+        {name: 'July', subsides:0},
+        {name: 'August', subsides:0},
+        {name: 'September', subsides:0},
+        {name: 'October', subsides:0},
+        {name: 'November', subsides:0},
+        {name: 'December', subsides:subsidies}
+      ];
+      return data;
+    }
+
     componentWillMount(){
       this.props.getInformationForGovernmentDashboard();
     }
@@ -174,7 +168,7 @@ class GovernmentDashboard extends React.Component {
                       <Segment>
                         <Header as="h3">Subsidies delivered</Header>
                         <ResponsiveContainer width = "100%" height={300}>
-                          <LineChart data={data}
+                          <LineChart data={this.getSubsidiesPerYear(this.props.dashboardInfo.subsidiesDeliverd)}
                                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                            <XAxis dataKey="name"/>
                            <YAxis/>

@@ -8,14 +8,6 @@ import { Header, Button, Grid, Segment, Statistic, List, Table } from 'semantic-
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import PieChart from 'react-minimal-pie-chart';
 
-const data = [
-  { name: 'Q1', 2015: 4000, 2016: 2400},
-  { name: 'Q2', 2015: 3000, 2016: 1398},
-  { name: 'Q3', 2015: 2000, 2016: 9800},
-  { name: 'Q4', 2015: 2780, 2016: 3908}
-];
-
-
 class CompaniesDashboard extends React.Component {
   constructor() {
     super();
@@ -24,12 +16,41 @@ class CompaniesDashboard extends React.Component {
   componentWillMount() {
     this.props.getInformationForCompaniesDashboard();
   }
+
+  getDataForChart = (earnings) => {
+    debugger;
+    const data = [
+      { name: 'Q1', 2017: 0, 2016: 0},
+      { name: 'Q2', 2017: 0, 2016: 0},
+      { name: 'Q3', 2017: 0, 2016: 0},
+      { name: 'Q4', 2017: earnings, 2016: 0}
+    ];
+    return data;
+  }
+
+  getEarningsPerYear = (earnings) => {
+    const data = [
+      {name: 'January', 2016: 0, 2017: 0},
+      {name: 'February', 2016: 0, 2017: 0},
+      {name: 'March', 2016: 0, 2017: 0},
+      {name: 'April', 2016: 0, 2017: 0},
+      {name: 'May', 2016: 0, 2017: 0},
+      {name: 'June', 2016: 0, 2017: 0},
+      {name: 'July', 2016: 0, 2017: 0},
+      {name: 'August', 2016: 0, 2017: 0},
+      {name: 'September', 2016: 0, 2017: 0},
+      {name: 'October', 2016: 0, 2017: 0},
+      {name: 'November', 2016: 0, 2017: 0},
+      {name: 'December', 2016: 0, 2017: earnings}
+    ];
+    return data;
+  }
   render() {
     return (
       <span>
         <Grid columns={3}>
           <Grid.Row>
-            <Header as="h1">Dashboard</Header>
+            <Header style={{ paddingLeft: "1rem"}} as="h1">Dashboard</Header>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column >
@@ -51,15 +72,15 @@ class CompaniesDashboard extends React.Component {
               <Segment>
                 <Header as="h3">Earnings per quarter</Header>
                 <ResponsiveContainer width="100%" height={290}>
-                  <BarChart data={data}
+                  <BarChart data={this.getDataForChart(this.props.dashboardInfo.totalEarnings || 0)}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="2015" fill="#21ba45" />
-                    <Bar dataKey="2016" fill="#1a9437" />
+                    <Bar dataKey="2016" fill="#00908a" />
+                    <Bar dataKey="2017" fill="#1a9437" />
                   </BarChart>
                 </ResponsiveContainer>
               </Segment>
@@ -71,12 +92,12 @@ class CompaniesDashboard extends React.Component {
                 <Grid width={16}>
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">Total Earnings</h5>
-                    <p>{`$ ${this.props.dashboardInfo.totalEarnings}`}</p>
+                    <p>{`$ ${this.props.dashboardInfo.totalEarnings.format()}`}</p>
                   </Grid.Column>
 
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">This Month</h5>
-                    <p>{`$ ${this.props.dashboardInfo.totalEarnings}`}</p>
+                    <p>{`$ ${this.props.dashboardInfo.totalEarnings.format()}`}</p>
                   </Grid.Column>
                 </Grid>
               </Segment>
@@ -128,7 +149,7 @@ class CompaniesDashboard extends React.Component {
                       return <Table.Row key={index}>
                         <Table.Cell>{item.model}</Table.Cell>
                         <Table.Cell>{item.type}</Table.Cell>
-                        <Table.Cell>{item.costPerUnit}</Table.Cell>
+                        <Table.Cell>{`$ ${Number(item.costPerUnit).format()}`}</Table.Cell>
                       </Table.Row>
                     })
                     }
@@ -148,16 +169,16 @@ class CompaniesDashboard extends React.Component {
           <Grid.Row>
             <Grid.Column width={10}>
               <Segment>
-                <Header as="h3">Leases expiring in the next month</Header>
+                <Header as="h3">Earnings per year</Header>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={data}
+                  <LineChart data={this.getEarningsPerYear(this.props.dashboardInfo.totalEarnings || 0)}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="pv" stroke="#21ba45" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="2017" stroke="#21ba45" activeDot={{ r: 8 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </Segment>

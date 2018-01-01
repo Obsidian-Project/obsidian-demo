@@ -59,8 +59,8 @@ const getPieChartValues = (numberOfPrograms) => {
     let pieChartValues =
     [
         { value: 0, key: 1, color: '#00b5ad' },
-        { value: 0, key: 2, color: '#7fdad6' },
-        { value: 100, key: 3, color: '#00908a' }
+        { value: 0, key: 2, color: '#bec038' },
+        { value: 100, key: 3, color: '#21ba45' }
     ];
     return pieChartValues;
 }

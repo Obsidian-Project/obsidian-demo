@@ -19,8 +19,7 @@ axios.get(SMART_CONTRACT_INFO_URL)
         axios.get(ACCOUNT_INFO_URL)
             .then((accountInfo) => {                      
                 let contractObject = createSmartContractObject(smartContractInfo.data, accountInfo.data.account);                
-                setDefaultAccount(accountInfo.data.account);
-                //setSmartContractObject(contractObject);
+                setDefaultAccount(accountInfo.data.account);              
                 let obsidianActions = obsidianContract(contractObject);
                 const createStoreWithMiddleware = applyMiddleware(reduxThunk.withExtraArgument({ ObsidianSmartContract: contractObject, Obsidian: obsidianActions }))(createStore);
                 const store = createStoreWithMiddleware(reducers);

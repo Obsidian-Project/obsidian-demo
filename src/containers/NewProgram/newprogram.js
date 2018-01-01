@@ -9,14 +9,6 @@ import Equipments from '../Equipments';
 import './newprogram.css';
 const MNID = require('mnid');
 
-Number.prototype.format = function(n, x) {
-    if(this == 0){
-        return;
-    }
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-};
-
 const programType = [
   {
     text: 'Subsidy',

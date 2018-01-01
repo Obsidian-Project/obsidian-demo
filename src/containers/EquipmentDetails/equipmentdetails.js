@@ -31,7 +31,8 @@ class EquipmentDetails extends React.Component {
             <Header>Transfering</Header>
           </Loader>
         </Dimmer>}
-
+        
+        
         <Segment>
           <Grid>
             <Grid.Column width={8}>
