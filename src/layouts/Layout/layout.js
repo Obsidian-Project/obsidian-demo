@@ -16,21 +16,21 @@ const HeaderFixed = (props) => {
           </Link>
         </Menu.Item>
         <Menu.Item><Link to="/">Home</Link></Menu.Item>
-        <Menu.Item><Link to="/programs">Programs</Link></Menu.Item>
+        {props.showPrograms && <Menu.Item><Link to="/programs">Programs</Link></Menu.Item>}
 
         <Menu.Menu position='right'>
           <Dropdown item icon="add">
             <Dropdown.Menu>
               <Dropdown.Item><Link to={`/${props.baseUrl}/newMember`}>New Member</Link></Dropdown.Item>
               <Dropdown.Item><Link to={`/${props.baseUrl}/newGroup`}>New Group</Link></Dropdown.Item>
-              <Dropdown.Item><Link to={`/${props.baseUrl}/newProgram`}>New Program</Link></Dropdown.Item>
+              {props.showPrograms && <Dropdown.Item><Link to={`/${props.baseUrl}/newProgram`}>New Program</Link></Dropdown.Item>}
             </Dropdown.Menu>
           </Dropdown>
 
           <Menu.Item name='search'>
             <Icon name='search' />
           </Menu.Item>
-
+          {props.showNotifications &&
           <Popup
             trigger={
               <Menu.Item as ="a" name='alarm'>
@@ -48,7 +48,7 @@ const HeaderFixed = (props) => {
             hoverable
             position='top right'
           />
-
+          }
 
           <Menu.Item name='user'>
             <Icon name='user' />
@@ -88,10 +88,10 @@ class Layout extends React.Component {
         return (
           <Container
             fluid
-            className={`main-container ${this.props.baseUrl}`}>
+            className={`main-container ${this.props.baseUrl}`}>           
               <Grid>
-                  <Grid.Row>
-                      <Grid.Column width={16} className="main-content">
+                  <Grid.Row>                    
+                      <Grid.Column width={16} className="main-content">                       
                           <HeaderFixed
                             companyNotificationsNumber={this.props.companyNotificationsNumber}
                             baseUrl={this.props.baseUrl} title={this.state.title}
@@ -100,6 +100,8 @@ class Layout extends React.Component {
                             pageIcon={this.props.pageIcon}
                             color={this.props.color}
                             programId={this.props.programId}
+                            showPrograms={this.props.showPrograms}
+                            showNotifications={this.props.showNotifications}
                            />
                           <Container className="inner-content">
                             {this.props.children}
@@ -114,9 +116,13 @@ class Layout extends React.Component {
 
 Layout.propTypes = {
     // logo: PropTypes.any.isRequired,
-    baseUrl: PropTypes.string.isRequired
+    baseUrl: PropTypes.string.isRequired,
 }
 
+Layout.defaultProps ={
+  showPrograms: true,
+  showNotifications: false
+}
 function mapStateProps(state) {
   return {     
       companyNotificationsNumber: state.notificationReducer.numberOfNotifications,

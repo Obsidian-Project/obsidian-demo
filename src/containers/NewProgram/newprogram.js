@@ -102,13 +102,14 @@ class NewProgram extends React.Component {
     }
     render() {        
         return (
-          <span>
+          <div>
             {this.props.showLoader && <Dimmer inverted active>
                 <Loader>
                 <Header>Program is being created</Header>
               </Loader>
             </Dimmer>}
-            <Grid>
+            {!this.props.showProgramCreatedView &&
+            <Grid>                        
               <Grid.Row>
                 <Grid.Column><Header as="h1">New Program</Header>  </Grid.Column>
               </Grid.Row>
@@ -120,12 +121,9 @@ class NewProgram extends React.Component {
                     <Form.Input label='Name' placeholder="Name of the program" onChange={this.onNameChange} value={this.state.name} />
                     <Form.TextArea label='Description' placeholder="Description about the program" onChange={this.onDescriptionChange} value={this.state.description} />
                     <Form.Select label='Type' options={programType} value={this.state.programType} onChange={this.onProgramTypeChange} />
-
-                    <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
-                    <Form.Input label='Amount to subsidy per unit' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />
-
-                    <Modal
-                      trigger={<Button fluid color='grey' onClick={this.selectEquipment}>Select Equipment</Button>}
+                   
+                     <Modal
+                      trigger={<Form.Button fluid color='grey' onClick={this.selectEquipment}>Select Equipment</Form.Button>}
                       open={this.props.modalOpen}
                       onClose={this.handleClose}>
                       <Modal.Header>Select an Equipment</Modal.Header>
@@ -135,6 +133,12 @@ class NewProgram extends React.Component {
                             </Modal.Description>
                       </Modal.Content>
                     </Modal>
+                    {this.props.selectedEquipment &&
+                    <div>                        
+                    <Form.Input label='Units' placeholder="How many units?" onChange={this.onUnitsChange} value={this.state.units} />
+                    <Form.Input label='Amount to subsidy per unit' placeholder="The amount to subsidy" onChange={this.onSubsidyAmountChange} value={this.state.subsidyAmount} />                                       
+                    </div>
+                    }
                   </Form>
                 </Segment>
               </Grid.Column>
@@ -175,9 +179,18 @@ class NewProgram extends React.Component {
                   </Button>
                 </Segment>
                 }
-              </Grid.Column>
-            </Grid>
-          </span>
+              </Grid.Column>  </Grid>
+             }
+              {this.props.showProgramCreatedView &&
+               <Grid> 
+              <Grid.Column width={16} className="program-created">
+                  <Segment>
+                      <h1>The program has being created successfully</h1>
+                  </Segment>
+              </Grid.Column>    </Grid>
+              }
+        
+          </div>
         )
     }
 }
@@ -187,7 +200,8 @@ function mapStateProps(state) {
         selectedEquipment: state.equipmentsReducer.selectedEquipment,
         modalOpen: state.equipmentsReducer.modalOpen,
         showLoader: state.equipmentsReducer.showLoader,
-        equipment: state.equipmentsReducer.equipment
+        equipment: state.equipmentsReducer.equipment,
+        showProgramCreatedView: state.equipmentsReducer.showProgramCreatedView
     }
 }
 

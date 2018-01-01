@@ -12,7 +12,8 @@ import {
     COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
     EQUIPMENT_DETAILS_RECEVIED,
     MEMBER_INFO_RECEIVED,
-    SET_NOTIFICATION_NUMBER
+    SET_NOTIFICATION_NUMBER,
+    SHOW_PROGRAM_CREATED_VIEW
 } from './types';
 
 import {
@@ -109,19 +110,23 @@ export function createProgram(values, redirect) {
                 let ipfsHash = response.data;
                 let costPerUnit = values.selectedEquipment.price;
                 let { subsidyAmount, units } = values;
-                //ipfsHash, costPerUnit, subsidyAmount, units
-                debugger;
                 Obsidian.createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units)
                     .then((response) => {
-                        debugger;
-                        //show notification message   
-                        //dispatch(displayNotification("Program created")); 
+                        dispatch({
+                            type: SHOW_PROGRAM_CREATED_VIEW,
+                            data: true    
+                        }); 
                         dispatch({
                             type: SHOW_LOADER,
                             data: false
                         });
+
                         setTimeout(() => {
                             redirect();
+                            dispatch({
+                                type: SHOW_PROGRAM_CREATED_VIEW,
+                                data: false    
+                            }); 
                         }, 3000);
                     }).catch((error) => {
                         //TODO: handle error
@@ -157,7 +162,7 @@ export function getInformationForCompaniesDashboard() {
                 result.unitsTransferred = unitsTransferred.length;
                 result.numberOfPrograms = numberOfPrograms;
 
-                result.customers = numberOfPrograms * 2;//for couples now for demo        
+                result.customers = unitsTransferred.length > 0 ? 2 : 0;//for the only 2 members registered
                 let transfers = unitsTransferred.map((item) => {
                     return {
                         model: item.selectedEquipment.model,

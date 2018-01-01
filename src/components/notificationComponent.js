@@ -10,7 +10,7 @@ class NotificationComponent extends React.Component {
 
         return(
             <div id="message-notification">
-                {this.props.message !== "" &&
+                
                     <AnimateOnChange
                         baseClassName="animate"
                         animationClassName={animation}
@@ -20,7 +20,7 @@ class NotificationComponent extends React.Component {
                             header={this.props.message}
                         />     
                     </AnimateOnChange>
-                }
+              
             </div>
         )
     }

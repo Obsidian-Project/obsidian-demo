@@ -4,7 +4,8 @@ import {
     SELECTED_EQUIPMENT,
     SHOW_MODAL,
     SHOW_LOADER,
-    EQUIPMENT_DETAILS_RECEVIED   
+    EQUIPMENT_DETAILS_RECEVIED,
+    SHOW_PROGRAM_CREATED_VIEW   
 } from '../actions/types';
 
 
@@ -14,11 +15,14 @@ const initialState = {
     selectedEquipment: undefined,
     modalOpen: false,
     showLoader: false,
-    equipmentDetails: undefined,   
+    equipmentDetails: undefined,
+    showProgramCreatedView: false   
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {      
+        case SHOW_PROGRAM_CREATED_VIEW:
+            return { ...state, ...{ showProgramCreatedView: action.data } };  
         case SHOW_LOADER:           
             return { ...state, ...{ showLoader: action.data } };  
         case SELECTED_EQUIPMENT:

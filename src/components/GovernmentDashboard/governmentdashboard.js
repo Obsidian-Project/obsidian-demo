@@ -45,10 +45,10 @@ class GovernmentDashboard extends React.Component {
     }
     render() {
         return(
-            <span>
+            <div>
                 <Grid columns={3}>
                   <Grid.Row>
-                    <Header as="h1">Dashboard</Header>
+                    <Header style={{ paddingLeft: "1rem"}} as="h1">Dashboard</Header>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Column >
@@ -62,7 +62,7 @@ class GovernmentDashboard extends React.Component {
 
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Beneficiaries</h5><br/>
-                            <p>{this.props.dashboardInfo.subsidiesDeliverd * 2}</p>
+                            <p>{this.props.dashboardInfo.subsidiesDeliverd > 0 ? 2 : 0}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
@@ -188,7 +188,7 @@ class GovernmentDashboard extends React.Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-            </span>
+            </div>
       )
     }
 }

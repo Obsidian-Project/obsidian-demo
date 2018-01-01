@@ -25,3 +25,5 @@ export const EQUIPMENT_DETAILS_RECEVIED = "Equipment_Details_Received";
 export const MEMBER_INFO_RECEIVED = "Member_Info_Received";
 
 export const SET_NOTIFICATION_NUMBER = "Set_Notification_Number";
+
+export const SHOW_PROGRAM_CREATED_VIEW = "Show_Program_Created_View";

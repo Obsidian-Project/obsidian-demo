@@ -10,3 +10,18 @@ p.price-per-unit {
 .ui.inverted.dimmer{
   height:100vh;
 }
+
+.sixteen.wide.column.program-created{
+  height: 85vh;
+}
+
+.sixteen.wide.column.program-created .segment{
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.sixteen.wide.column.program-created .segment h1{
+  margin: auto;
+  color: #04ad00
+}

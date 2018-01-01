@@ -15,6 +15,8 @@ class CompaniesLayout extends React.Component {
               pageTitle="Companies"
               pageIcon = "briefcase"
               baseUrl="companies"
+              showPrograms={false}
+              showNotifications={true}
               color="green">
                 {this.props.children}
             </Layout>
