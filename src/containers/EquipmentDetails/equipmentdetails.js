@@ -11,6 +11,7 @@ class EquipmentDetails extends React.Component {
     super();
   }
   componentWillMount() {
+    this.props.resetNotificationsNumber();
     if (this.props.match.params.equipmentId) {
       this.props.getProgram(this.props.match.params.equipmentId);
     }

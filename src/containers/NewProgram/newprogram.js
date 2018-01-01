@@ -17,27 +17,6 @@ Number.prototype.format = function(n, x) {
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
 
-const waitForMined = (txHash, response, pendingCB, successCB) => {
-    if (response.blockNumber) {
-        successCB()
-    } else {
-        pendingCB()
-        pollingLoop(txHash, response, pendingCB, successCB)
-    }
-}
-
-const pollingLoop = (txHash, response, pendingCB, successCB) => {
-    setTimeout(function () {
-        web3.eth.getTransaction(txHash, (error, response) => {
-            if (error) { throw error }
-            if (response === null) {
-                response = { blockNumber: null }
-            }
-            waitForMined(txHash, response, pendingCB, successCB)
-        })
-    }, 1000);
-}
-
 const programType = [
   {
     text: 'Subsidy',
@@ -48,8 +27,6 @@ const programType = [
     value: 'other'
   }
 ]
-
-
 
 class NewProgram extends React.Component {
     constructor() {
@@ -108,21 +85,7 @@ class NewProgram extends React.Component {
     }
     onProgramTypeChange = (event, data) => {
         this.setState({ programType: data.value });
-    }
-    requestCredentials = () => {
-        uport.requestCredentials({
-            requested: ['name', 'phone', 'country', 'avatar'],
-            verified: ["NationalIdVerified"],
-            notifications: true
-        })
-        .then((credentials) => {
-            let addressPayload = MNID.decode(credentials.address);
-            let userAddress = addressPayload.address;
-            this.setState({
-                fromAdress: userAddress
-            });
-        });
-    }
+    }   
 
     getTotalToPay(){
         let units = this.state.units;
@@ -135,9 +98,9 @@ class NewProgram extends React.Component {
         return (units * price).format();
     }
     componentWillMount(){
-       //this.requestCredentials();
+        this.props.resetSelectedEquipment();
     }
-    render() {
+    render() {        
         return (
           <span>
             {this.props.showLoader && <Dimmer inverted active>

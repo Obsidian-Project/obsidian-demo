@@ -26,10 +26,4 @@ class Companies extends React.Component {
     }
 }
 
-function mapStateProps(state) {
-    return {
-        numberOfNotifications: state.notificationReducer.companyNotificationsNumber
-    }
-}
-
-export default connect(mapStateProps,actions)(Companies);
+export default connect(null, actions)(Companies);

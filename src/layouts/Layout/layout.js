@@ -48,15 +48,23 @@ const HeaderFixed = (props) => {
             hoverable
             position='top right'
           />
+
+
+          <Menu.Item name='user'>
+            <Icon name='user' />
+          </Menu.Item>
         </Menu.Menu>
       </Menu>
     </div>
 };
 
 class Layout extends React.Component {
+    constructor(){
+        super();       
+    } 
     componentWillMount(){
-        //this.props.setupEventListeners();
-        //hot fix for the bad design of the hierarchy and the need of higher order components
+        //hot fix for the bad design of the hierarchy and the need of higher order components        
+        
         const { match, location } = this.props;
         if(location.pathname.indexOf("newMember") > -1){
             this.setState({
@@ -111,8 +119,8 @@ Layout.propTypes = {
 
 function mapStateProps(state) {
   return {     
-      companyNotificationsNumber: state.notificationReducer.notificationInfo.notificationNumber,
-      programId: Number(state.notificationReducer.notificationInfo.programId)
+      companyNotificationsNumber: state.notificationReducer.numberOfNotifications,
+      programId: Number(state.notificationReducer.programId)
   }
 }
 

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import {
     SHOW_NOTIFICATION,
     EQUIPMENT_RECEIVED,
@@ -13,29 +11,17 @@ import {
     PROGRAMS_RECEIVED,
     COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
     EQUIPMENT_DETAILS_RECEVIED,
-    MEMBER_INFO_RECEIVED
+    MEMBER_INFO_RECEIVED,
+    SET_NOTIFICATION_NUMBER
 } from './types';
 
-import Web3 from 'web3';
-import { CreateObsidianContractObj } from '../utils/smartcontract.js';
+import {
+    TRACTORS_URL, PROGRAM_URL,
+    GET_PROGRAMS_URL,
+    DASHBOARD_INFORMATION_URL
+} from '../constants';
 
-const ETHEREUM_PROVIDER = "http://52.178.92.72:8545";
-
-const DEMO_ADDRESS = "0x6884ff0de92e3328173ab12b722c0f2d727b1677";
-
-const web3Instance = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER));
-
-let ROOT_URL = "http://obsidian-api.azurewebsites.net";
-
-if (process.env.NODE_ENV == "production") {
-    ROOT_URL = "http://obsidian-api.azurewebsites.net";
-}
-
-const ObsidianContract = CreateObsidianContractObj(web3Instance);
-const TRACTORS_URL = `${ROOT_URL}/equipments/tractors`;
-const PROGRAM_URL = `${ROOT_URL}/program`;
-const GET_PROGRAMS_URL = `${ROOT_URL}/programs`;
-const DASHBOARD_INFORMATION_URL = `${ROOT_URL}/programInfo`;
+import axios from 'axios';
 
 export function displayNotification(message) {
     return (dispatch) => {
@@ -113,20 +99,21 @@ export function closeModal() {
 }
 
 export function createProgram(values, redirect) {
-    return (dispatch) => {
+    return (dispatch, getState, { Obsidian }) => {
         dispatch({
             type: SHOW_LOADER,
             data: true
         });
-        let fromAddress = DEMO_ADDRESS;
         axios.post(PROGRAM_URL, values)
             .then(response => {
-                let ipfsHash = response.data;               
+                let ipfsHash = response.data;
                 let costPerUnit = values.selectedEquipment.price;
                 let { subsidyAmount, units } = values;
                 //ipfsHash, costPerUnit, subsidyAmount, units
-                createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units, fromAddress)
+                debugger;
+                Obsidian.createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units)
                     .then((response) => {
+                        debugger;
                         //show notification message   
                         //dispatch(displayNotification("Program created")); 
                         dispatch({
@@ -137,7 +124,7 @@ export function createProgram(values, redirect) {
                             redirect();
                         }, 3000);
                     }).catch((error) => {
-
+                        //TODO: handle error
                     });
             })
             .catch((error) => {
@@ -146,40 +133,16 @@ export function createProgram(values, redirect) {
     }
 }
 
-export function addListenerForNewRequests() {
-    return (dispatch) => {
-      
-        let myEvent = ObsidianContract.newEquipmentRequested("latest");
-        myEvent.watch((error, event) => {
-            if (!error) {   
-              
-                console.log("new equipment requested");
-                if(localStorage.getItem('newEquipmentRequested')){
-                    dispatch({
-                        type: NEW_EQUIPMENT_REQUESTED,
-                        data: { notificationNumber: 1,
-                            programId: event.args.programId.toNumber()
-                        }
-                    })
-               }   
-               localStorage.setItem('newEquipmentRequested', 'on');
-            }
-        });
-    }
-}
 
-export function getInformationForCompaniesDashboard() {   
+export function getInformationForCompaniesDashboard() {
     return (dispatch) => {
-        dispatch({
-            type: SHOW_LOADER,
-            data: true
-        });
-       
+    
+
         //Para sacar el total earnings, get all programs
         //iterate and filter all the ones that are delivered    
         let result = {};
         axios.get(GET_PROGRAMS_URL)
-            .then(response => {                                           
+            .then(response => {
                 let programs = response.data;
                 let numberOfPrograms = programs.length;
                 let unitsTransferred = programs.filter((item) => {
@@ -187,13 +150,13 @@ export function getInformationForCompaniesDashboard() {
                 });
 
                 let balance = 0;
-                for(let i = 0; i < unitsTransferred.length; i++){
+                for (let i = 0; i < unitsTransferred.length; i++) {
                     balance += Number(unitsTransferred[i].costPerUnit);
-                }             
+                }
                 result.totalEarnings = balance > 0 ? balance.format() : balance;
                 result.unitsTransferred = unitsTransferred.length;
                 result.numberOfPrograms = numberOfPrograms;
-                
+
                 result.customers = numberOfPrograms * 2;//for couples now for demo        
                 let transfers = unitsTransferred.map((item) => {
                     return {
@@ -206,54 +169,45 @@ export function getInformationForCompaniesDashboard() {
                 dispatch({
                     type: COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
                     data: result
-                });      
-                dispatch({
-                    type: SHOW_LOADER,
-                    data: false
-                });
+                });                
             }).catch((error) => {
                 //TODO
+                console.log(error);
             });
     }
 }
-export function getInformationForGovernmentDashboard() {   
-    return (dispatch) => {
-        dispatch({
-            type: SHOW_LOADER,
-            data: true
-        });
+export function getInformationForGovernmentDashboard() {
+    return (dispatch, getState, { Obsidian }) => {      
         let result;
+        debugger;
         axios.get(DASHBOARD_INFORMATION_URL)
             .then(response => {
                 result = response.data;
-                getMyBalance().then((balance) => {
+                Obsidian.getBalance().then((balance) => {
                     result.balance = balance;
                     dispatch({
                         type: DASHBOARD_INFORMATION_RECEIVED,
                         data: result
                     });
-                    dispatch(getProgramInformation());
-                    dispatch({
-                        type: SHOW_LOADER,
-                        data: false
-                    });
+                    dispatch(getProgramInformation());                   
                 });
             }).catch((error) => {
                 //TODO
+                debugger;
             });
-      
+
     }
 }
 
-export function getProgram(programId){
+export function getProgram(programId) {
     return (dispatch) => {
         axios.get(`${GET_PROGRAMS_URL}`)
-            .then(response => {             
+            .then(response => {
                 let result;
                 let program = response.data.filter((item) => {
                     return item.programId == Number(programId);
                 });
-                if(program.length > 0){
+                if (program.length > 0) {
                     result = program[0].selectedEquipment;
                     result.programId = programId;
                 }
@@ -268,193 +222,132 @@ export function getProgram(programId){
     }
 }
 
-export function setupEventListeners(){
+export function setupEventListeners() {
     return (dispatch) => {
-        dispatch(addListenerForNewRequests);
-        dispatch(addListenerForNewTransfers);
+        dispatch(addListenerForNewRequests());
+        dispatch(addListenerForNewTransfers());
     }
 }
-export function addListenerForNewTransfers() {//for governments
+
+export function resetSelectedEquipment(){
     return (dispatch) => {
-        let myEvent = ObsidianContract.newEquipmentTransferred('latest');
-        myEvent.watch(function (error, event) {
-            if (!error) {        
-                dispatch({
-                    type: NEW_EQUIPMENT_TRANSFERRED//tengo que reaccionar, obtener data, entonces
-                    //dispatcho otra action
-                });
+        dispatch({
+            type: SELECTED_EQUIPMENT,
+            data: undefined       
+        })
+    }
+    
+}
+
+export function resetNotificationsNumber(){
+    return (dispatch) => {
+        dispatch({
+            type: SET_NOTIFICATION_NUMBER,
+            data: 0        
+        })
+    }
+    
+}
+export function addListenerForNewRequests() {
+    return (dispatch, getState, { ObsidianSmartContract }) => {
+        debugger;
+        let myEvent = ObsidianSmartContract.newEquipmentRequested('latest');
+        myEvent.watch((error, event) => {
+            debugger;
+            if (!error) {
+                console.log("new equipment requested");
+                if (localStorage.getItem('newEquipmentRequested')) {
+                    dispatch({
+                        type: SET_NOTIFICATION_NUMBER,
+                        data: 1
+                    })
+                    dispatch({
+                        type: NEW_EQUIPMENT_REQUESTED,
+                        data: event.args.programId.toNumber()
+                    })
+                }
+                localStorage.setItem('newEquipmentRequested', 'on');
             }
         });
     }
 }
 
-export function makeTransfer(programId, redirect){
-    return (dispatch) => {       
+
+export function addListenerForNewTransfers() {
+    return (dispatch, getState, { ObsidianSmartContract }) => {
+        let myEvent = ObsidianSmartContract.newEquipmentTransferred('latest');
+        myEvent.watch((error, event) => {
+            debugger;
+            if (!error) {
+                console.log("new equipment transferred");
+                if (localStorage.getItem('newEquipmentTransferred')) {
+                    dispatch({
+                        type: NEW_EQUIPMENT_TRANSFERRED
+                    });
+                }
+                localStorage.setItem('newEquipmentTransferred', 'on');
+            }
+            dispatch({
+                type: NEW_EQUIPMENT_TRANSFERRED
+            });
+        });
+    }
+}
+
+export function makeTransfer(programId, redirect) {
+    return (dispatch, getState, { Obsidian }) => {
         dispatch({
             type: SHOW_LOADER,
             data: true
         });
-        
-        makeTransferOnChain(programId).then((result) => {
+        debugger;
+        Obsidian.makeTransferOnChain(programId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,
                 data: false
-            });    
+            });
             dispatch(getInformationForCompaniesDashboard());
             dispatch(getInformationForGovernmentDashboard());
             redirect();
-        }).catch((error)=>{
+        }).catch((error) => {
             //TODO: catch error
-        })            
+        })
     }
 }
 
 export function getMemberInformation(address, callback) {
-    return (dispatch) => {   
-        memberExist(address)
+    return (dispatch, getState, ObsidianSmartContract) => {
+        ObsidianSmartContract.memberExist(address)
             .then(() => {
-                getMemberInfoBy(address)
+                ObsidianSmartContract.getMemberInfoBy(address)
                     .then((memberInfo) => {
                         dispatch({
                             type: MEMBER_INFO_RECEIVED,
-                            data: memberInfo 
+                            data: memberInfo
                         })
                     })
             })
     }
 }
 
-const memberExist = (address) => {
-    return new Promise((resolve, reject) => {
-        ObsidianContract.members(address, (error, result) => {
-            if (!result) {
-                resolve(result);
-            }
-        });    
-    })
-}
-
-const getMemberInfoBy = (address) => {
-    return new Promise((resolve, reject) => {
-        ObsidianContract.membersInfo(address, (error, result) => {
-            let latitude = result[0];
-            let longitude = result[1];
-            let sizeOfLand = result[2].toNumber();
-            resolve({ latitude, longitude, sizeOfLand });
-            //TODO: error handling
-        });
-    })
-}
-
-const addMember = (memberAddress, latitude, longitude, sizeOfLand, callback) => {
-    ObsidianContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {
-        gas: 2000000,
-        from: memberAddress
-    }, (error, txHash) => {
-        if (error) { throw error }
-        waitForMined(txHash, { blockNumber: null },
-            function pendingCB() {
-                // Signal to the user you're still waiting
-                // for a block confirmation
-            },
-            function successCB(data) {
-                callback();
-            }
-        )
-    })
-}
-
-
-const makeTransferOnChain = (programId) => {
-    return new Promise((resolve, reject) => {                    
-        ObsidianContract.transfer(programId, {
-            gas: 2000000,
-            from: DEMO_ADDRESS
-        }, (error, txHash) => {
-            if (error) { throw error }
-            waitForMined(txHash, { blockNumber: null },
-                function pendingCB() {
-                    // Signal to the user you're still waiting
-                    // for a block confirmation
-                },
-                function successCB(data) {
-                    resolve();//don't need to pass nothing
-                }
-            )
-        })
-
-    });
-}
-const getMyBalance = () => {
-    return new Promise((resolve, reject) => {       
-        let address = DEMO_ADDRESS;
-        ObsidianContract.balances(address, (error, result) => {
-            resolve(result.toNumber());
-        })
-    });
-
-}
-
-const getProgramInformation = () => { 
+const getProgramInformation = () => {
     return (dispatch) => {
         axios.get(GET_PROGRAMS_URL)
             .then((response) => {
                 dispatch({
-                   type:PROGRAMS_RECEIVED,
-                   data: response.data
-               });
+                    type: PROGRAMS_RECEIVED,
+                    data: response.data
+                });
             }).catch((error) => {
                 //TODO: catch error
             })
-    }   
-}
-
-const createProgramOnChain = (ipfsHash, costPerUnit, subsidyAmount, units, fromAddress) => {
-    return new Promise((resolve, reject) => {
-        ObsidianContract.addProgram(ipfsHash, costPerUnit, subsidyAmount, units, {
-            gas: 2000000,
-            from: fromAddress
-        }, (error, txHash) => {
-            if (error) { throw error }
-            waitForMined(txHash, { blockNumber: null },
-                function pendingCB() {
-                    // Signal to the user you're still waiting
-                    // for a block confirmation
-                },
-                function successCB(data) {
-                    resolve();//don't need to pass nothing
-                }
-            )
-        })
-    })
-}
-
-const waitForMined = (txHash, response, pendingCB, successCB) => {
-    if (response.blockNumber) {
-        successCB();
-    } else {
-        pendingCB()
-        pollingLoop(txHash, response, pendingCB, successCB)
     }
 }
 
-const pollingLoop = (txHash, response, pendingCB, successCB) => {
-    setTimeout(function () {
-        web3Instance.eth.getTransaction(txHash, (error, response) => {
-            if (error) { throw error }
-            if (response === null) {
-                response = { blockNumber: null }
-            }
-            waitForMined(txHash, response, pendingCB, successCB)
-        })
-    }, 1000);
-}
-
-Number.prototype.format = function(n, x) {
-    if(this == 0){
+Number.prototype.format = function (n, x) {
+    if (this == 0) {
         return;
     }
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-  };
-  
+};

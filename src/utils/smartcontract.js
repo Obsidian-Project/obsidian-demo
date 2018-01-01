@@ -1,532 +1,129 @@
-const ABI = [
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "membersGroup",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfRequest",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfProgramsDelivered",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "programInfo",
-		"outputs": [
-			{
-				"name": "delivered",
-				"type": "bool"
-			},
-			{
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"name": "costPerUnit",
-				"type": "uint256"
-			},
-			{
-				"name": "subsidyAmount",
-				"type": "uint256"
-			},
-			{
-				"name": "units",
-				"type": "uint256"
-			},
-			{
-				"name": "creator",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfMembers",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfGroups",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "element",
-				"type": "uint256"
-			}
-		],
-		"name": "getGroupInfo",
-		"outputs": [
-			{
-				"components": [
-					{
-						"name": "members",
-						"type": "address[]"
-					}
-				],
-				"name": "groupInformation",
-				"type": "tuple"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "requestInfo",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "memberInfo",
-		"outputs": [
-			{
-				"name": "latitude",
-				"type": "string"
-			},
-			{
-				"name": "longitude",
-				"type": "string"
-			},
-			{
-				"name": "sizeOfLand",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "programs",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "members",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "balances",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "membersPrograms",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "balance",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "numberOfPrograms",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "memberAdress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "isRegistered",
-				"type": "bool"
-			}
-		],
-		"name": "newMemberAdded",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "newMember",
-				"type": "address"
-			},
-			{
-				"name": "latitude",
-				"type": "string"
-			},
-			{
-				"name": "longitude",
-				"type": "string"
-			},
-			{
-				"name": "sizeOfLand",
-				"type": "uint256"
-			}
-		],
-		"name": "addMember",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "programId",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"name": "costPerUnit",
-				"type": "uint256"
-			},
-			{
-				"name": "subsidyAmount",
-				"type": "uint256"
-			},
-			{
-				"name": "units",
-				"type": "uint256"
-			}
-		],
-		"name": "addProgram",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "programId",
-				"type": "uint256"
-			},
-			{
-				"name": "requester",
-				"type": "address"
-			}
-		],
-		"name": "requestEquipment",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "newGroupMembers",
-				"type": "address[]"
-			}
-		],
-		"name": "registerGroup",
-		"outputs": [
-			{
-				"name": "result",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "programId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "costPerUnit",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "subsidyAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "units",
-				"type": "uint256"
-			}
-		],
-		"name": "newProgramAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "recipient",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "equipmentId",
-				"type": "uint256"
-			}
-		],
-		"name": "newEquipmentTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "programId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "beneficiary",
-				"type": "address"
-			}
-		],
-		"name": "newEquipmentRequested",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	}
-];
+import web3 from '../actions/web3';
 
-const ADDRESS = "0xda76a990a63a3a68bb86a4308cf69032affdfa5e";
+export const obsidianContract = (ObsidianSmartContract) => {
+    return {
+        createProgramOnChain: (ipfsHash, costPerUnit, subsidyAmount, units) => {
 
-export const CreateObsidianContractObj = (web3) => {      
-    let contractABI = web3.eth.contract(ABI);
-    let contractObj = contractABI.at(ADDRESS);      
-    
-    return contractObj;  
-}     
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.addProgram(ipfsHash, costPerUnit, subsidyAmount, units, {
+                    gas: 2000000
+                }, (error, txHash) => {
+                    if (error) { throw error }
+                    waitForMined(txHash, { blockNumber: null },
+                        function pendingCB() {
+                            // Signal to the user you're still waiting
+                            // for a block confirmation
+                        },
+                        function successCB(data) {
+                            resolve();//don't need to pass nothing
+                        }
+                    )
+                })
+            })
+        },
 
+        getBalance: (address) => {
+            return new Promise((resolve, reject) => {
+                debugger;
+                let addressToCheck = address || web3.eth.defaultAccount;
+                ObsidianSmartContract.balances(addressToCheck, (error, result) => {
+                    resolve(result.toNumber());
+                })
+            });
+
+        },
+
+        makeTransferOnChain: (programId) => {
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.transfer(programId, {
+                    gas: 2000000
+                }, (error, txHash) => {
+                    if (error) { throw error }
+                    waitForMined(txHash, { blockNumber: null },
+                        function pendingCB() {
+                            // Signal to the user you're still waiting
+                            // for a block confirmation
+                        },
+                        function successCB(data) {
+                            resolve();//don't need to pass nothing
+                        }
+                    )
+                })
+
+            });
+        },
+
+        addMember: (memberAddress, latitude, longitude, sizeOfLand, callback) => {
+            ObsidianSmartContract.addMember(memberAddress, `${latitude.toFixed(4)}`, `${longitude.toFixed(4)}`, sizeOfLand, {
+                gas: 2000000,
+                from: memberAddress
+            }, (error, txHash) => {
+                if (error) { throw error }
+                waitForMined(txHash, { blockNumber: null },
+                    function pendingCB() {
+                        // Signal to the user you're still waiting
+                        // for a block confirmation
+                    },
+                    function successCB(data) {
+                        callback();
+                    }
+                )
+            })
+        },
+
+        memberExist: (address) => {
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.members(address, (error, result) => {
+                    if (!result) {
+                        resolve(result);
+                    }
+                });
+            })
+        },
+
+        getMemberInfoBy: (address) => {
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.membersInfo(address, (error, result) => {
+                    let latitude = result[0];
+                    let longitude = result[1];
+                    let sizeOfLand = result[2].toNumber();
+                    resolve({ latitude, longitude, sizeOfLand });
+                    //TODO: error handling
+                });
+            })
+        }
+    }
+}
+
+const waitForMined = (txHash, response, pendingCB, successCB) => {
+    if (response.blockNumber) {
+        successCB();
+    } else {
+        pendingCB()
+        pollingLoop(txHash, response, pendingCB, successCB)
+    }
+}
+
+const pollingLoop = (txHash, response, pendingCB, successCB) => {
+    setTimeout(function () {
+        web3.eth.getTransaction(txHash, (error, response) => {
+            if (error) { throw error }
+            if (response === null) {
+                response = { blockNumber: null }
+            }
+            waitForMined(txHash, response, pendingCB, successCB)
+        })
+    }, 1000);
+}
+
+export const setDefaultAccount = (address) => {
+    web3.eth.defaultAccount = address;
+}
+
+export const createSmartContractObject = (info) => {
+    web3.eth.defaultAccount = info.clientAddress;
+    let contractABI = web3.eth.contract(info.abi);
+    let contractObj = contractABI.at(info.address);
+    return contractObj;
+}
 //TODO: for testing, paste here but remember the API can be used !

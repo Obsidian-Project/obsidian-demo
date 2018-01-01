@@ -19,7 +19,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {      
-        case SHOW_LOADER:
+        case SHOW_LOADER:           
             return { ...state, ...{ showLoader: action.data } };  
         case SELECTED_EQUIPMENT:
             return { ...state, ...{ selectedEquipment: action.data } };    
