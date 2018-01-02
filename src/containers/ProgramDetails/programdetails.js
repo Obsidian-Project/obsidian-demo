@@ -20,7 +20,6 @@ class ProgramDetails extends React.Component {
 
   transferEquipment = () => {
     const { history } = this.props;
-    debugger;
     let programIdNumber = Number(this.props.equipmentDetails.programId);
     this.props.makeProgramTransfer(programIdNumber, () => {
       history.push("/companies");

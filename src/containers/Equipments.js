@@ -55,10 +55,7 @@ class Equipments extends React.Component {
     componentWillMount() {
         this.props.getEquipments();
     }
-
-    onItemClick = (e) => {
-       // debugger;
-    }
+  
     render() {
         return (
             <div>

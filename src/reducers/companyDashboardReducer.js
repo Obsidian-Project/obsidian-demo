@@ -29,7 +29,6 @@ export default function (state = initialState, action) {
             let distributionPerType = getPieChartValues(action.data.length);
             return update(state, { distributionPerType: { $set: distributionPerType } });
         case LAST_TRANSFERS_RECEIVED:
-            debugger;
             return { ...state, ...{ transfers: action.data } };
         case TOTAL_CUSTOMERS:
             return { ...state, ...{ customers: action.data } };

@@ -331,7 +331,7 @@ export function resetNotificationsNumber() {
 export function addListenerForEquipmentRequests() {
     return (dispatch, getState, { ObsidianSmartContract }) => {
         let myEvent = ObsidianSmartContract.newEquipmentRequested('latest');
-        myEvent.watch((error, event) => {
+        myEvent.watch((error, event) => {          
             if (!error) {
                 console.log("new equipment requested");
                 //if (localStorage.getItem('newEquipmentRequested')) {         
@@ -378,7 +378,6 @@ export function makeEquipmentTransfer(equipmentId, redirect) {
             type: SHOW_LOADER,
             data: true
         });
-        debugger;
         Obsidian.makeEquipmentTransferOnChain(equipmentId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,
