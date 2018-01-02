@@ -17,8 +17,8 @@ const initialState = {
     totalEarnings: 0,
     transfers: [{
         model: "1",
-        type: "Tractor",
-        costPerUnit: 123123
+        category: "Tractor",
+        price: 123
     }],
     distributionPerType: []
 };

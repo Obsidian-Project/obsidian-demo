@@ -4,6 +4,7 @@ import {
     PROGRAMS_RECEIVED   
 } from '../actions/types';
 
+import update from 'immutability-helper';
 
 const initialState = {
     dashboardInfo: {
@@ -16,7 +17,7 @@ const initialState = {
     showLoader: false,
     programsInfo: undefined  
 };
-//subsidiesDeliverd, units, numberOfPrograms
+
 export default function (state = initialState, action) {
     switch (action.type) {         
         case PROGRAMS_RECEIVED:               
@@ -26,9 +27,10 @@ export default function (state = initialState, action) {
         case DASHBOARD_INFORMATION_RECEIVED:
             let pieValues = getPieChartValues(action.data.numberOfPrograms);
             let mechanizedArea = getTotalLandCoverage(action.data.subsidiesDeliverd);
-            action.data.pieChartValues = pieValues;
-            action.data.mechanizedAreaPieChartValues = mechanizedArea;
-            return { ...state, ...{ dashboardInfo: action.data } };          
+            const newState = update(action.data, {
+                $merge: { pieChartValues: pieValues, mechanizedArea: mechanizedArea }
+            });
+            return update(state, { dashboardInfo: { $set: newState  }});
         default:
             return state;
     }

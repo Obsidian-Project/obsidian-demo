@@ -27,17 +27,7 @@ export const obsidianContract = (ObsidianSmartContract) => {
             return new Promise((resolve, reject) => {                
                 ObsidianSmartContract.numberOfEquipmentsDelivered((error, result) => {
                     let numberOfEquipments = result.toNumber();
-                    let indexes = [];
-                    for(let i = 0; i < numberOfEquipments; i++){
-                        indexes.push(i);
-                    }
-
-                    let actions = indexes.map(this.getEquipmentTransferred);                   
-                    var results = Promise.all(actions);
-                    results.then(data => {                    
-                        debugger;
-                        resolve(data);               
-                    });      
+					resolve(numberOfEquipments);               
                 })
             });
         },

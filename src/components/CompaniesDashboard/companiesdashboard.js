@@ -147,8 +147,8 @@ class CompaniesDashboard extends React.Component {
                     {this.props.transfers && this.props.transfers.map((item, index) => {
                       return <Table.Row key={index}>
                         <Table.Cell>{item.model}</Table.Cell>
-                        <Table.Cell>{item.type}</Table.Cell>
-                        <Table.Cell>{`$ ${Number(item.costPerUnit).format()}`}</Table.Cell>
+                        <Table.Cell>{item.category}</Table.Cell>
+                        <Table.Cell>{`$ ${Number(item.price).format()}`}</Table.Cell>
                       </Table.Row>
                     })
                     }

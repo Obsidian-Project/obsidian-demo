@@ -17,7 +17,7 @@ import {
     SHOW_PROGRAM_CREATED_VIEW,
     TOTAL_CUSTOMERS,
     COMPANY_BALANCE_RECEIVED,
-    UNITS_TRANSFERRED_RECEIVED,   
+    UNITS_TRANSFERRED_RECEIVED,
     LAST_TRANSFERS_RECEIVED
 } from './types';
 
@@ -62,7 +62,7 @@ export function getEquipment(id) {
                     data: { ...item, ...{ title }, ...{ imageUrl } }
                 });
 
-                
+
             })
             .catch((error) => {
                 //TODO: Error handling
@@ -126,8 +126,8 @@ export function createProgram(values, redirect) {
                     .then((response) => {
                         dispatch({
                             type: SHOW_PROGRAM_CREATED_VIEW,
-                            data: true    
-                        }); 
+                            data: true
+                        });
                         dispatch({
                             type: SHOW_LOADER,
                             data: false
@@ -137,8 +137,8 @@ export function createProgram(values, redirect) {
                             redirect();
                             dispatch({
                                 type: SHOW_PROGRAM_CREATED_VIEW,
-                                data: false    
-                            }); 
+                                data: false
+                            });
                         }, 1500);
                     }).catch((error) => {
                         //TODO: handle error
@@ -150,7 +150,7 @@ export function createProgram(values, redirect) {
     }
 }
 
-export function getUnitsTransferred(){
+export function getUnitsTransferred() {
     return (dispatch, getState, { Obsidian }) => {
         Obsidian.getUnitsTransferred().then((unitsTransferred) => {
             dispatch({
@@ -162,7 +162,7 @@ export function getUnitsTransferred(){
 }
 
 
-export function getCompanyBalance(){
+export function getCompanyBalance() {
     return (dispatch, getState, { Obsidian }) => {
         Obsidian.getCompanyBalance().then((balance) => {
             dispatch({
@@ -173,7 +173,7 @@ export function getCompanyBalance(){
     }
 }
 
-export function getNumberOfCustomers(){
+export function getNumberOfCustomers() {
     return (dispatch, getState, { Obsidian }) => {
         Obsidian.getUnitsTransferred().then((unitsTransferred) => {
             let totalCustomers = unitsTransferred > 0 ? 2 : 0;//TODO: need to use real members or data structure to store members that have received an equipment      
@@ -185,39 +185,51 @@ export function getNumberOfCustomers(){
     }
 }
 
-export function getTransfers(){
+export function getTransfers() {
     return (dispatch, getState, { Obsidian }) => {
-        Obsidian.getEquipmentsTransferred().then((equipmentIds) => {   
-            //get the equipment ids by index         
-            let actions = equipmentIds.map(dispatch(this.getEquipment));                   
-            var results = Promise.all(actions);
-            results.then(data => {                    
-                dispatch({
-                    type: LAST_TRANSFERS_RECEIVED,
-                    data: data
+        debugger;
+        Obsidian.getEquipmentsTransferred().then((numberOfEquipments) => {
+            //get the equipment ids by index     
+            let indexes = [];
+            for (let i = 1; i <= numberOfEquipments; i++) {
+                indexes.push(i);
+            }
+            let actions = indexes.map(Obsidian.getEquipmentTransferred);
+            let results = Promise.all(actions);
+            debugger;
+            results.then(data => {
+                let equipmentActions = data.map(getEquipmentInfo);
+                let promises = Promise.all(equipmentActions);
+                promises.then(data => {
+                    debugger;
+                    dispatch({
+                        type: LAST_TRANSFERS_RECEIVED,
+                        data: data
+                    });
                 });
-            });         
+            });
+
+
         });
     }
 }
 export function getInformationForCompaniesDashboard() {
     return (dispatch, getState, { Obsidian }) => {
-      
+
         let result = {};
         axios.get(GET_PROGRAMS_URL)
             .then(response => {
                 let programs = response.data;
                 let numberOfPrograms = programs.length;
-                debugger;
                 dispatch(getCompanyBalance());
                 dispatch(getUnitsTransferred());
                 dispatch(getNumberOfCustomers());
-                dispatch(getTransfers());                        
-                   
+                dispatch(getTransfers());
+
                 dispatch({
                     type: COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
                     data: programs
-                });                
+                });
             }).catch((error) => {
                 //TODO
                 console.log(error);
@@ -225,8 +237,8 @@ export function getInformationForCompaniesDashboard() {
     }
 }
 export function getInformationForGovernmentDashboard() {
-    return (dispatch, getState, { Obsidian }) => {      
-        let result;     
+    return (dispatch, getState, { Obsidian }) => {
+        let result;
         axios.get(DASHBOARD_INFORMATION_URL)
             .then(response => {
                 result = response.data;
@@ -236,7 +248,7 @@ export function getInformationForGovernmentDashboard() {
                         type: DASHBOARD_INFORMATION_RECEIVED,
                         data: result
                     });
-                    dispatch(getProgramInformation());                   
+                    dispatch(getProgramInformation());
                 });
             }).catch((error) => {
                 //TODO              
@@ -272,36 +284,33 @@ export function setupEventListeners() {
     return (dispatch) => {
         dispatch(addListenerForEquipmentRequests());
         dispatch(addListenerForSubsidyRequests());
-        
-        // dispatch(addListenerForNewEquipmentTransfers());
-        // dispatch(addListenerForNewSubsidyTransfers());
     }
 }
 
-export function resetSelectedEquipment(){
+export function resetSelectedEquipment() {
     return (dispatch) => {
         dispatch({
             type: SELECTED_EQUIPMENT,
-            data: undefined       
+            data: undefined
         })
     }
-    
+
 }
 
-export function resetNotificationsNumber(){
+export function resetNotificationsNumber() {
     return (dispatch) => {
         dispatch({
             type: SET_NOTIFICATION_NUMBER,
-            data: 0        
+            data: 0
         })
     }
-    
+
 }
 
 export function addListenerForEquipmentRequests() {
-    return (dispatch, getState, { ObsidianSmartContract }) => {       
+    return (dispatch, getState, { ObsidianSmartContract }) => {
         let myEvent = ObsidianSmartContract.newEquipmentRequested('latest');
-        myEvent.watch((error, event) => {           
+        myEvent.watch((error, event) => {
             if (!error) {
                 console.log("new equipment requested");
                 if (localStorage.getItem('newEquipmentRequested')) {
@@ -322,9 +331,9 @@ export function addListenerForEquipmentRequests() {
 }
 
 export function addListenerForSubsidyRequests() {
-    return (dispatch, getState, { ObsidianSmartContract }) => {             
+    return (dispatch, getState, { ObsidianSmartContract }) => {
         let myEvent = ObsidianSmartContract.newSubsidyRequested('latest');
-        myEvent.watch((error, event) => {         
+        myEvent.watch((error, event) => {
             if (!error) {
                 console.log("new subsidy requested");
                 if (localStorage.getItem('newSubsidyRequested')) {
@@ -369,7 +378,7 @@ export function makeProgramTransfer(programId, redirect) {
         dispatch({
             type: SHOW_LOADER,
             data: true
-        });               
+        });
         Obsidian.makeProgramTransferOnChain(programId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,
@@ -413,3 +422,11 @@ const getProgramInformation = () => {
     }
 }
 
+const getEquipmentInfo = (equipmentId) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${TRACTORS_URL}/${equipmentId}`)
+            .then(response => {
+                resolve(response.data[0]);
+            })
+    })
+}

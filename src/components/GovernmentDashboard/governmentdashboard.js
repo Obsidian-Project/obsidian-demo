@@ -131,7 +131,7 @@ class GovernmentDashboard extends React.Component {
 
                           <PieChart
                             className="PieChart"
-                            data={this.props.dashboardInfo.mechanizedAreaPieChartValues}
+                            data={this.props.dashboardInfo.mechanizedArea}
                           />
                       </Segment>
                     </Grid.Column>
