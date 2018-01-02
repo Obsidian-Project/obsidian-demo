@@ -29,3 +29,11 @@ export const SET_NOTIFICATION_NUMBER = "Set_Notification_Number";
 export const SHOW_PROGRAM_CREATED_VIEW = "Show_Program_Created_View";
 
 export const NEW_SUBSIDY_TRANSFER_REQUESTED = "New_Subsidy_Transfer_Requested";
+
+export const TOTAL_CUSTOMERS = "Total_Customers";
+
+export const COMPANY_BALANCE_RECEIVED = "Company_Balance_Received";
+
+export const UNITS_TRANSFERRED_RECEIVED = "Units_Transferred_Received";
+
+export const LAST_TRANSFERS_RECEIVED = "Last_Transfers_Received";

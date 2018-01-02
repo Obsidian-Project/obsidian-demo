@@ -14,7 +14,11 @@ import {
     EQUIPMENT_DETAILS_RECEVIED,
     MEMBER_INFO_RECEIVED,
     SET_NOTIFICATION_NUMBER,
-    SHOW_PROGRAM_CREATED_VIEW    
+    SHOW_PROGRAM_CREATED_VIEW,
+    TOTAL_CUSTOMERS,
+    COMPANY_BALANCE_RECEIVED,
+    UNITS_TRANSFERRED_RECEIVED,   
+    LAST_TRANSFERS_RECEIVED
 } from './types';
 
 import {
@@ -116,8 +120,9 @@ export function createProgram(values, redirect) {
             .then(response => {
                 let ipfsHash = response.data;
                 let costPerUnit = values.selectedEquipment.price;
+                let equipmentId = values.selectedEquipment.equipmentId;
                 let { subsidyAmount, units } = values;
-                Obsidian.createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units)
+                Obsidian.createProgramOnChain(ipfsHash, costPerUnit, subsidyAmount, units, equipmentId)
                     .then((response) => {
                         dispatch({
                             type: SHOW_PROGRAM_CREATED_VIEW,
@@ -145,42 +150,73 @@ export function createProgram(values, redirect) {
     }
 }
 
+export function getUnitsTransferred(){
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getUnitsTransferred().then((unitsTransferred) => {
+            dispatch({
+                type: UNITS_TRANSFERRED_RECEIVED,
+                data: unitsTransferred
+            })
+        })
+    }
+}
 
+
+export function getCompanyBalance(){
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getCompanyBalance().then((balance) => {
+            dispatch({
+                type: COMPANY_BALANCE_RECEIVED,
+                data: balance
+            })
+        })
+    }
+}
+
+export function getNumberOfCustomers(){
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getUnitsTransferred().then((unitsTransferred) => {
+            let totalCustomers = unitsTransferred > 0 ? 2 : 0;//TODO: need to use real members or data structure to store members that have received an equipment      
+            dispatch({
+                type: TOTAL_CUSTOMERS,
+                data: totalCustomers
+            })
+        });
+    }
+}
+
+export function getTransfers(){
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getEquipmentsTransferred().then((equipmentIds) => {   
+            //get the equipment ids by index         
+            let actions = equipmentIds.map(dispatch(this.getEquipment));                   
+            var results = Promise.all(actions);
+            results.then(data => {                    
+                dispatch({
+                    type: LAST_TRANSFERS_RECEIVED,
+                    data: data
+                });
+            });         
+        });
+    }
+}
 export function getInformationForCompaniesDashboard() {
-    return (dispatch) => {
-    
-
-        //Para sacar el total earnings, get all programs
-        //iterate and filter all the ones that are delivered    
+    return (dispatch, getState, { Obsidian }) => {
+      
         let result = {};
         axios.get(GET_PROGRAMS_URL)
             .then(response => {
                 let programs = response.data;
                 let numberOfPrograms = programs.length;
-                let unitsTransferred = programs.filter((item) => {
-                    return item.delivered == true;
-                });
-
-                let balance = 0;
-                for (let i = 0; i < unitsTransferred.length; i++) {
-                    balance += Number(unitsTransferred[i].costPerUnit);
-                }
-                result.totalEarnings = balance > 0 ? balance : balance;
-                result.unitsTransferred = unitsTransferred.length;
-                result.numberOfPrograms = numberOfPrograms;
-
-                result.customers = unitsTransferred.length > 0 ? 2 : 0;//for the only 2 members registered
-                let transfers = unitsTransferred.map((item) => {
-                    return {
-                        model: item.selectedEquipment.model,
-                        type: "Tractor",
-                        costPerUnit: item.costPerUnit
-                    }
-                });
-                result.transfers = transfers;
+                debugger;
+                dispatch(getCompanyBalance());
+                dispatch(getUnitsTransferred());
+                dispatch(getNumberOfCustomers());
+                dispatch(getTransfers());                        
+                   
                 dispatch({
                     type: COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
-                    data: result
+                    data: programs
                 });                
             }).catch((error) => {
                 //TODO
@@ -308,28 +344,6 @@ export function addListenerForSubsidyRequests() {
     }
 }
 
-
-// export function addListenerForNewTransfers() {
-//     return (dispatch, getState, { ObsidianSmartContract }) => {
-//         let myEvent = ObsidianSmartContract.newEquipmentTransferred('latest');
-//         myEvent.watch((error, event) => {
-//             debugger;
-//             if (!error) {
-//                 console.log("new equipment transferred");
-//                 if (localStorage.getItem('newEquipmentTransferred')) {
-//                     dispatch({
-//                         type: NEW_EQUIPMENT_TRANSFERRED
-//                     });
-//                 }
-//                 localStorage.setItem('newEquipmentTransferred', 'on');
-//             }
-//             dispatch({
-//                 type: NEW_EQUIPMENT_TRANSFERRED
-//             });
-//         });
-//     }
-// }
-
 export function makeEquipmentTransfer(equipmentId, redirect) {
     return (dispatch, getState, { Obsidian }) => {
         dispatch({
@@ -355,8 +369,7 @@ export function makeProgramTransfer(programId, redirect) {
         dispatch({
             type: SHOW_LOADER,
             data: true
-        });        
-        debugger;
+        });               
         Obsidian.makeProgramTransferOnChain(programId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,

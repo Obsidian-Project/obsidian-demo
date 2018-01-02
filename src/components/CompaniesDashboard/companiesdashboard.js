@@ -58,12 +58,12 @@ class CompaniesDashboard extends React.Component {
                 <Grid width={16}>
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">Equipment Transfers</h5>
-                    <p>{this.props.dashboardInfo.unitsTransferred}</p>
+                    <p>{this.props.unitsTransferred}</p>
                   </Grid.Column>
 
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">Customers</h5>
-                    <p>{this.props.dashboardInfo.customers}</p>
+                    <p>{this.props.customers}</p>
                   </Grid.Column>
                 </Grid>
               </Segment>
@@ -71,7 +71,7 @@ class CompaniesDashboard extends React.Component {
               <Segment>
                 <Header as="h3">Earnings per quarter</Header>
                 <ResponsiveContainer width="100%" height={290}>
-                  <BarChart data={this.getDataForChart(this.props.dashboardInfo.totalEarnings || 0)}
+                  <BarChart data={this.getDataForChart(this.props.totalEarnings || 0)}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -91,12 +91,12 @@ class CompaniesDashboard extends React.Component {
                 <Grid width={16}>
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">Total Earnings</h5>
-                    <p>{`$ ${this.props.dashboardInfo.totalEarnings.format()}`}</p>
+                    <p>{`$ ${this.props.totalEarnings.format()}`}</p>
                   </Grid.Column>
 
                   <Grid.Column textAlign="center" width={8}>
                     <h5 className="dashHeader">This Month</h5>
-                    <p>{`$ ${this.props.dashboardInfo.totalEarnings.format()}`}</p>
+                    <p>{`$ ${this.props.totalEarnings.format()}`}</p>
                   </Grid.Column>
                 </Grid>
               </Segment>
@@ -126,7 +126,7 @@ class CompaniesDashboard extends React.Component {
                 <PieChart
                   lineWidth={30}
                   className="PieChart"
-                  data={this.props.dashboardInfo.distributionPerType}
+                  data={this.props.distributionPerType}
                 />
               </Segment>
             </Grid.Column>
@@ -144,7 +144,7 @@ class CompaniesDashboard extends React.Component {
                   </Table.Header>
 
                   <Table.Body>
-                    {this.props.dashboardInfo.transfers && this.props.dashboardInfo.transfers.map((item, index) => {
+                    {this.props.transfers && this.props.transfers.map((item, index) => {
                       return <Table.Row key={index}>
                         <Table.Cell>{item.model}</Table.Cell>
                         <Table.Cell>{item.type}</Table.Cell>
@@ -152,7 +152,7 @@ class CompaniesDashboard extends React.Component {
                       </Table.Row>
                     })
                     }
-                    {!this.props.dashboardInfo.transfers &&
+                    {!this.props.transfers &&
                       <Table.Row>
                         <Table.Cell>No records</Table.Cell>
                         <Table.Cell>No records</Table.Cell>
@@ -170,7 +170,7 @@ class CompaniesDashboard extends React.Component {
               <Segment>
                 <Header as="h3">Earnings per year</Header>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={this.getEarningsPerYear(this.props.dashboardInfo.totalEarnings || 0)}
+                  <LineChart data={this.getEarningsPerYear(this.props.totalEarnings || 0)}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -212,8 +212,12 @@ class CompaniesDashboard extends React.Component {
 
 function mapStateProps(state) {
   return {
-    dashboardInfo: state.dashboardReducer.companiesDashboardInfo,
-    showLoader: state.dashboardReducer.showLoader
+    showLoader: state.dashboardReducer.showLoader,
+    unitsTransferred: state.companyDashboardReducer.unitsTransferred,
+    customers: state.companyDashboardReducer.customers,
+    totalEarnings: state.companyDashboardReducer.totalEarnings,
+    distributionPerType: state.companyDashboardReducer.distributionPerType,
+    transfers: state.companyDashboardReducer.transfers
   }
 }
 

@@ -2,10 +2,11 @@ import web3 from '../actions/web3';
 
 export const obsidianContract = (ObsidianSmartContract) => {
     return {
-        createProgramOnChain: (ipfsHash, costPerUnit, subsidyAmount, units) => {
+        createProgramOnChain: (ipfsHash, costPerUnit, subsidyAmount, units, equipmentId) => {
 
             return new Promise((resolve, reject) => {
-                ObsidianSmartContract.addProgram(ipfsHash, costPerUnit, subsidyAmount, units, {
+                ObsidianSmartContract.addProgram(ipfsHash, costPerUnit, 
+                    subsidyAmount, units, equipmentId, {
                     gas: 2000000
                 }, (error, txHash) => {
                     if (error) { throw error }
@@ -22,10 +23,43 @@ export const obsidianContract = (ObsidianSmartContract) => {
             })
         },
 
+        getEquipmentsTransferred: () => {
+            return new Promise((resolve, reject) => {                
+                ObsidianSmartContract.numberOfEquipmentsDelivered((error, result) => {
+                    let numberOfEquipments = result.toNumber();
+                    let indexes = [];
+                    for(let i = 0; i < numberOfEquipments; i++){
+                        indexes.push(i);
+                    }
+
+                    let actions = indexes.map(this.getEquipmentTransferred);                   
+                    var results = Promise.all(actions);
+                    results.then(data => {                    
+                        debugger;
+                        resolve(data);               
+                    });      
+                })
+            });
+        },
+        getCompanyBalance: () => {
+            return new Promise((resolve, reject) => {                
+                ObsidianSmartContract.balance((error, result) => {
+                    resolve(result.toNumber());
+                })
+            });
+        },
         getBalance: (address) => {
             return new Promise((resolve, reject) => {
                 let addressToCheck = address || web3.eth.defaultAccount;
                 ObsidianSmartContract.balances(addressToCheck, (error, result) => {
+                    resolve(result.toNumber());
+                })
+            });
+
+        },
+        getUnitsTransferred: () => {
+            return new Promise((resolve, reject) => {
+               ObsidianSmartContract.numberOfEquipmentsDelivered((error, result) => {
                     resolve(result.toNumber());
                 })
             });
@@ -52,6 +86,13 @@ export const obsidianContract = (ObsidianSmartContract) => {
             });
         },
 
+        getEquipmentTransferred: (id) => {
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.equipmentsTransferred(id, (error, result) => {
+                    resolve(result.toNumber());
+                });
+            });
+        },
         makeProgramTransferOnChain: (programId) => {
             return new Promise((resolve, reject) => {
                 ObsidianSmartContract.transfer(programId, {

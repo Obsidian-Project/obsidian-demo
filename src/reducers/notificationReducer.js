@@ -18,23 +18,23 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-    switch (action.type) {     
+    switch (action.type) {
         case SET_NOTIFICATION_NUMBER:
-            return { ...state, ...{ numberOfNotifications: action.data }};
-        case NEW_SUBSIDY_TRANSFER_REQUESTED:         
-        const newState = update(state, {
-            programId: { $set: action.data },
-            equipmentId: {$set: undefined}
-          });
-            return update(state, { $set: newState } );      
-        case NEW_EQUIPMENT_TRANSFER_REQUESTED:            
+            return { ...state, ...{ numberOfNotifications: action.data } };
+        case NEW_SUBSIDY_TRANSFER_REQUESTED:
+            const newState = update(state, {
+                programId: { $set: action.data },
+                equipmentId: { $set: undefined }
+            });
+            return update(state, { $set: newState });
+        case NEW_EQUIPMENT_TRANSFER_REQUESTED:
             const newData = update(state, {
                 equipmentId: { $set: action.data },
-                programId: {$set: undefined}
-              });
-            return update(state, { $set: newData } );            
+                programId: { $set: undefined }
+            });
+            return update(state, { $set: newData });
         case SHOW_NOTIFICATION:
-            return { ...state, ...{ message: action.data, animateIn: action.data !== "" } };        
+            return { ...state, ...{ message: action.data, animateIn: action.data !== "" } };
         default:
             return state;
     }
