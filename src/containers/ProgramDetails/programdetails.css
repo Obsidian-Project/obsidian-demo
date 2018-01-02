@@ -1,0 +1,15 @@
+.equipmentDetails{
+  width: 100%;
+}
+
+.equipmentdetailsImg{
+  max-width: 100%;
+}
+
+.equipmentdetailsHeader{
+  margin-bottom: 0em !important;
+}
+
+.equipmentdetailsp{
+  /* margin: em 0; */
+}

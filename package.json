@@ -6,6 +6,7 @@
     "axios": "^0.17.1",
     "google-map-react": "^0.26.0",
     "google-maps-react": "^1.1.2",
+    "immutability-helper": "^2.6.2",
     "ipfs-api": "^17.2.6",
     "leaflet": "^1.2.0",
     "mnid": "^0.1.1",

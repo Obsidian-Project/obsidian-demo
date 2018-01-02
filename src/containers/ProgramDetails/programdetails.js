@@ -1,30 +1,31 @@
 import React from 'react';
 import Equipments from '../Equipments';
-import styles from './equipmentdetails.css';
+import styles from './programdetails.css';
 import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, Divider, Input, Modal, Item, List } from 'semantic-ui-react';
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-class EquipmentDetails extends React.Component {
+class ProgramDetails extends React.Component {
   constructor() {
     super();
   }
 
   componentWillMount() {
     this.props.resetNotificationsNumber();
-    if (this.props.match.params.equipmentId) {
-      this.props.getEquipment(this.props.match.params.equipmentId);
+    if (this.props.match.params.programId) {
+      this.props.getProgram(this.props.match.params.programId);
     }
   }
 
   transferEquipment = () => {
     const { history } = this.props;
-    let equipmentIdNumber = Number(this.props.equipmentDetails.equipmentId);
-    this.props.makeProgramTransfer(equipmentIdNumber, () => {
+    let programIdNumber = Number(this.props.equipmentDetails.programId);
+    this.props.makeEquipmentTransfer(programIdNumber, () => {
       history.push("/companies");
     });
   }
+
   render() {
     return (
       <span>
@@ -75,6 +76,6 @@ function mapStateToProps(state) {
   }
 }
 
-EquipmentDetails = withRouter(EquipmentDetails);
+ProgramDetails = withRouter(ProgramDetails);
 
-export default connect(mapStateToProps, actions)(EquipmentDetails);
+export default connect(mapStateToProps, actions)(ProgramDetails);

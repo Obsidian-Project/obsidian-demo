@@ -10,7 +10,7 @@ export const SHOW_MODAL = "Show_Modal";
 
 export const SHOW_LOADER = "Show_Loader";
 
-export const NEW_EQUIPMENT_REQUESTED = "New_Equipment_Requested";
+export const NEW_EQUIPMENT_TRANSFER_REQUESTED = "New_Equipment_Transfer_Requested";
 
 export const NEW_EQUIPMENT_TRANSFERRED = "New_Equipment_Transferred";
 
@@ -27,3 +27,5 @@ export const MEMBER_INFO_RECEIVED = "Member_Info_Received";
 export const SET_NOTIFICATION_NUMBER = "Set_Notification_Number";
 
 export const SHOW_PROGRAM_CREATED_VIEW = "Show_Program_Created_View";
+
+export const NEW_SUBSIDY_TRANSFER_REQUESTED = "New_Subsidy_Transfer_Requested";

@@ -5,7 +5,8 @@ import {
     SHOW_MODAL,
     SHOW_LOADER,
     SELECTED_EQUIPMENT,
-    NEW_EQUIPMENT_REQUESTED,
+    NEW_EQUIPMENT_TRANSFER_REQUESTED,
+    NEW_SUBSIDY_TRANSFER_REQUESTED,
     NEW_EQUIPMENT_TRANSFERRED,
     DASHBOARD_INFORMATION_RECEIVED,
     PROGRAMS_RECEIVED,
@@ -13,7 +14,7 @@ import {
     EQUIPMENT_DETAILS_RECEVIED,
     MEMBER_INFO_RECEIVED,
     SET_NOTIFICATION_NUMBER,
-    SHOW_PROGRAM_CREATED_VIEW
+    SHOW_PROGRAM_CREATED_VIEW    
 } from './types';
 
 import {
@@ -52,6 +53,12 @@ export function getEquipment(id) {
                     type: SELECTED_EQUIPMENT,
                     data: { ...item, ...{ title }, ...{ imageUrl } }
                 });
+                dispatch({
+                    type: EQUIPMENT_DETAILS_RECEVIED,
+                    data: { ...item, ...{ title }, ...{ imageUrl } }
+                });
+
+                
             })
             .catch((error) => {
                 //TODO: Error handling
@@ -183,8 +190,7 @@ export function getInformationForCompaniesDashboard() {
 }
 export function getInformationForGovernmentDashboard() {
     return (dispatch, getState, { Obsidian }) => {      
-        let result;
-        debugger;
+        let result;     
         axios.get(DASHBOARD_INFORMATION_URL)
             .then(response => {
                 result = response.data;
@@ -197,8 +203,7 @@ export function getInformationForGovernmentDashboard() {
                     dispatch(getProgramInformation());                   
                 });
             }).catch((error) => {
-                //TODO
-                debugger;
+                //TODO              
             });
 
     }
@@ -229,8 +234,11 @@ export function getProgram(programId) {
 
 export function setupEventListeners() {
     return (dispatch) => {
-        dispatch(addListenerForNewRequests());
-        dispatch(addListenerForNewTransfers());
+        dispatch(addListenerForEquipmentRequests());
+        dispatch(addListenerForSubsidyRequests());
+        
+        // dispatch(addListenerForNewEquipmentTransfers());
+        // dispatch(addListenerForNewSubsidyTransfers());
     }
 }
 
@@ -253,22 +261,22 @@ export function resetNotificationsNumber(){
     }
     
 }
-export function addListenerForNewRequests() {
-    return (dispatch, getState, { ObsidianSmartContract }) => {
-        debugger;
+
+export function addListenerForEquipmentRequests() {
+    return (dispatch, getState, { ObsidianSmartContract }) => {       
         let myEvent = ObsidianSmartContract.newEquipmentRequested('latest');
-        myEvent.watch((error, event) => {
-            debugger;
+        myEvent.watch((error, event) => {           
             if (!error) {
                 console.log("new equipment requested");
                 if (localStorage.getItem('newEquipmentRequested')) {
+                    debugger;
                     dispatch({
                         type: SET_NOTIFICATION_NUMBER,
                         data: 1
                     })
                     dispatch({
-                        type: NEW_EQUIPMENT_REQUESTED,
-                        data: event.args.programId.toNumber()
+                        type: NEW_EQUIPMENT_TRANSFER_REQUESTED,
+                        data: event.args.equipmentId.toNumber()
                     })
                 }
                 localStorage.setItem('newEquipmentRequested', 'on');
@@ -277,36 +285,79 @@ export function addListenerForNewRequests() {
     }
 }
 
-
-export function addListenerForNewTransfers() {
-    return (dispatch, getState, { ObsidianSmartContract }) => {
-        let myEvent = ObsidianSmartContract.newEquipmentTransferred('latest');
-        myEvent.watch((error, event) => {
-            debugger;
+export function addListenerForSubsidyRequests() {
+    return (dispatch, getState, { ObsidianSmartContract }) => {             
+        let myEvent = ObsidianSmartContract.newSubsidyRequested('latest');
+        myEvent.watch((error, event) => {         
             if (!error) {
-                console.log("new equipment transferred");
-                if (localStorage.getItem('newEquipmentTransferred')) {
+                console.log("new subsidy requested");
+                if (localStorage.getItem('newSubsidyRequested')) {
+                    debugger;
                     dispatch({
-                        type: NEW_EQUIPMENT_TRANSFERRED
-                    });
+                        type: SET_NOTIFICATION_NUMBER,
+                        data: 1
+                    })
+                    dispatch({
+                        type: NEW_SUBSIDY_TRANSFER_REQUESTED,
+                        data: event.args.programId.toNumber()
+                    })
                 }
-                localStorage.setItem('newEquipmentTransferred', 'on');
+                localStorage.setItem('newSubsidyRequested', 'on');
             }
-            dispatch({
-                type: NEW_EQUIPMENT_TRANSFERRED
-            });
         });
     }
 }
 
-export function makeTransfer(programId, redirect) {
+
+// export function addListenerForNewTransfers() {
+//     return (dispatch, getState, { ObsidianSmartContract }) => {
+//         let myEvent = ObsidianSmartContract.newEquipmentTransferred('latest');
+//         myEvent.watch((error, event) => {
+//             debugger;
+//             if (!error) {
+//                 console.log("new equipment transferred");
+//                 if (localStorage.getItem('newEquipmentTransferred')) {
+//                     dispatch({
+//                         type: NEW_EQUIPMENT_TRANSFERRED
+//                     });
+//                 }
+//                 localStorage.setItem('newEquipmentTransferred', 'on');
+//             }
+//             dispatch({
+//                 type: NEW_EQUIPMENT_TRANSFERRED
+//             });
+//         });
+//     }
+// }
+
+export function makeEquipmentTransfer(equipmentId, redirect) {
     return (dispatch, getState, { Obsidian }) => {
         dispatch({
             type: SHOW_LOADER,
             data: true
         });
+        Obsidian.makeEquipmentTransferOnChain(equipmentId).then((result) => {
+            dispatch({
+                type: SHOW_LOADER,
+                data: false
+            });
+            dispatch(getInformationForCompaniesDashboard());
+            dispatch(getInformationForGovernmentDashboard());
+            redirect();
+        }).catch((error) => {
+            //TODO: catch error
+        })
+    }
+}
+
+export function makeProgramTransfer(programId, redirect) {
+    return (dispatch, getState, { Obsidian }) => {
+        dispatch({
+            type: SHOW_LOADER,
+            data: true
+        });        
         debugger;
-        Obsidian.makeTransferOnChain(programId).then((result) => {
+        Obsidian.makeProgramTransferOnChain(programId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,
                 data: false

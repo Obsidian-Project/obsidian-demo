@@ -24,7 +24,6 @@ export const obsidianContract = (ObsidianSmartContract) => {
 
         getBalance: (address) => {
             return new Promise((resolve, reject) => {
-                debugger;
                 let addressToCheck = address || web3.eth.defaultAccount;
                 ObsidianSmartContract.balances(addressToCheck, (error, result) => {
                     resolve(result.toNumber());
@@ -33,7 +32,27 @@ export const obsidianContract = (ObsidianSmartContract) => {
 
         },
 
-        makeTransferOnChain: (programId) => {
+        makeEquipmentTransferOnChain: (equipmentId) => {
+            return new Promise((resolve, reject) => {
+                ObsidianSmartContract.transferEquipment(equipmentId, {
+                    gas: 2000000
+                }, (error, txHash) => {
+                    if (error) { throw error }
+                    waitForMined(txHash, { blockNumber: null },
+                        function pendingCB() {
+                            // Signal to the user you're still waiting
+                            // for a block confirmation
+                        },
+                        function successCB(data) {
+                            resolve();//don't need to pass nothing
+                        }
+                    )
+                })
+
+            });
+        },
+
+        makeProgramTransferOnChain: (programId) => {
             return new Promise((resolve, reject) => {
                 ObsidianSmartContract.transfer(programId, {
                     gas: 2000000
@@ -49,7 +68,6 @@ export const obsidianContract = (ObsidianSmartContract) => {
                         }
                     )
                 })
-
             });
         },
 

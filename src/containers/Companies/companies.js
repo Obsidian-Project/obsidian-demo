@@ -12,8 +12,7 @@ class Companies extends React.Component {
 
     componentWillMount(){
         //add event listener for event
-        //show alert
-        this.props.addListenerForNewRequests();
+        //show alert       
         //el action escucha y si hay algo, dispacha una action
         //aqui yo solo recibo el numero para actualizar el badge
     }

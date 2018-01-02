@@ -35,14 +35,17 @@ const HeaderFixed = (props) => {
             trigger={
               <Menu.Item as ="a" name='alarm'>
                 <Icon name='alarm' />
-                 {props.companyNotificationsNumber > 0 && props.companyNotificationsNumber < 2 && <Label color='red' circular floating>{props.companyNotificationsNumber}</Label>}
+                 {props.companyNotificationsNumber > 0 && <Label color='red' circular floating>{props.companyNotificationsNumber}</Label>}
               </Menu.Item>
             }
             content={
               <Button color='green'>
-                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails/${props.programId}`} >
+                {props.programId ? <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails/${props.programId}/`} >
+                  New request for subisdy
+                </Link> :
+                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/programdetails/${props.equipmentId}/`} >
                   New request for equipment
-                </Link>
+                </Link>}
               </Button>
             }
             hoverable
@@ -100,6 +103,7 @@ class Layout extends React.Component {
                             pageIcon={this.props.pageIcon}
                             color={this.props.color}
                             programId={this.props.programId}
+                            equipmentId={this.props.equipmentId}
                             showPrograms={this.props.showPrograms}
                             showNotifications={this.props.showNotifications}
                            />
@@ -114,8 +118,7 @@ class Layout extends React.Component {
     }
 }
 
-Layout.propTypes = {
-    // logo: PropTypes.any.isRequired,
+Layout.propTypes = {  
     baseUrl: PropTypes.string.isRequired,
 }
 
@@ -126,7 +129,8 @@ Layout.defaultProps ={
 function mapStateProps(state) {
   return {     
       companyNotificationsNumber: state.notificationReducer.numberOfNotifications,
-      programId: Number(state.notificationReducer.programId)
+      programId: Number(state.notificationReducer.programId),
+      equipmentId: Number(state.notificationReducer.equipmentId)
   }
 }
 

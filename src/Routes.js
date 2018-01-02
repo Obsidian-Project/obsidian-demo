@@ -9,7 +9,7 @@ import NewGroup from './containers/NewGroup';
 import NewProgram from './containers/NewProgram';
 import NewMember from './containers/NewMember';
 import EquipmentDetails from './containers/EquipmentDetails';
-
+import ProgramDetails from './containers/ProgramDetails';
 
 import GovernmentDashboard from './components/GovernmentDashboard'
 import CompaniesDashboard from './components/CompaniesDashboard'
@@ -31,8 +31,9 @@ const CompaniesRoutes = () => (
     <Switch>
         <Companies>
             <Route exact path="/companies" component={CompaniesDashboard} />
-            <Route path="/companies/newProgram" component={NewProgram} />
+            <Route path="/companies/newProgram" component={NewProgram} />            
             <Route path="/companies/equipmentdetails/:equipmentId" component={EquipmentDetails} />
+            <Route path="/companies/programdetails/:programId" component={ProgramDetails} />
         </Companies>
     </Switch>
 )
@@ -52,8 +53,7 @@ const Routes = () => (
           <Route exact path="/" component={Home} />
             <Route path="/governments" component={GovernmentsRoutes} />
             <Route path="/companies" component={CompaniesRoutes} />
-            <Route path="/sugarmills" component={SugarMillsRoutes} />
-            <Route path="/test" component={Equipments} />
+            <Route path="/sugarmills" component={SugarMillsRoutes} />         
             <Route component={Home} />
         </Switch>
     </Router>

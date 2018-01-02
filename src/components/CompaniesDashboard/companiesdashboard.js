@@ -18,7 +18,6 @@ class CompaniesDashboard extends React.Component {
   }
 
   getDataForChart = (earnings) => {
-    debugger;
     const data = [
       { name: 'Q1', 2017: 0, 2016: 0},
       { name: 'Q2', 2017: 0, 2016: 0},
@@ -186,12 +185,12 @@ class CompaniesDashboard extends React.Component {
 
             <Grid.Column width={6}>
               <Segment className="table2">
-                <Header as="h3">Recent Payments</Header>
+                <Header as="h3">Leases expiring this Month</Header>
                 <Table textAlign="center" size="small">
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Group number</Table.HeaderCell>
-                      <Table.HeaderCell>Total payment</Table.HeaderCell>
+                      <Table.HeaderCell>Program reference</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
 
