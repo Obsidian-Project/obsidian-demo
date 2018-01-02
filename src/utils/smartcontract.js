@@ -22,6 +22,13 @@ export const obsidianContract = (ObsidianSmartContract) => {
                 })
             })
         },
+        getNumberOfPrograms: () => {
+            return new Promise((resolve, reject) => {                
+                ObsidianSmartContract.numberOfPrograms((error, result) => {
+                    resolve(result.toNumber());               
+                })
+            });
+        },
 
         getEquipmentsTransferred: () => {
             return new Promise((resolve, reject) => {                
@@ -31,6 +38,15 @@ export const obsidianContract = (ObsidianSmartContract) => {
                 })
             });
         },
+
+        getSubsidiesDelivered: () => {
+            return new Promise((resolve, reject) => {                
+                ObsidianSmartContract.numberOfProgramsDelivered((error, result) => {
+                    resolve(result.toNumber());
+                })
+            });
+        },
+
         getCompanyBalance: () => {
             return new Promise((resolve, reject) => {                
                 ObsidianSmartContract.balance((error, result) => {

@@ -212,7 +212,6 @@ class CompaniesDashboard extends React.Component {
 
 function mapStateProps(state) {
   return {
-    showLoader: state.dashboardReducer.showLoader,
     unitsTransferred: state.companyDashboardReducer.unitsTransferred,
     customers: state.companyDashboardReducer.customers,
     totalEarnings: state.companyDashboardReducer.totalEarnings,

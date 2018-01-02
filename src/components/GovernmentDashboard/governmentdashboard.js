@@ -51,17 +51,17 @@ class GovernmentDashboard extends React.Component {
                         <Grid width={15}>
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Programs</h5><br/>
-                            <p>{this.props.dashboardInfo.numberOfPrograms}</p>
+                            <p>{this.props.numberOfPrograms}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Beneficiaries</h5><br/>
-                            <p>{this.props.dashboardInfo.subsidiesDeliverd > 0 ? 2 : 0}</p>
+                            <p>{this.props.subsidiesDeliverd > 0 ? 2 : 0}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={5}>
                             <h5 className="dashHeader">Subsidies delivered</h5>
-                            <p>{this.props.dashboardInfo.subsidiesDeliverd}</p>
+                            <p>{this.props.subsidiesDeliverd}</p>
                           </Grid.Column>
                         </Grid>
                       </Segment>
@@ -91,7 +91,7 @@ class GovernmentDashboard extends React.Component {
                           <PieChart
                             lineWidth={30}
                             className="PieChart"
-                            data={this.props.dashboardInfo.pieChartValues}
+                            data={this.props.equipmentTypes}
                           />
                       </Segment>
                     </Grid.Column>
@@ -102,12 +102,12 @@ class GovernmentDashboard extends React.Component {
                         <Grid width={16}>
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">Total Spent</h5><br/>
-                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "$ 0"}</p>
+                            <p>{this.props.balance ? `$ ${this.props.balance.format()}` : "$ 0"}</p>
                           </Grid.Column>
 
                           <Grid.Column textAlign = "center" width={8}>
                             <h5 className="dashHeader">This Month</h5><br/>
-                            <p>{this.props.dashboardInfo.balance ? `$ ${this.props.dashboardInfo.balance.format()}` : "$ 0"}</p>
+                            <p>{this.props.balance ? `$ ${this.props.balance.format()}` : "$ 0"}</p>
                           </Grid.Column>
                         </Grid>
                       </Segment>
@@ -131,7 +131,7 @@ class GovernmentDashboard extends React.Component {
 
                           <PieChart
                             className="PieChart"
-                            data={this.props.dashboardInfo.mechanizedArea}
+                            data={this.props.landCoverage}
                           />
                       </Segment>
                     </Grid.Column>
@@ -168,7 +168,7 @@ class GovernmentDashboard extends React.Component {
                       <Segment>
                         <Header as="h3">Subsidies delivered</Header>
                         <ResponsiveContainer width = "100%" height={300}>
-                          <LineChart data={this.getSubsidiesPerYear(this.props.dashboardInfo.subsidiesDeliverd)}
+                          <LineChart data={this.getSubsidiesPerYear(this.props.subsidiesDeliverd)}
                                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                            <XAxis dataKey="name"/>
                            <YAxis/>
@@ -189,9 +189,14 @@ class GovernmentDashboard extends React.Component {
 
 function mapStateProps(state) {
   return {
-      dashboardInfo: state.dashboardReducer.dashboardInfo,
-      showLoader: state.dashboardReducer.showLoader,
-      programsInfo: state.dashboardReducer.programsInfo
+      balance: state.governmentDashboardReducer.balance,
+      subsidiesDeliverd: state.governmentDashboardReducer.subsidiesDeliverd,
+      units: state.governmentDashboardReducer.units,
+      numberOfPrograms: state.governmentDashboardReducer.numberOfPrograms,
+      showLoader: state.governmentDashboardReducer.showLoader,
+      equipmentTypes: state.governmentDashboardReducer.equipmentTypes,
+      landCoverage: state.governmentDashboardReducer.landCoverage,
+      programsInfo: state.governmentDashboardReducer.programsInfo
   }
 }
 

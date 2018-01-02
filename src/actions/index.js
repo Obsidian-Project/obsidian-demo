@@ -8,7 +8,6 @@ import {
     NEW_EQUIPMENT_TRANSFER_REQUESTED,
     NEW_SUBSIDY_TRANSFER_REQUESTED,
     NEW_EQUIPMENT_TRANSFERRED,
-    DASHBOARD_INFORMATION_RECEIVED,
     PROGRAMS_RECEIVED,
     COMPANIES_DASHBOARD_INFORMATION_RECEIVED,
     EQUIPMENT_DETAILS_RECEVIED,
@@ -18,7 +17,10 @@ import {
     TOTAL_CUSTOMERS,
     COMPANY_BALANCE_RECEIVED,
     UNITS_TRANSFERRED_RECEIVED,
-    LAST_TRANSFERS_RECEIVED
+    LAST_TRANSFERS_RECEIVED,
+    NUMBER_OF_PROGRAMS_RECEIVED,
+    GOVERNMENT_BALANCE_RECEIVED,
+    SUBSIDIES_DELIVERED_RECEIVED
 } from './types';
 
 import {
@@ -210,6 +212,40 @@ export function getTransfers() {
         });
     }
 }
+
+export function getGovernmentBalance() {
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getBalance().then((balance) => {
+            dispatch({
+                type: GOVERNMENT_BALANCE_RECEIVED,
+                data: balance
+            })
+        })
+    }
+}
+
+export function getNumberOfPrograms() {
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getNumberOfPrograms().then((numberOfPrograms) => {
+            dispatch({
+                type: NUMBER_OF_PROGRAMS_RECEIVED,
+                data: numberOfPrograms
+            })
+        })
+    }
+}
+
+export function getSubsidiesDelivered() {
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getSubsidiesDelivered().then((subsidiesDelivered) => {
+            dispatch({
+                type: SUBSIDIES_DELIVERED_RECEIVED,
+                data: subsidiesDelivered
+            })
+        })
+    }
+}
+
 export function getInformationForCompaniesDashboard() {
     return (dispatch, getState, { Obsidian }) => {
 
@@ -235,22 +271,10 @@ export function getInformationForCompaniesDashboard() {
 }
 export function getInformationForGovernmentDashboard() {
     return (dispatch, getState, { Obsidian }) => {
-        let result;
-        axios.get(DASHBOARD_INFORMATION_URL)
-            .then(response => {
-                result = response.data;
-                Obsidian.getBalance().then((balance) => {
-                    result.balance = balance;
-                    dispatch({
-                        type: DASHBOARD_INFORMATION_RECEIVED,
-                        data: result
-                    });
-                    dispatch(getProgramInformation());
-                });
-            }).catch((error) => {
-                //TODO              
-            });
-
+        dispatch(getGovernmentBalance());
+        dispatch(getNumberOfPrograms());        
+        dispatch(getSubsidiesDelivered());    
+        dispatch(getProgramInformation())    
     }
 }
 

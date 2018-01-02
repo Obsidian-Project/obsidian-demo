@@ -37,3 +37,9 @@ export const COMPANY_BALANCE_RECEIVED = "Company_Balance_Received";
 export const UNITS_TRANSFERRED_RECEIVED = "Units_Transferred_Received";
 
 export const LAST_TRANSFERS_RECEIVED = "Last_Transfers_Received";
+
+export const GOVERNMENT_BALANCE_RECEIVED = "Government_Balance_Received";
+
+export const NUMBER_OF_PROGRAMS_RECEIVED = "Number_Of_Programs_Received";
+
+export const SUBSIDIES_DELIVERED_RECEIVED = "Subsidies_Delivered_Received";

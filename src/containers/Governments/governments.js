@@ -21,10 +21,4 @@ class Governments extends React.Component {
     }
 }
 
-function mapStateProps(state) {
-    return {
-        dashboardInfo: state.dashboardReducer.dashboardInfo
-    }
-}
-
-export default connect(mapStateProps, actions)(Governments);
+export default connect(null, actions)(Governments);
