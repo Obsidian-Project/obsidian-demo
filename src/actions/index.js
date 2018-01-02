@@ -187,7 +187,6 @@ export function getNumberOfCustomers() {
 
 export function getTransfers() {
     return (dispatch, getState, { Obsidian }) => {
-        debugger;
         Obsidian.getEquipmentsTransferred().then((numberOfEquipments) => {
             //get the equipment ids by index     
             let indexes = [];
@@ -196,12 +195,10 @@ export function getTransfers() {
             }
             let actions = indexes.map(Obsidian.getEquipmentTransferred);
             let results = Promise.all(actions);
-            debugger;
             results.then(data => {
                 let equipmentActions = data.map(getEquipmentInfo);
                 let promises = Promise.all(equipmentActions);
                 promises.then(data => {
-                    debugger;
                     dispatch({
                         type: LAST_TRANSFERS_RECEIVED,
                         data: data
@@ -313,8 +310,7 @@ export function addListenerForEquipmentRequests() {
         myEvent.watch((error, event) => {
             if (!error) {
                 console.log("new equipment requested");
-                if (localStorage.getItem('newEquipmentRequested')) {
-                    debugger;
+                //if (localStorage.getItem('newEquipmentRequested')) {         
                     dispatch({
                         type: SET_NOTIFICATION_NUMBER,
                         data: 1
@@ -323,8 +319,8 @@ export function addListenerForEquipmentRequests() {
                         type: NEW_EQUIPMENT_TRANSFER_REQUESTED,
                         data: event.args.equipmentId.toNumber()
                     })
-                }
-                localStorage.setItem('newEquipmentRequested', 'on');
+                //}
+                //localStorage.setItem('newEquipmentRequested', 'on');
             }
         });
     }
@@ -336,8 +332,7 @@ export function addListenerForSubsidyRequests() {
         myEvent.watch((error, event) => {
             if (!error) {
                 console.log("new subsidy requested");
-                if (localStorage.getItem('newSubsidyRequested')) {
-                    debugger;
+                //if (localStorage.getItem('newSubsidyRequested')) {               
                     dispatch({
                         type: SET_NOTIFICATION_NUMBER,
                         data: 1
@@ -346,8 +341,8 @@ export function addListenerForSubsidyRequests() {
                         type: NEW_SUBSIDY_TRANSFER_REQUESTED,
                         data: event.args.programId.toNumber()
                     })
-                }
-                localStorage.setItem('newSubsidyRequested', 'on');
+                //}
+                //localStorage.setItem('newSubsidyRequested', 'on');
             }
         });
     }
@@ -359,6 +354,7 @@ export function makeEquipmentTransfer(equipmentId, redirect) {
             type: SHOW_LOADER,
             data: true
         });
+        debugger;
         Obsidian.makeEquipmentTransferOnChain(equipmentId).then((result) => {
             dispatch({
                 type: SHOW_LOADER,

@@ -21,7 +21,7 @@ class EquipmentDetails extends React.Component {
   transferEquipment = () => {
     const { history } = this.props;
     let equipmentIdNumber = Number(this.props.equipmentDetails.equipmentId);
-    this.props.makeProgramTransfer(equipmentIdNumber, () => {
+    this.props.makeEquipmentTransfer(equipmentIdNumber, () => {
       history.push("/companies");
     });
   }

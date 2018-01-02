@@ -40,10 +40,10 @@ const HeaderFixed = (props) => {
             }
             content={
               <Button color='green'>
-                {props.programId ? <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails/${props.programId}/`} >
-                  New request for subisdy
+                {props.programId ? <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/programdetails/${props.programId}/`} >
+                  New request for equipment
                 </Link> :
-                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/programdetails/${props.equipmentId}/`} >
+                <Link className="equipmentdetailsLink" to={`/${props.baseUrl}/equipmentdetails/${props.equipmentId}/`} >
                   New request for equipment
                 </Link>}
               </Button>

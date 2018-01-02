@@ -1,5 +1,5 @@
 
-let ROOT_URL = "http://obsidian-api.azurewebsites.net";
+let ROOT_URL = "http://localhost:4000";//"http://obsidian-api.azurewebsites.net";
 
 if (process.env.NODE_ENV == "production") {
     ROOT_URL = "http://obsidian-api.azurewebsites.net";

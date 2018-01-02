@@ -58,6 +58,7 @@ export const obsidianContract = (ObsidianSmartContract) => {
 
         makeEquipmentTransferOnChain: (equipmentId) => {
             return new Promise((resolve, reject) => {
+				debugger;
                 ObsidianSmartContract.transferEquipment(equipmentId, {
                     gas: 2000000
                 }, (error, txHash) => {
