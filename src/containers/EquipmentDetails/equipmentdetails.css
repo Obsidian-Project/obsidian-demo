@@ -6,10 +6,33 @@
   max-width: 100%;
 }
 
-.equipmentdetailsHeader{
-  margin-bottom: 0em !important;
+h3.ui.header.equipmentdetailsHeader {
+  margin-bottom: 1rem !important;
+
 }
 
-.equipmentdetailsp{
-  /* margin: em 0; */
+h3.ui.header.equipmentdetailsHeader.no-margin-bottom, h4.ui.header.margin-top-one {
+  margin-bottom: 0rem !important;
+  margin-top: 1rem;
+}
+.row.title-row {
+  margin-bottom: 1rem !important;
+}
+
+.farmer-details-content { 
+  display: flex;
+  align-content: space-around;
+  align-items: center;
+}
+
+img.ui.centered.image.farmer-details{
+  margin: auto;
+}
+
+h5.ui.header.no-margin-top {
+  margin-top: 0;
+}
+
+.equipment-detail-page h5.ui.header {
+  font-weight: 400;
 }

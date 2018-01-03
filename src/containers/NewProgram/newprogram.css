@@ -25,3 +25,6 @@ p.price-per-unit {
   margin: auto;
   color: #04ad00
 }
+h3.ui.header.margin-top-one {
+  margin-top: 1rem;
+}
