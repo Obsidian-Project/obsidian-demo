@@ -20,7 +20,9 @@ import {
     LAST_TRANSFERS_RECEIVED,
     NUMBER_OF_PROGRAMS_RECEIVED,
     GOVERNMENT_BALANCE_RECEIVED,
-    SUBSIDIES_DELIVERED_RECEIVED
+    SUBSIDIES_DELIVERED_RECEIVED,
+    NUMBER_OF_EQUIPMENTS,
+    GROUP_BALANCE_RECEIVED
 } from './types';
 
 import {
@@ -369,6 +371,37 @@ export function addListenerForSubsidyRequests() {
                 //localStorage.setItem('newSubsidyRequested', 'on');
             }
         });
+    }
+}
+
+export function getGroupBalance() {
+    return (dispatch, getState, { ObsidianSmartContract, Obsidian }) => {
+        ObsidianSmartContract.membersRegistered(1, (error, result) => {
+            debugger;
+            let address = result;
+            Obsidian.getBalance(address).then((balance) => {
+                dispatch({
+                    type: GROUP_BALANCE_RECEIVED,
+                    data: balance
+                })
+            });
+        })
+        //get members info 1, get address, then balance
+        // dispatch({ 
+        //     type: GROUP_BALANCE_RECEIVED,
+        //     data: 
+        // });
+    }
+}
+
+export function getNumberOfEquipmentsPerGroup() {
+    return (dispatch, getState, { Obsidian }) => {
+        Obsidian.getUnitsTransferred().then((unitsTransferred) => {
+            dispatch({
+                type: NUMBER_OF_EQUIPMENTS,
+                data: unitsTransferred
+            })
+        })
     }
 }
 

@@ -43,3 +43,7 @@ export const GOVERNMENT_BALANCE_RECEIVED = "Government_Balance_Received";
 export const NUMBER_OF_PROGRAMS_RECEIVED = "Number_Of_Programs_Received";
 
 export const SUBSIDIES_DELIVERED_RECEIVED = "Subsidies_Delivered_Received";
+
+export const NUMBER_OF_EQUIPMENTS = "Number_Of_Equipments";
+
+export const GROUP_BALANCE_RECEIVED = "Group_Balance_Received";

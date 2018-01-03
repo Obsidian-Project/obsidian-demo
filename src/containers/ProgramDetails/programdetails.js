@@ -5,6 +5,7 @@ import { Container, Header, Grid, Segment, Image, Form, Button, Dimmer, Loader, 
 import * as actions from '../../actions';
 import { connect, } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import EquipmentDetail from '../../components/EquipmentDetail';
 
 class ProgramDetails extends React.Component {
   constructor() {
@@ -28,43 +29,15 @@ class ProgramDetails extends React.Component {
 
   render() {
     return (
-      <span>
+      <div className="equipment-detail-page">
         {this.props.showLoader && <Dimmer inverted active>
           <Loader>
             <Header>Transfering</Header>
           </Loader>
         </Dimmer>}
 
-
-        <Segment>
-          <Grid>
-            <Grid.Row>
-
-            </Grid.Row>
-            <Grid.Column width={8}>
-              {this.props.equipmentDetails && <img className="equipmentdetailsImg" src={this.props.equipmentDetails.imageUrl} alt="equipment details" />}
-
-            </Grid.Column>
-            {this.props.equipmentDetails &&
-              <Grid.Column width={8}>
-                <Header as="h2" className="equipmentdetailsHeader">{`${this.props.equipmentDetails.category} ${this.props.equipmentDetails.model}`}</Header>
-                <span>{this.props.equipmentDetails.category}</span>
-                <List as="ul">
-                  {this.props.equipmentDetails.details.map((item, index) => {
-                    return <List.Item key={index} as="li">
-                      {item}
-                    </List.Item>
-                  })}
-                </List>
-                <p className="equipmentdetailsp">
-                  {this.props.equipmentDetails.description}
-                </p>
-                <Button fluid color="green" onClick={this.transferEquipment}>Transfer</Button>
-              </Grid.Column>
-            }
-          </Grid>
-        </Segment>
-      </span>
+        <EquipmentDetail equipmentDetails={this.props.equipmentDetails} onTransfer={this.transferEquipment} />
+    </div>
     )
   }
 }
